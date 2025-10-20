@@ -2,3 +2,6 @@ fastapi==0.115.6
 uvicorn==0.30.6
 pydantic==2.9.2
 python-multipart==0.0.20
+livekit-agents[silero,turn-detector]~=1.2
+livekit-agents[clova]~=1.2
+python-dotenv

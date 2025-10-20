@@ -10,7 +10,7 @@ app = FastAPI(
 )
 
 # ========================
-# 📌 Pydantic Models
+#  Pydantic Models
 # ========================
 
 class STTRequest(BaseModel):
