@@ -17,7 +17,7 @@ async def entrypoint(ctx: agents.JobContext):
     #  CLOVA STT로 세션 구성
     session = AgentSession(
         stt=clova.STT(
-            language="ko-KR",          # ko-KR / en-US / ja / zh-cn / zh-tw / enko 등
+            language="ko-KR", # ko-KR / en-US / ja / zh-cn / zh-tw / enko 등
             # word_boost=["Talaria", "LiveKit"],  # 선택: 용어 부스트
         ),
         vad=silero.VAD.load(),

@@ -69,3 +69,7 @@ Thumbs.db
 # dotenv
 .env
 .env.local
+
+
+# data raw file
+gartner_glossary_raw.html
