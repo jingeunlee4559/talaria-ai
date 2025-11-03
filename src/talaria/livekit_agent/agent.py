@@ -1,5 +1,6 @@
 # talaria-ai/agent_stt.py
 import os, json
+import sys
 from dotenv import load_dotenv
 from livekit import agents
 from livekit.agents import Agent, AgentSession, RoomInputOptions, WorkerOptions, cli
@@ -8,6 +9,12 @@ from livekit.plugins.turn_detector.multilingual import MultilingualModel
 from livekit.plugins import clova
 
 load_dotenv()
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../"))
+
+src_path = os.path.abspath(os.path.join(PROJECT_ROOT, "src"))
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
 
 class STTOnlyAgent(Agent):
     def __init__(self):

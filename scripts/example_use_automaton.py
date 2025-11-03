@@ -2,7 +2,7 @@
 
 import ahocorasick
 import pickle
-from db_manager import get_db_cursor
+from src.talaria.core.database import get_db_cursor
 
 # 1. 저장된 파일을 로드
 try:
