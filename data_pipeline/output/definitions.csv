@@ -1,0 +1,604 @@
+﻿def_id,English Meaning,Korean Meaning
+1,A method of comparing two versions of a webpage or app to see which performs better.,두 가지 이상의 시안 중 어느 것이 더 나은 성과를 보이는지 사용자의 반응을 통해 비교하는 테스트.
+2,The content visible on a screen without scrolling.,사용자가 스크롤을 내리지 않고 처음으로 보게 되는 화면 영역.
+3,"Predefined requirements that must be met for a task to be considered ""done.""",개발된 기능이 요구사항을 충족했는지 판단하는 구체적인 조건 목록.
+4,The design of products and services to be usable by people with disabilities.,장애 여부와 관계없이 누구나 동등하게 정보에 접근하고 이용할 수 있도록 보장하는 것.
+5,Data or insight that can be used to inform a decision or action.,"실제 행동이나 의사결정으로 이어질 수 있는, 구체적이고 유용한."
+6,"Created for a specific purpose as necessary, without a plan.","특정 문제를 해결하기 위해 즉석에서 구성되거나 수행되는 것. (예: 애드혹 회의, 애드혹 쿼리)"
+7,"A project management methodology using short development cycles called ""sprints.""",짧은 주기의 개발 단위를 반복하여 변화에 민첩하게 대응하는 개발 방법론.
+8,To bring into agreement or cooperation.,"팀원이나 부서 간의 목표, 의견, 이해도를 일치시키는 과정."
+9,A process or set of rules to be followed in calculations or problem-solving.,"문제 해결을 위한 절차나 방법, 특히 컴퓨터가 수행하는 규칙의 집합."
+10,The action of distributing a resource or task.,"인력, 예산, 시간 등의 리소스를 특정 프로젝트나 작업에 배분하는 것."
+11,"The first phase of testing, typically carried out in-house by the development team.",정식 출시 전 개발팀 내부에서 진행하는 초기 기능 테스트.
+12,The quality of being open to more than one interpretation; inexactness.,요구사항이나 목표가 명확하지 않아 여러 가지로 해석될 수 있는 상태.
+13,The systematic computational analysis of data or statistics.,데이터를 분석하여 비즈니스 인사이트를 도출하고 의사결정에 활용하는 과정.
+14,A set of rules allowing different software applications to communicate with each other.,애플리케이션끼리 데이터를 주고받기 위한 약속된 규격이나 통신 창구.
+15,To add something to the end of a list or document.,기존 데이터나 리스트의 끝에 새로운 데이터를 추가하는 것.
+16,"The fundamental organization of a system, embodied in its components and their relationships.",시스템의 전체적인 구조와 구성 요소 간의 관계를 설계한 것.
+17,To move data that is no longer actively used to a separate storage for long-term retention.,자주 사용하지 않는 데이터를 장기 보관을 위해 별도의 저장소로 옮기는 작업.
+18,"In the current condition, without any changes.","현재 상태를 분석하거나, 변경 없이 그대로 사용하는 것을 의미."
+19,As quickly as can be done.,가능한 한 신속하게 처리해달라는 요청.
+20,"A useful or valuable resource, such as an image, font, or code library.","디자인, 코드, 데이터 등 프로젝트를 구성하는 모든 디지털 리소스."
+21,(Of processes) not existing or happening at the same time.,특정 작업이 끝날 때까지 기다리지 않고 다음 작업을 바로 수행하는 처리 방식.
+22,Relating to an operation that is indivisible and irreducible.,더 이상 쪼갤 수 없는 하나의 단위로 처리되는 것. (예: 아토믹 커밋)
+23,The process of verifying the identity of a user.,사용자가 누구인지 확인하는 절차. (예: 로그인)
+24,The process of specifying access rights/privileges to resources.,인증된 사용자가 특정 데이터나 기능에 접근할 수 있는 권한을 주는 절차.
+25,A cloud feature that automatically adjusts computational resources based on demand.,트래픽 양에 따라 서버 리소스를 자동으로 늘리거나 줄이는 기능.
+26,The proportion of time a system is in a functioning condition.,시스템이 장애 없이 정상적으로 운영되는 시간의 비율.
+27,Business transactions conducted between companies.,기업 간 거래.
+28,Business transactions conducted between a company and individual customers.,기업과 개인 소비자 간 거래.
+29,The central high-speed network that connects smaller networks together.,네트워크의 중심을 이루는 대규모 전송 회선.
+30,"The server-side of an application, responsible for logic, database, and APIs.","사용자 눈에 보이지 않는 서버, 데이터베이스, 비즈니스 로직 등을 다루는 영역."
+31,The process of retroactively populating a database with old or missing data.,과거에 누락되었거나 새로 추가된 필드의 데이터를 채워 넣는 작업.
+32,An accumulation of uncompleted work or tasks needing to be dealt with.,앞으로 개발해야 할 기능이나 처리해야 할 작업들의 우선순위 목록.
+33,Applying a fix or feature from a newer software version to an older one.,최신 버전에서 수정된 버그나 추가된 기능을 이전 버전에 적용하는 것.
+34,A copy of data made in case the original is lost or damaged.,데이터 손실에 대비하여 데이터를 복사해 두는 것 또는 그 복사본.
+35,The ability of a new system to work with older systems or data.,새로운 버전이 이전 버전의 환경이나 데이터를 문제없이 지원하는 것.
+36,A rough numerical estimate or approximation.,정확하지는 않지만 대강의 규모를 파악하기 위한 추정치. '볼파크'로 줄여서 사용.
+37,"A temporary, superficial solution to a problem.","근본적인 해결이 아닌, 급한 불만 끄는 임시 조치."
+38,The maximum rate of data transfer across a network.,네트워크에서 데이터를 전송할 수 있는 최대 용량. 업무 처리 능력의 비유로도 사용.
+39,A minimum or starting point used for comparisons.,성능 측정이나 프로젝트 진행 상황을 비교하기 위한 기준점.
+40,A group of records processed as a single unit.,데이터를 한 번에 모아서 일괄적으로 처리하는 방식.
+41,To remember a piece of information that is important.,특정 사실을 기억하고 고려하다.
+42,A standard or point of reference against which things may be compared.,성능을 측정하고 비교하기 위한 표준. 경쟁사 제품 분석의 의미로도 사용.
+43,A method or technique that has consistently shown superior results.,특정 작업을 수행하는 가장 효율적이고 검증된 모범 사례.
+44,The second phase of testing where a product is tested by a real user audience.,"정식 출시 전, 외부의 일반 사용자 그룹에게 미리 공개하여 피드백을 받는 테스트."
+45,The overall perspective or a holistic view of a situation.,세부 사항보다는 전체적인 맥락이나 장기적인 관점.
+46,(Of time) that can be charged to a client.,클라이언트에게 비용을 청구할 수 있는 업무 시간.
+47,"A file containing machine-readable code, not human-readable text.",컴파일되어 컴퓨터가 직접 실행할 수 있는 형태의 파일.
+48,Connecting a data source to a user interface element.,데이터와 UI 요소를 연결하여 한쪽이 변경되면 다른 쪽도 자동으로 업데이트되게 하는 것.
+49,The use of unique physical characteristics (like fingerprints) for identification.,"지문, 홍채, 얼굴 등 개인의 신체적 특징을 이용한 인증 방식."
+50,A list of entities that are denied access or service.,접근을 차단하거나 허용하지 않는 대상의 목록.
+51,"The very forefront of technological development, often not yet stable.",매우 혁신적이지만 아직 안정성이 검증되지 않은 최신 기술.
+52,Unwanted software included on a new computer or mobile device.,불필요하게 많은 시스템 리소스를 차지하는 소프트웨어.
+53,An issue that prevents any progress from being made on a task or project.,작업 진행을 완전히 가로막는 결정적인 문제.
+54,"Standardized text, code, or other content that can be reused.",반복적으로 사용되는 코드 조각이나 문서 템플릿.
+55,A point of congestion in a system that slows down overall performance.,시스템 전체의 성능을 저하시키는 특정 부분.
+56,The final total or the most important point.,"가장 중요한 요점이나 최종 결과. (예: ""그래서 바텀라인이 뭐야?"")"
+57,"Building a system from its smallest, most basic components.",세부적인 요소에서 시작하여 전체 시스템을 구축해 나가는 방식.
+58,The percentage of visitors who leave a website after viewing only one page.,사용자가 웹사이트의 한 페이지만 보고 다른 행동 없이 나가는 비율.
+59,A group creativity technique to find a conclusion for a specific problem.,특정 주제에 대해 자유롭게 아이디어를 내고 공유하는 회의.
+60,A separate line of development in a version control system.,"버전 관리 시스템에서, 메인 코드에 영향을 주지 않고 독립적으로 개발을 진행하기 위해 만드는 코드 복사본."
+61,"To divide a large task into smaller, more manageable parts.",큰 작업을 실행 가능한 작은 단위로 나누는 것.
+62,A meeting for giving concise information or instructions.,업무 관련 핵심 정보를 전달하거나 지시하는 간단한 회의.
+63,A temporary storage area for data while it is being moved from one place to another.,데이터를 일시적으로 저장하여 처리 속도 차이를 완충하는 메모리 공간.
+64,"An error, flaw or fault in a computer program or system.",소프트웨어의 결함이나 오류.
+65,The process of converting source code files into a standalone software artifact.,소스 코드를 실행 가능한 파일로 변환하는 과정 또는 그 결과물.
+66,In large quantities; relating to the processing of large amounts of data.,많은 양의 데이터를 한 번에 처리하는 것을 의미. (예: 벌크 연산)
+67,The rate at which a company spends its capital before generating profit.,회사가 수익을 내기 전까지 자금을 소진하는 속도. 스타트업에서 주로 사용.
+68,The part of the program that encodes the real-world business rules.,애플리케이션의 핵심적인 데이터 처리 규칙 및 프로세스.
+69,Agreement on and commitment to a course of action from stakeholders.,프로젝트나 제안에 대해 이해관계자들로부터 동의나 지원을 얻는 것.
+70,A hardware or software component that stores data for faster future access.,자주 사용하는 데이터를 더 빠른 저장소에 임시로 보관하여 성능을 높이는 기술.
+71,An instruction designed to provoke an immediate response from the user.,"사용자의 특정 행동(클릭, 구매 등)을 유도하는 버튼이나 문구."
+72,"Writing phrases where each word begins with a capital letter, with no spaces.",프로그래밍에서 변수나 함수 이름을 표기하는 방식 중 하나 (예: camelCase).
+73,The maximum amount that a system can handle or produce.,시스템이나 개인이 처리할 수 있는 최대 부하. '캐파'라고 줄여서 많이 사용.
+74,Funds used by a company to acquire or upgrade physical assets.,서버 구매 등 고정 자산에 지출되는 비용. 클라우드와 대비되는 개념.
+75,To record or store data.,"화면을 이미지로 저장하거나, 특정 시점의 데이터를 기록하는 행위."
+76,Differentiating between uppercase and lowercase letters.,프로그래밍 언어나 시스템에서 대문자와 소문자를 다르게 인식하는 것.
+77,A meeting to discuss what has happened since the last time you met.,서로의 진행 상황을 공유하고 맞춰보는 간단한 미팅.
+78,A distributed network of servers that deliver web content to users based on their location.,사용자와 물리적으로 가까운 서버에서 콘텐츠를 전송하여 로딩 속도를 높이는 기술.
+79,"A digital document used to prove the ownership of a public key (e.g., for SSL/TLS).",SSL/TLS 통신에서 서버의 신원을 증명하고 데이터를 암호화하는 데 사용되는 전자 문서.
+80,A formal proposal for an alteration to a product or system.,개발이 진행 중이거나 완료된 기능에 대한 수정을 공식적으로 요청하는 문서.
+81,A set of characters recognized by the computer hardware and software.,컴퓨터가 텍스트를 인코딩하고 디코딩하는 데 사용하는 문자의 집합 (예: UTF-8).
+82,To submit changes to a version control system.,버전 관리 시스템에 내가 수정한 코드 변경사항을 저장하는 행위.
+83,A point in a process at which progress is assessed or a state is saved.,프로세스 중간에 진행 상황을 점검하거나 데이터를 저장하는 시점.
+84,The rate at which customers stop doing business with an entity.,일정 기간 동안 서비스를 이탈하거나 구독을 해지한 고객의 비율.
+85,The practice of automating the software development and release process.,"코드 변경사항을 자동으로 빌드, 테스트, 배포하여 개발 및 배포 과정을 자동화하는 것."
+86,To discuss or return to a topic at a later time.,지금 당장 결론 내기 어려운 주제에 대해 추후 다시 이야기하자고 할 때 사용.
+87,A text-based user interface used to view and manage computer files.,"그래픽 인터페이스(GUI)가 아닌, 텍스트 명령어로 컴퓨터를 제어하는 방식."
+88,Operations that are performed by the client (user's browser) in a client-server relationship.,사용자의 웹 브라우저 단에서 실행되는 처리. (반대: 서버 사이드)
+89,A group of linked computers that work together closely as a single system.,여러 대의 컴퓨터를 하나처럼 묶어 고가용성이나 고성능을 확보하는 기술.
+90,A point in the development cycle when no new code is added to the source.,배포 안정성을 위해 더 이상 새로운 기능 코드를 추가하지 않고 버그 수정에만 집중하는 기간.
+91,A systematic examination of computer source code.,동료 개발자가 작성한 코드를 함께 검토하며 개선점을 찾고 품질을 높이는 과정.
+92,A data center facility in which a business can rent space for servers.,기업이 자체 서버를 데이터센터의 공간을 임대하여 운영하는 방식.
+93,To save changes to a local repository in a version control system.,코드 변경사항을 버전 관리 시스템에 하나의 단위로 기록하는 행위.
+94,A basis of mutual interest or agreement.,서로 다른 의견 속에서 함께 동의할 수 있는 부분.
+95,The capacity for two systems to work together without having to be altered.,서로 다른 하드웨어나 소프트웨어가 문제없이 함께 작동하는 능력.
+96,To convert source code into a machine-readable format.,사람이 작성한 소스 코드(고급 언어)를 컴퓨터가 이해할 수 있는 기계어(저급 언어)로 번역하는 과정.
+97,"A reusable, self-contained part of a larger system.",UI나 기능을 독립적인 부품처럼 만들어 재사용할 수 있도록 한 단위.
+98,The ability of different parts of a program to be executed out-of-order without affecting the final outcome.,여러 작업이 짧은 시간 동안 번갈아 실행되면서 동시에 실행되는 것처럼 보이는 것.
+99,The arrangement or set-up of the hardware and software that make up a computer system.,시스템이나 애플리케이션이 동작하는 방식을 정의하는 설정값.
+100,A general agreement among a group of people.,회의나 논의를 통해 그룹 구성원 대다수가 동의하는 의견.
+101,The property that ensures data remains in a valid state after a transaction.,"데이터베이스 트랜잭션에서, 작업이 성공하면 데이터가 항상 유효한 상태로 유지되는 성질."
+102,A limitation or restriction.,개발이나 설계 시 반드시 지켜야 하는 규칙이나 제한 사항.
+103,"A lightweight, standalone, executable package of software that includes everything needed to run it.",애플리케이션과 그 실행 환경을 격리하여 패키징하는 기술 (예: 도커).
+104,"The circumstances that form the setting for an event, statement, or idea.","어떤 일의 배경이나 전후 사정. ""컨텍스트를 공유해주세요."""
+105,A plan designed to take account of a possible future event or circumstance.,예상치 못한 문제가 발생했을 때를 대비한 대안 계획.
+106,"The process of a website visitor completing a desired goal, such as making a purchase.","방문자가 마케터가 의도한 행동(구매, 회원가입 등)을 완료하는 것."
+107,A small piece of data stored on the user's computer by the web browser.,웹사이트가 사용자의 브라우저에 저장하는 작은 텍스트 파일 (로그인 정보 유지 등에 사용).
+108,The central or most important part of something.,시스템이나 애플리케이션의 가장 핵심적인 기능 또는 부분.
+109,A problem or situation that occurs only outside of normal operating parameters.,"일반적인 상황이 아닌, 극단적이거나 예외적인 조건에서 발생하는 문제."
+110,(Of data) containing errors.,데이터 파일이 오류로 인해 변형되어 사용할 수 없게 된 상태.
+111,A process by which business decisions are analyzed.,어떤 프로젝트의 예상 비용과 그로 인해 얻게 될 이익을 비교 분석하는 것.
+112,"Top-level executive titles in a corporation (CEO, CTO, CFO).","최고 경영진 (CEO, CTO 등)."
+113,(Of a computer or system) to fail suddenly.,프로그램이나 시스템이 예기치 않게 갑자기 종료되는 현상.
+114,"Authentication information, such as a username and password.","시스템에 접근하기 위한 사용자 이름, 비밀번호, API 키 등의 정보."
+115,The sequence of stages determining the minimum time needed for an operation.,프로젝트 완료를 위해 반드시 순서대로 진행되어야 하는 가장 긴 작업 경로. 이 경로가 지연되면 전체 프로젝트가 지연됨.
+116,A technology for managing all your company’s relationships and interactions with customers.,고객과의 관계를 관리하고 개선하기 위한 전략 및 시스템.
+117,A time-based job scheduler in Unix-like computer operating systems.,유닉스 계열 시스템에서 특정 시간에 특정 작업을 자동으로 실행하도록 예약하는 기능.
+118,Denoting or relating to a system whereby people from different areas of an organization work together.,"개발, 기획, 디자인 등 다양한 직무의 사람들이 하나의 팀을 이루어 협업하는 것."
+119,The four basic functions of persistent storage.,"데이터베이스에서 수행하는 생성(Create), 조회(Read), 수정(Update), 삭제(Delete)의 네 가지 기본 작업."
+120,The art of writing or solving codes.,데이터를 안전하게 보호하기 위해 암호화하고 복호화하는 기술.
+121,"A presentation that outlines the values, mission, and practices of a company.","회사의 비전, 가치, 일하는 방식 등을 정리한 문서."
+122,The action of modifying something to suit a particular individual or task.,"사용자의 요구에 맞게 제품이나 서비스의 기능, 디자인 등을 변경하는 것."
+123,The process of switching from an old system to a new one.,기존 시스템에서 새로운 시스템으로 데이터를 이전하고 운영을 시작하는 과정.
+124,A user interface that organizes and presents information in a way that is easy to read.,여러 데이터를 한눈에 파악할 수 있도록 시각화하여 보여주는 화면.
+125,The process of detecting and correcting corrupt or inaccurate records from a dataset.,데이터에서 부정확하거나 불완전한 부분을 찾아 수정하거나 제거하는 작업.
+126,Determined by or dependent on the collection or analysis of data.,"직감이나 경험이 아닌, 수집된 데이터를 분석하여 의사결정을 내리는 방식."
+127,A centralized repository that allows you to store all your structured and unstructured data at any scale.,"정형, 비정형 데이터를 가공하지 않은 원본 형태 그대로 저장하는 대규모 저장소."
+128,A subset of a data warehouse focused on a specific business line.,데이터 웨어하우스의 데이터를 특정 부서나 목적에 맞게 추출하여 만든 소규모 데이터 저장소.
+129,The practice of examining large databases in order to generate new information.,대규모 데이터에서 의미 있는 패턴이나 규칙을 찾아내는 기술.
+130,A large store of data accumulated from a wide range of sources within a company.,여러 소스에서 수집된 데이터를 분석하기 좋은 형태로 통합하여 저장하는 대규모 저장소.
+131,"A large group of networked computer servers used by organizations for remote storage, processing, or distribution of large amounts of data.","서버, 스토리지, 네트워크 장비를 모아놓고 관리하는 시설."
+132,The latest time or date by which something should be completed.,작업이나 프로젝트를 완료해야 하는 최종 시점.
+133,"A situation in which two or more competing actions are each waiting for the other to finish, and thus neither ever does.",두 개 이상의 프로세스가 서로 상대방의 작업이 끝나기만을 기다리며 무한 대기하는 상태.
+134,A meeting to question someone about a completed mission or undertaking.,"프로젝트나 업무가 끝난 후, 과정과 결과를 검토하고 회고하는 미팅."
+135,The process of finding and resolving defects or problems within a computer program.,코드의 버그(오류)를 찾아내고 수정하는 과정.
+136,To explore a topic in-depth.,특정 주제나 문제에 대해 깊이 있게 분석하고 탐구하는 것.
+137,A preselected option adopted by a computer program or other mechanism.,사용자가 별도로 설정하지 않았을 때 자동으로 적용되는 초기 설정값.
+138,To put off an action or event to a later time; postpone.,작업의 우선순위를 낮추거나 일정을 뒤로 미루는 것.
+139,A tangible or intangible good or service produced as a result of a project.,"프로젝트를 통해 최종적으로 만들어내야 하는 결과물 (예: 기획서, 디자인 시안, 소스 코드)."
+140,A demonstration of a product or feature.,개발된 제품이나 기능이 어떻게 동작하는지 직접 보여주는 것.
+141,A state in which one object uses a function of another object.,어떤 모듈이나 코드가 다른 모듈의 기능을 사용해야만 동작할 수 있는 관계.
+142,To place a software application into a live environment.,개발이 완료된 소프트웨어를 사용자가 실제로 사용할 수 있는 서버 환경에 올리는 것.
+143,To mark a software feature as obsolete and recommend against its use.,특정 기능이 구식이 되었거나 더 나은 대안이 있어 앞으로 사라질 예정이므로 사용을 자제하라는 의미.
+144,A general reusable solution to a commonly occurring problem within a given context.,소프트웨어 설계에서 반복적으로 발생하는 문제들을 해결하기 위한 검증된 해결책.
+145,"A time-constrained, five-phase process that uses design thinking to reduce the risk when bringing a new product.","5일 정도의 단기간에 아이디어 구체화, 프로토타입 제작, 사용자 테스트까지 집중적으로 진행하는 방법론."
+146,A set of practices that combines software development (Dev) and IT operations (Ops).,개발과 운영을 통합하여 소프트웨어 개발 및 배포 과정을 자동화하고 효율화하는 문화 및 방식.
+147,"Distinguishing a product or service from others, to make it more attractive.",경쟁 제품이나 서비스와 구별되는 독특한 강점이나 특징을 가진.
+148,A summary of information or a collection of data.,데이터를 요약하거나 해시 함수를 통해 고정된 길이의 값으로 만든 것.
+149,A file system cataloging structure which contains references to other computer files.,컴퓨터 파일을 체계적으로 정리하기 위한 폴더.
+150,A set of policies and procedures to enable the recovery of vital technology infrastructure.,"지진, 화재 등 재난으로 시스템이 마비되었을 때를 대비한 복구 계획 및 시스템."
+151,"A statement that denies something, especially responsibility.",법적 책임을 지지 않는다는 것을 명시하는 문구.
+152,The initial phase of a project where the team gathers information and defines scope.,프로젝트 초기 단계에서 요구사항을 파악하고 목표와 범위를 정의하는 과정.
+153,A lack of compatibility or similarity between two or more facts.,"데이터나 문서, 의견 등이 서로 맞지 않는 부분."
+154,(Of a technology) innovative or groundbreaking.,기존 시장의 판도를 완전히 바꾸는 혁신적인 기술이나 서비스.
+155,The system that translates human-readable domain names to machine-readable IP addresses.,https://www.google.com/search?q=google.com'과 같은 도메인 이름을 컴퓨터가 이해하는 IP 주소로 변환해주는 시스템.
+156,"An open platform for developing, shipping, and running applications in containers.",애플리케이션을 컨테이너라는 격리된 환경으로 패키징하여 배포하고 실행하는 플랫폼.
+157,Written text or illustration that accompanies computer software or is embedded in the source code.,개발한 코드나 시스템에 대한 설명을 정리한 문서.
+158,The practice of using one's own products or services.,자사가 만든 제품이나 서비스를 내부 직원들이 직접 사용하며 문제점을 찾아 개선하는 것.
+159,A distinct subset of the Internet with addresses sharing a common suffix.,웹사이트의 주소 (예: https://www.google.com/search?q=google.com). 특정 비즈니스 영역을 의미하기도 함.
+160,A period of time when a system is unavailable.,서버나 서비스가 장애로 인해 작동하지 않는 시간.
+161,To move from summary information to more detailed data.,요약된 데이터에서 시작하여 더 상세한 하위 데이터로 파고들며 분석하는 것.
+162,A program that controls a particular type of device that is attached to your computer.,운영체제가 하드웨어를 제어할 수 있도록 해주는 소프트웨어.
+163,A graphical control element that allows the user to choose one value from a list.,클릭하면 아래로 선택 가능한 목록이 펼쳐지는 UI 요소.
+164,A rehearsal of a performance or procedure before the real one.,실제 실행하기 전에 문제가 없는지 미리 테스트해보는 과정.
+165,Reasonable steps taken by a person in order to satisfy a legal requirement.,"투자나 인수 합병 시, 대상 기업의 재무 상태나 기술 등을 면밀히 검토하는 과정."
+166,To copy data from a computer's memory to another device or a printout.,특정 시점의 메모리나 데이터베이스의 상태를 파일로 저장하는 것 (주로 오류 분석에 사용).
+167,(Of a communication system) capable of transmitting in both directions.,데이터가 동시에 양쪽 방향으로 전송될 수 있는 통신 방식.
+168,"The ability of a system to remain functional, without requiring excessive maintenance or repair.",데이터가 손실되지 않고 영구적으로 보존되는 성질.
+169,"(Of a process or system) characterized by constant change, activity, or progress.",상황에 따라 변할 수 있는. (반대: 정적 - Static)
+170,A process that takes a system or service from beginning to end.,사용자 관점에서 서비스의 시작부터 끝까지 전체 흐름을 테스트하는 것.
+171,A person who starts using a product or technology as soon as it becomes available.,새로운 제품이나 기술을 남들보다 먼저 사용하는 사람.
+172,"To designate (something, typically funds or resources) for a particular purpose.",특정 목적을 위해 예산이나 리소스를 미리 할당해두는 것.
+173,A problem or situation that occurs only at an extreme (maximum or minimum) operating parameter.,일반적인 사용 범위를 벗어나는 극단적인 상황에서 발생하는 문제.
+174,The degree to which a system is able to adapt to workload changes by provisioning and de-provisioning resources.,"클라우드 컴퓨팅에서, 필요에 따라 컴퓨팅 리소스를 자동으로 늘리거나 줄일 수 있는 능력."
+175,"A brief, persuasive speech that you use to spark interest in what your organization does.",엘리베이터를 타고 이동하는 짧은 시간 안에 프로젝트나 아이디어를 핵심만 요약하여 설명하는 것.
+176,(Of a computer system) fixed in and forming an essential part of a larger system or device.,특정 기능을 수행하기 위해 기계나 장치 안에 내장된 컴퓨터 시스템.
+177,To reproduce the function or action of a different computer or software system.,한 시스템이 다른 시스템의 동작을 그대로 흉내 내는 것.
+178,The bundling of data with the methods that operate on that data.,객체 지향 프로그래밍에서 데이터와 관련 함수를 하나로 묶고 외부의 직접적인 접근을 제한하는 것.
+179,The process of converting data from one form to another.,데이터를 컴퓨터가 처리할 수 있는 다른 형식으로 변환하는 과정 (예: 문자 인코딩).
+180,The process of converting information or data into a code to prevent unauthorized access.,데이터를 권한이 없는 사람이 볼 수 없도록 비밀 코드로 변환하는 과정.
+181,"One end of a communication channel, where it interfaces with a client or a server.",API 통신에서 클라이언트가 서버의 특정 기능에 접근하기 위해 사용하는 URI.
+182,The metric that measures the level of interaction from users on a piece of content or platform.,사용자가 서비스나 콘텐츠에 얼마나 적극적으로 반응하고 상호작용하는지를 나타내는 지표.
+183,"To intensify, increase, or further improve the quality, value, or extent of.",기존 기능의 품질이나 성능을 더 좋게 향상시키는 것.
+184,A business or company. Used to refer to large-scale business software.,대규모 기업 환경에서 사용되는 시스템이나 소프트웨어.
+185,A computer system in which a computer program or software component is deployed and executed.,"개발, 테스트, 운영 등 소프트웨어가 실행되는 특정 목적의 시스템 구성. (개발 환경, 운영 환경 등)"
+186,A large body of work that can be broken down into a number of smaller stories.,"애자일 개발에서, 하나의 큰 기능이나 목표를 나타내는 최상위 작업 단위. 여러 개의 사용자 스토리로 구성됨."
+187,The study of people's efficiency in their working environment.,사용자가 더 편리하고 효율적으로 시스템을 사용할 수 있도록 설계하는 것.
+188,To increase or make more intense; (in business) to raise an issue to a higher level of authority.,담당자 수준에서 해결이 어려운 문제를 상급자나 다른 팀에 알려 처리를 요청하는 것.
+189,The time at which something is expected to arrive.,작업이 언제쯤 끝날지에 대한 예상 시간.
+190,A type of data integration process.,"여러 소스에서 데이터를 추출(Extract)하고, 분석에 적합한 형태로 변환(Transform)하여, 데이터 웨어하우스에 적재(Load)하는 과정."
+191,"(Content) that is continually relevant and stays ""fresh"" for readers.",시간이 지나도 유효하고 가치 있는 콘텐츠나 기술.
+192,An anomalous or exceptional condition requiring special processing.,프로그램 실행 중 발생하는 예기치 못한 오류 상황.
+193,To carry out an instruction or run a program.,컴퓨터가 명령어로나 프로그램을 수행하는 것.
+194,Designed to allow the addition of new capabilities or functionality.,새로운 기능을 쉽게 추가하거나 변경할 수 있도록 설계된 구조.
+195,Relating to or forming the outside part of something.,"회사나 시스템의 바깥에 있는 것. (예: 외부 사용자, 외부 API)"
+196,A meeting involving people who are physically in the same place.,"온라인이 아닌, 직접 만나서 하는 회의."
+197,A renovation or modernization.,오래된 UI나 시스템 디자인을 현대적으로 개선하는 작업.
+198,To make an action or process easy or easier.,회의나 워크숍에서 논의가 원활하게 진행되도록 돕는 역할.
+199,"A method of protecting computer systems from failure, in which standby equipment automatically takes over.","주 시스템에 장애가 발생했을 때, 예비 시스템이 자동으로 운영을 이어받는 것."
+200,An alternative plan or system that can be used if a primary one fails.,특정 기능이 실패했을 때를 대비한 대안 처리 로직.
+201,A value that is considered false when encountered in a Boolean context.,"프로그래밍에서 false, 0, null, """" 등 불리언 문맥에서 거짓으로 취급되는 값."
+202,A list of questions and answers relating to a particular subject.,사용자들이 자주 묻는 질문과 그에 대한 답변을 모아놓은 목록.
+203,The property that enables a system to continue operating properly in the event of the failure of some of its components.,시스템의 일부 구성 요소에 장애가 발생하더라도 전체 시스템은 중단 없이 계속 작동하는 능력.
+204,An assessment of the practicality of a proposed project or system.,"새로운 프로젝트가 기술적, 경제적으로 실현 가능한지 사전에 검토하는 과정."
+205,A distinctive attribute or aspect of a product or service.,제품이 사용자에게 제공하는 구체적인 기능.
+206,A group of computing or network providers that agree upon standards of operation in a collective fashion.,여러 시스템이나 조직이 표준화된 방식으로 서로 인증하고 자원을 공유하는 구조.
+207,"The communication between an information processing system, such as a computer, and the outside world.",컴퓨터가 데이터를 읽고(Input) 쓰는(Output) 모든 작업을 통칭하는 말.
+208,The process of designing a software application so that it can be adapted to various languages and regions.,소프트웨어를 다양한 언어와 지역에 맞게 쉽게 변경할 수 있도록 설계하는 과정. (Internationalization의 I와 n 사이에 18글자가 있다는 의미)
+209,A software application that provides comprehensive facilities to computer programmers for software development.,"코딩, 디버깅, 빌드 등 개발에 필요한 모든 도구를 하나로 묶어 제공하는 소프트웨어."
+210,"(Of an operation) denoting an action that, when performed multiple times, has no further effect after the first time.",특정 연산을 여러 번 수행해도 결과가 첫 번째 수행했을 때와 동일한 성질.
+211,"A name used to identify a variable, function, class, module, or other object.","변수, 함수 등을 구분하기 위해 붙이는 고유한 이름."
+212,Not active or in use.,시스템이나 리소스가 아무 작업도 하지 않고 대기하고 있는 상태.
+213,An HTML document embedded inside another HTML document on a website.,웹페이지 안에 또 다른 독립적인 웹페이지를 삽입하는 HTML 태그.
+214,Unchanging over time or unable to be changed.,생성된 후에 그 상태를 변경할 수 없는 객체나 데이터.
+215,A hindrance or obstruction in doing something.,스크럼 등 애자일 개발에서 팀의 작업을 방해하는 모든 요소.
+216,The process of putting a decision or plan into effect; execution.,기획이나 설계를 바탕으로 실제 코드를 작성하여 기능을 만들어내는 과정.
+217,Suggested though not directly expressed.,코드나 규칙에 명시적으로 드러나지 않지만 존재하는. (반대: 명시적 - Explicit)
+218,Done or existing within an organization.,외주를 주지 않고 회사 내부에서 직접 개발하거나 운영하는 것.
+219,A thing that motivates or encourages one to do something.,사용자의 특정 행동을 유도하기 위해 제공하는 보상.
+220,"An event or occurrence, typically one that is unpleasant.",서비스 운영 중 발생하는 예기치 못한 사건이나 장애.
+221,"An increase or addition, especially one of a series on a fixed scale.","애자일 개발에서, 하나의 스프린트가 끝날 때마다 만들어지는 동작 가능한 제품의 개선된 버전."
+222,A data structure that improves the speed of data retrieval operations on a database table.,데이터베이스에서 검색 속도를 높이기 위해 책의 목차처럼 만들어두는 데이터 구조.
+223,The basic physical and organizational structures and facilities needed for the operation of a society or enterprise.,"서비스를 운영하는 데 필요한 서버, 네트워크, 데이터베이스 등 기반 시스템 전체."
+224,To take in or absorb data into a system.,외부의 데이터를 시스템 안으로 들여오는 과정.
+225,A mechanism in which one class acquires the property of another class.,"객체 지향 프로그래밍에서, 부모 클래스의 속성과 메서드를 자식 클래스가 물려받는 것."
+226,An abbreviation consisting of initial letters pronounced separately.,"단어의 첫 글자들을 따서 만든 약어 (예: API, DNS)."
+227,"A type of security vulnerability that allows an attacker to ""inject"" malicious code.",공격자가 악의적인 코드나 쿼리를 애플리케이션에 주입하여 데이터를 탈취하거나 시스템을 파괴하는 공격.
+228,(In code) existing as part of a line of text or code.,CSS나 코드 등을 별도의 파일로 분리하지 않고 해당 태그나 코드 라인에 직접 작성하는 방식.
+229,A deep understanding of a person or thing.,데이터를 분석하여 얻게 되는 의미 있는 결과나 비즈니스에 대한 깊은 이해.
+230,An occurrence of a particular type of thing.,클래스라는 설계도를 바탕으로 메모리에 실제로 생성된 객체. 클라우드에서는 가상 서버 한 대를 의미하기도 함.
+231,To create an instance of an object in an object-oriented programming language.,클래스로부터 실제 객체(인스턴스)를 생성하는 과정.
+232,Unable to be touched or grasped; not having physical presence.,"물리적 형태가 없는 자산이나 가치 (예: 브랜드, 특허권)."
+233,Necessary to make a whole complete; essential or fundamental.,시스템이나 프로젝트에서 없어서는 안 될 중요한 부분.
+234,To combine one thing with another so that they become a whole.,서로 다른 시스템이나 서비스를 연결하여 하나의 시스템처럼 동작하게 만드는 것.
+235,The phase in software testing in which individual software modules are combined and tested as a group.,여러 개의 모듈을 결합하여 서로 상호작용이 잘 되는지 검증하는 테스트.
+236,"The maintenance of, and the assurance of the accuracy and consistency of, data over its entire life-cycle.",데이터가 생성부터 삭제될 때까지 정확하고 일관된 상태를 유지하는 성질.
+237,"A point where two systems, subjects, organizations, etc. meet and interact.","서로 다른 두 시스템이나 사용자가 상호작용하기 위한 접점. (UI, API 등)"
+238,Occurring at irregular intervals; not continuous or steady.,"문제가 지속적으로 발생하지 않고, 불규칙적으로 나타났다 사라지는 현상."
+239,Of or situated on the inside.,회사나 팀 안에서만 사용되거나 공유되는. (반대: 외부의 - External)
+240,The insertion of something of a different nature into something else.,알려진 데이터 지점들 사이의 값을 추정하는 방법. 문자열 안에 변수 값을 삽입하는 것을 의미하기도 함.
+241,Easy to use and understand.,사용자가 별도의 설명 없이도 쉽게 사용법을 이해하고 쓸 수 있는.
+242,"To call on (a procedure, method, etc.) in a program.",프로그램에서 특정 함수나 메서드를 실행시키는 것.
+243,"A work or invention that is the result of creativity, such as a manuscript or a design, to which one has rights.","특허, 상표, 저작권 등 창작물에 대한 법적 권리."
+244,A unique string of numbers separated by periods that identifies each computer using the Internet Protocol.,인터넷에 연결된 각 장치를 식별하기 위한 고유한 숫자 주소.
+245,To resolve by discussion; settle or smooth out.,문제나 의견 차이를 조율하여 해결하는 것.
+246,To cause (a person or place) to be or remain alone or apart from others.,특정 프로세스나 환경을 다른 부분과 분리하여 서로 영향을 주지 않도록 하는 것.
+247,An important topic or problem for debate or discussion.,해결해야 할 문제점이나 논의가 필요한 사안. 버그나 개선사항을 관리하는 단위.
+248,To perform or utter repeatedly.,"계획, 개발, 테스트, 피드백의 짧은 주기를 반복하며 제품을 점진적으로 개선해 나가는 과정."
+249,Special words or expressions that are used by a particular profession or group.,특정 분야의 사람들만 사용하는 용어.
+250,"The variation in the time between packets arriving, caused by network congestion.",네트워크에서 패킷 전송 시간이 불규칙하게 변동하는 현상. 실시간 통신 품질에 영향을 줌.
+251,A specified task or piece of work.,스케줄러에 의해 실행되는 특정 작업 단위.
+252,A clause in SQL that combines rows from two or more tables.,관계형 데이터베이스에서 두 개 이상의 테이블을 특정 조건에 따라 연결하는 작업.
+253,A lightweight data-interchange format.,"데이터를 교환할 때 널리 사용되는, 사람이 읽기 쉬운 텍스트 기반의 데이터 형식."
+254,An abstract computing machine that enables a computer to run a Java program.,자바 코드가 어떤 운영체제에서든 동일하게 실행될 수 있도록 해주는 가상 환경.
+255,A design principle which states that most systems work best if they are kept simple.,단순하게 유지하라'는 설계 원칙. 복잡한 것보다 단순한 것이 더 좋다는 의미.
+256,A piece of information (a parameter) that determines the functional output of a cryptographic algorithm.,데이터를 암호화하거나 복호화하는 데 사용되는 비밀 정보. 데이터베이스의 레코드를 식별하는 고유한 값이기도 함.
+257,A simple database that uses a simple key/value method to store data.,데이터를 고유한 '키'와 그에 해당하는 '값'의 쌍으로 저장하는 단순한 형태의 데이터베이스.
+258,A word or concept of great significance.,프로그래밍 언어에서 특별한 의미를 가지고 있어 변수명 등으로 사용할 수 없는 단어. 또는 검색의 핵심 단어.
+259,The first meeting with the project team and the client of the project.,프로젝트를 공식적으로 시작하면서 모든 참여자가 모여 목표와 계획을 공유하는 첫 회의.
+260,To terminate a process in a computer's operating system.,실행 중인 프로세스를 강제로 종료하는 것.
+261,A clumsy or inelegant solution to a problem.,"문제 해결을 위해 급하게 만든, 비효율적이고 지저분한 코드나 시스템."
+262,A measurable value that demonstrates how effectively a company is achieving key business objectives.,조직의 목표 달성도를 측정하기 위해 사용하는 핵심적인 지표.
+263,A centralized repository for information.,특정 주제에 대한 정보나 노하우를 체계적으로 정리해 놓은 데이터베이스.
+264,The process of adapting internationalized software for a specific region or language.,"국제화(i18n)된 소프트웨어를 특정 국가의 언어, 문화, 형식에 맞게 수정하는 작업. (Localization의 L과 n 사이에 10글자가 있다는 의미)"
+265,The delay before a transfer of data begins following an instruction for its transfer.,데이터 요청을 보낸 시점부터 응답을 받기 시작하는 시점까지 걸리는 시간.
+266,A level of a system that has a particular function.,"시스템을 기능별로 구분한 논리적인 층 (예: 프레젠테이션 계층, 비즈니스 로직 계층)."
+267,The way in which the parts of something are arranged or laid out.,웹페이지나 애플리케이션 화면의 구성 요소들을 배치하는 방식.
+268,A design pattern that defers initialization of an object until the point at which it is needed.,"페이지 로딩 시 모든 리소스를 한 번에 불러오지 않고, 실제로 필요한 시점에 불러오는 기술."
+269,"An old method, technology, computer system, or application program.",더 이상 사용되지 않는 낡은 기술이나 방법론으로 만들어진 기존 시스템.
+270,To use something to maximum advantage.,기존의 자원이나 기술을 지렛대처럼 활용하여 더 큰 효과를 얻는 것.
+271,A collection of pre-written code that can be used to perform common tasks.,개발 시 자주 사용되는 기능들을 모아놓은 코드의 집합.
+272,A permit from an authority to own or use something.,소프트웨어 사용에 대한 권리 및 제약 조건을 명시한 허가서.
+273,A unit of effort representing the work of one person for one month.,프로젝트 투입 인력과 기간을 산정하는 단위. 1M/M은 1명이 1개월 동안 일하는 양.
+274,The study of computer algorithms that can improve automatically through experience.,컴퓨터가 데이터를 학습하여 스스로 패턴을 찾고 예측하는 인공지능의 한 분야.
+275,"Belonging to or characteristic of the dominant trend in opinion, fashion, or the arts.",특정 기술이나 트렌드가 널리 보급되어 대중화된 상태.
+276,"The process of maintaining or preserving someone or something, or the state of being maintained.","개발된 시스템이 안정적으로 운영되도록 관리하고, 오류를 수정하거나 기능을 개선하는 작업."
+277,Intended to do harm.,시스템에 해를 끼치려는 의도를 가진. (예: 악성 코드 - Malicious Code)
+278,An official order or commission to do something.,반드시 지켜야 하는 규정이나 지시.
+279,Required by law or rules; compulsory.,"선택이 아닌, 반드시 해야만 하는."
+280,"A document listing the cargo, passengers, and crew of a ship, aircraft, or vehicle.",애플리케이션의 구성 요소나 메타데이터를 담고 있는 설정 파일.
+281,Done with the hands.,자동화되지 않고 사람이 직접 처리하는. 또는 사용 설명서를 의미.
+282,The blank border on each side of the print on a page.,"UI 디자인에서 요소와 요소 사이, 또는 요소와 화면 경계 사이의 간격."
+283,A lightweight markup language for creating formatted text using a plain-text editor.,간단한 기호를 사용해 텍스트 서식을 지정하는 경량 마크업 언어.
+284,The degree to which a product satisfies strong market demand.,우리 제품이 시장(고객)의 요구에 얼마나 잘 부합하는지의 정도.
+285,A web page or application created by combining data or functionality from different sources.,여러 서비스의 API를 조합하여 새로운 서비스나 콘텐츠를 만드는 것.
+286,The main or definitive version of a file or project.,버전 관리 시스템에서 개발의 중심이 되는 메인 브랜치. (최근에는 'main'으로 대체되는 추세)
+287,"The state, fact, or period of being mature.",기술이나 프로세스가 얼마나 안정되고 발전되었는지를 나타내는 수준.
+288,"To ascertain the size, amount, or degree of (something) by using an instrument or device.",데이터나 성과를 정량적인 수치로 파악하는 것.
+289,A CSS technique that allows content rendering to adapt to conditions such as screen resolution.,접속하는 기기의 화면 크기에 따라 다른 CSS 스타일을 적용하는 기술 (반응형 웹의 핵심).
+290,A written record of everything that’s said and decided at a meeting.,"회의에서 논의된 내용, 결정 사항, 담당자 등을 기록한 문서."
+291,A gradual loss of available computer memory when a program repeatedly fails to return memory it has obtained for temporary use.,프로그램이 사용한 메모리를 해제하지 않아 시스템 가용 메모리가 점차 줄어드는 현상.
+292,To combine or cause to combine to form a single entity.,"버전 관리 시스템에서, 여러 브랜치의 변경 사항을 하나로 합치는 작업."
+293,A set of data that describes and gives information about other data.,"데이터에 대한 데이터. 데이터의 속성, 이력, 위치 등을 설명하는 정보."
+294,A standard of measurement.,서비스의 성과나 상태를 측정하기 위한 정량적인 값.
+295,An architectural style that structures an application as a collection of loosely coupled services.,하나의 큰 애플리케이션을 여러 개의 작은 서비스로 잘게 나누어 독립적으로 개발하고 배포하는 구조.
+296,Software that acts as a bridge between an operating system or database and applications.,운영체제와 애플리케이션 사이에서 다양한 서비스를 제공하는 소프트웨어.
+297,A significant stage or event in the development of something.,프로젝트 진행 과정에서 중요한 중간 목표 지점.
+298,A diagram used to visually organize information.,핵심 주제를 중심으로 아이디어를 방사형으로 펼쳐 나가는 시각적 사고 도구.
+299,To reduce the size of a file by removing unnecessary characters from the source code.,"코드의 기능에는 영향을 주지 않으면서 공백, 주석 등을 제거하여 파일 크기를 줄이는 작업."
+300,(Of a system or component) vital to the functioning of an organization.,장애가 발생하면 비즈니스에 치명적인 영향을 미치는 매우 중요한 시스템.
+301,"A model or replica of a machine or structure, used for instructional or experimental purposes.",디자인이나 기능을 실제와 유사하게 구현한 정적인 시제품.
+302,Each of a set of standardized parts or independent units that can be used to construct a more complex structure.,특정 기능을 수행하는 독립적인 코드 단위. 여러 모듈을 조립하여 프로그램을 만듦.
+303,"The action or process of earning revenue from an asset, business, etc.",서비스나 제품을 통해 돈을 버는 것.
+304,To observe and check the progress or quality of (something) over a period of time.,시스템의 상태나 성능을 지속적으로 관찰하고 기록하는 것.
+305,"(Of an application) formed of a single, large, indivisible unit.",모든 기능이 하나의 큰 애플리케이션 안에 통합되어 있는 구조. (MSA와 반대)
+306,To make a storage device accessible to the operating system.,저장 장치(디스크 등)를 운영체제가 인식하고 접근할 수 있도록 연결하는 과정.
+307,A version of a product with just enough features to be usable by early customers.,고객에게 가치를 제공할 수 있는 최소한의 핵심 기능만 구현한 초기 버전의 제품.
+308,"A software application built in a specific programming language, for the specific device platform.","iOS, 안드로이드 등 특정 운영체제에 최적화된 언어로 개발된 애플리케이션."
+309,"To move around a website, application or other screen-based interface.",사용자가 웹사이트나 앱 내에서 다른 화면으로 이동하는 것.
+310,"A legal contract that outlines confidential material, knowledge, or information.",프로젝트나 업무를 통해 알게 된 기밀 정보를 외부에 유출하지 않겠다는 서약서.
+311,Placing a code construct or data structure inside another of the same kind.,코드나 데이터 구조 안에 같은 종류의 구조를 여러 겹으로 포함시키는 것.
+312,A group or system of interconnected people or things.,컴퓨터나 장치들이 서로 통신할 수 있도록 연결된 망.
+313,A specialized segment of the market for a particular kind of product or service.,특정 수요를 가진 소규모의 소비자 집단을 타겟으로 하는 시장.
+314,A point in a network or diagram at which lines or pathways intersect or branch.,네트워크를 구성하는 개별 컴퓨터나 장치.
+315,"Requirements that describe how the system works, rather than what it does.","성능, 보안, 안정성 등 시스템의 품질과 관련된 요구사항. (기능적 요구사항과 대비)"
+316,To bring or restore to a normal or standard condition or state.,데이터베이스에서 데이터의 중복을 최소화하고 일관성을 유지하기 위해 구조를 재조정하는 과정.
+317,An indentation or incision on an edge or surface.,스마트폰 상단에 카메라 등을 배치하기 위해 화면이 움푹 파인 부분.
+318,The action of notifying someone or something.,사용자에게 새로운 정보나 이벤트 발생을 알려주는 메시지.
+319,To prod (someone) gently to do something.,강요하지 않고 부드러운 방식으로 사용자의 행동 변화를 유도하는 것.
+320,Having no legal or binding force; invalid. Having or associated with the value zero.,프로그래밍에서 '값이 없음' 또는 '존재하지 않음'을 나타내는 특별한 값.
+321,A data construct that provides a description of a thing in terms of its characteristics and behavior.,객체 지향 프로그래밍에서 데이터와 그 데이터를 처리하는 함수를 묶어놓은 단위.
+322,A thing aimed at or sought; a goal.,프로젝트나 팀이 달성하고자 하는 구체적인 목표.
+323,No longer produced or used; out of date.,새로운 기술이나 버전으로 대체되어 더 이상 쓰이지 않는.
+324,Not custom-made; available from existing stock.,별도로 개발하지 않고 이미 만들어져 판매되는 상용 소프트웨어나 솔루션.
+325,Not connected to or controlled by a computer or network.,인터넷에 연결되어 있지 않은 상태.
+326,To get rid of something unwanted or burdensome.,특정 서버의 과부하를 막기 위해 작업의 일부를 다른 서버나 클라이언트로 넘겨 처리하는 것.
+327,Software and technology that is located within the physical confines of an enterprise.,"클라우드가 아닌, 회사 내부에 자체적으로 서버와 인프라를 구축하여 운영하는 방식."
+328,While in motion or progress.,"미리 준비하지 않고, 프로그램이 실행되는 도중에 즉각적으로 처리하는."
+329,The process of integrating a new employee into an organization or a new customer into a product.,"신규 입사자가 조직에 적응하도록 돕거나, 신규 사용자가 서비스 사용법을 익히도록 안내하는 과정."
+330,"Done, made, or happening only once and not repeated.",단 한 번만 사용되거나 실행되는.
+331,Software for which the original source code is made freely available.,"소스 코드가 공개되어 누구나 자유롭게 사용, 수정, 배포할 수 있는 소프트웨어."
+332,The software that supports a computer's basic functions.,컴퓨터의 하드웨어를 관리하고 응용 프로그램이 실행될 수 있는 환경을 제공하는 시스템 소프트웨어.
+333,In a state of readiness for use.,실제 서비스 운영과 관련된.
+334,"The ongoing cost for running a product, business, or system.",클라우드 사용료처럼 비즈니스를 운영하며 지속적으로 발생하는 비용. (CapEx와 대비)
+335,"To make the best or most effective use of (a situation, opportunity, or resource).",시스템의 성능이나 효율을 최대한으로 끌어올리는 작업.
+336,To choose to be involved in something / To choose not to be involved.,정보 수신이나 참여 여부를 사용자가 직접 선택(Opt-in)하거나 거부(Opt-out)하는 것.
+337,"The automated arrangement, coordination, and management of complex computer systems and services.",컨테이너와 같은 여러 개의 복잡한 시스템들을 자동화하여 관리하고 조율하는 기술.
+338,"(Of traffic) generated from a search engine's natural, unpaid results.","광고를 통하지 않고, 검색 등 사용자의 자발적인 행동을 통해 발생하는 트래픽."
+339,A period when a power supply or other service is not available.,서비스가 중단되어 사용할 수 없는 상태.
+340,(Of a feature or product) available without any special configuration; ready to use.,별도의 설정이나 개발 없이 바로 사용할 수 있는 기능이나 제품.
+341,The indirect costs or fixed expenses of operating a business.,특정 작업을 처리하기 위해 추가적으로 소요되는 시간이나 메모리 등의 간접적인 비용.
+342,An excessive load.,시스템이 처리할 수 있는 용량을 초과하는 요청이 들어와 성능이 저하되는 상태.
+343,"To interrupt the action of (an automatic device), typically in order to take manual control.","객체 지향 프로그래밍에서, 부모 클래스의 메서드를 자식 클래스에서 재정의하는 것."
+344,A small unit of data transmitted over a network.,네트워크 통신에서 데이터를 잘게 나눈 전송 단위.
+345,Soft material used to cover a surface to make it softer or thicker.,"UI 디자인에서, 요소의 테두리(border)와 내부 콘텐츠 사이의 안쪽 여백."
+346,The sequence of numbers assigned to pages in a book or periodical.,많은 양의 콘텐츠를 여러 페이지로 나누어 보여주는 기능.
+347,A specific problem that prospective customers of your business are experiencing.,사용자가 서비스를 이용하면서 겪는 불편함이나 어려움.
+348,A software development technique in which two programmers work together at one workstation.,두 명의 개발자가 한 컴퓨터에서 함께 코드를 작성하며 실시간으로 리뷰하고 협업하는 개발 방식.
+349,"(Of lines, planes, surfaces, or objects) side by side and having the same distance continuously between them.",여러 개의 작업을 동시에 실행하여 처리 속도를 높이는 방식.
+350,A numerical or other measurable factor forming one of a set that defines a system or sets the conditions of its operation.,함수나 메서드에 전달되어 내부 동작에 영향을 주는 값.
+351,To analyze (a string or text) into logical syntactic components.,"특정 형식의 텍스트(HTML, JSON 등)를 컴퓨터가 이해할 수 있는 자료구조로 변환하는 과정."
+352,"A piece of software designed to update a computer program or its supporting data, to fix or improve it.",프로그램의 버그를 수정하거나 기능을 개선하기 위해 배포하는 작은 업데이트 파일.
+353,The route or track between two points.,파일 시스템에서 파일이나 디렉토리의 위치를 나타내는 주소.
+354,A repeated decorative design.,소프트웨어 설계에서 반복적으로 발생하는 문제에 대한 모범적인 해결책. (디자인 패턴)
+355,The part of transmitted data that is the fundamental purpose of the transmission.,"데이터 통신에서, 헤더 등 부가 정보를 제외한 순수한 데이터 부분."
+356,"The point of highest activity, quality, or achievement.",트래픽이나 시스템 사용량이 가장 높은 시간대.
+357,"A person of the same age, status, or ability as another specified person.",P2P 네트워크 등에서 중앙 서버 없이 동등한 관계에서 통신하는 각 노드.
+358,A simulated cyber attack against your computer system to check for exploitable vulnerabilities.,시스템의 보안 취약점을 찾기 위해 실제 해커처럼 시스템을 공격해보는 테스트.
+359,"The action or process of carrying out or accomplishing an action, task, or function.",시스템이 주어진 작업을 얼마나 빠르고 효율적으로 처리하는지를 나타내는 척도.
+360,"(Of a device) able to be attached to and used with a computer, although not an integral part of it.","컴퓨터에 연결하여 사용하는 마우스, 키보드, 프린터 등의 장치."
+361,The action of officially allowing someone to do a particular thing; consent or authorization.,사용자가 파일이나 시스템 기능에 접근할 수 있는 자격.
+362,The aspect of someone's character that is presented to or perceived by others.,제품이나 서비스의 타겟 사용자를 대표하는 가상의 인물.
+363,A particular attitude toward or way of regarding something; a point of view.,문제를 바라보는 시각이나 관점.
+364,"Information that can be used on its own or with other information to identify, contact, or locate a single person.","이름, 주민등록번호 등 특정 개인을 알아볼 수 있는 정보."
+365,"A small-scale preliminary study conducted in order to evaluate feasibility, time, cost, and improve upon the design prior to performance of a full-scale project.","본격적인 프로젝트 도입에 앞서, 소규모로 미리 진행해보는 예비 테스트."
+366,A utility to test the reachability of a host on an IP network.,네트워크에 연결된 다른 컴퓨터가 응답하는지 확인하기 위해 보내는 신호.
+367,To find or locate the exact position of.,문제의 근본적인 원인을 정확하게 집어내다.
+368,A linear sequence of stages for processing data.,데이터나 작업이 여러 단계를 거쳐 순차적으로 처리되는 흐름. (CI/CD 파이프라인 등)
+369,"The central point, pin, or shaft on which a mechanism turns or oscillates.","기존의 사업 모델이나 전략이 시장에서 통하지 않을 때, 핵심 역량은 유지한 채 사업 방향을 바꾸는 것."
+370,"A minute area of illumination on a display screen, one of many from which an image is composed.",디지털 이미지를 구성하는 가장 작은 단위의 점.
+371,"A temporary or substitute name, value, or piece of text.",실제 콘텐츠가 들어가기 전에 임시로 자리만 차지하고 있는 텍스트나 이미지.
+372,"Text that is not computationally tagged, specially formatted, or written in code.",아무런 서식이 없는 순수한 텍스트.
+373,"A standard for the hardware of a computer system, which determines the kinds of software it can run.","애플리케이션이 실행되는 기반이 되는 환경. (운영체제, 하드웨어 등)"
+374,A software component that adds a specific feature to an existing computer program.,기존 프로그램에 특정 기능을 추가하기 위해 설치하는 확장 프로그램.
+375,Evidence demonstrating that a business model or idea is feasible.,새로운 기술이나 아이디어가 실제로 실현 가능한지 검증하는 과정.
+376,"A course or principle of action adopted or proposed by a government, party, business, or individual.",시스템 운영이나 보안 등에 대한 규칙의 집합.
+377,"To improve, refine, or add the finishing touches to.","기능 개발을 마친 후, 디자인이나 사용자 경험을 더 좋게 개선하는 마무리 작업."
+378,"To check the status of (a device), typically as part of a repeated cycle.",클라이언트가 서버에게 주기적으로 요청을 보내 상태 변화를 확인하는 방식.
+379,The condition of occurring in several different forms.,"객체 지향 프로그래밍에서, 하나의 객체가 여러 가지 다른 형태로 표현될 수 있는 성질."
+380,A connection point on a computer to which a peripheral device can be attached.,네트워크에서 특정 프로세스를 식별하기 위해 사용하는 번호.
+381,An internet site providing access or links to other sites.,여러 정보나 서비스를 한 곳에서 제공하는 대형 웹사이트.
+382,An examination of a dead body to determine the cause of death.,"장애 발생 후, 원인을 분석하고 재발 방지 대책을 논의하는 회의."
+383,A thing that is required as a prior condition for something else to happen or exist.,어떤 작업을 시작하기 전에 반드시 먼저 완료되어야 하는 조건이나 작업.
+384,To determine the order for dealing with (a series of items or tasks) according to their relative importance.,여러 작업들 중 어떤 것을 먼저 처리할지 중요도와 긴급도에 따라 순서를 매기는 것.
+385,For the use of a particular person or group of people only.,특정 사용자나 그룹에게만 접근이 허용되는. (반대: Public)
+386,"A special right, advantage, or immunity granted or available only to a particular person or group.",시스템의 특정 기능이나 데이터에 접근할 수 있는 높은 수준의 권한.
+387,Creating or controlling a situation by causing something to happen rather than responding to it after it has happened.,문제가 발생하기 전에 미리 예측하고 조치하는.
+388,A series of actions or steps taken in order to achieve a particular end.,운영체제에서 실행 중인 프로그램의 단위.
+389,"The process of or management involved in making a film, play, or record.",개발이 완료되어 실제 사용자들이 사용하고 있는 라이브 서비스 환경.
+390,A brief biographical sketch.,프로그램이 실행될 때 어떤 함수가 얼마나 실행되고 리소스를 사용하는지 분석하는 작업.
+391,"A plan or suggestion, especially a formal or written one, put forward for consideration or discussion by others.",새로운 프로젝트나 아이디어를 실행하기 위해 공식적으로 제출하는 문서.
+392,Relating to an owner or ownership.,특정 회사나 개인이 소유권을 가지고 있는 기술이나 소프트웨어.
+393,The official procedure or system of rules governing affairs of state or diplomatic occasions.,컴퓨터나 장치들이 서로 원활하게 통신하기 위해 지켜야 하는 약속이나 규칙.
+394,"A first, typical or preliminary model of something, especially a machine, from which other forms are developed or copied.",본격적인 개발에 앞서 핵심 기능만 간단하게 구현해 본 시제품.
+395,The action of providing or supplying something for use.,사용자의 요구에 맞게 시스템 자원을 할당하고 설정하는 작업.
+396,"The authority to represent someone else, especially in voting.",클라이언트와 서버 사이에서 통신을 중계해주는 서버. 보안이나 캐싱 목적으로 사용.
+397,Of or concerning the people as a whole.,누구나 접근할 수 있도록 열려 있는. (반대: Private)
+398,To perform an action of moving something forcefully toward oneself.,"버전 관리 시스템에서, 원격 저장소의 최신 변경 사항을 내 로컬 환경으로 가져오는 것."
+399,A request to merge one branch into another in a Git repository.,내가 수정한 코드를 다른 사람에게 리뷰받고 메인 브랜치에 병합(Merge)해달라고 요청하는 행위.
+400,"To exert force on (someone or something), typically with one's hand, in order to move them away from oneself.","버전 관리 시스템에서, 내 로컬 환경의 변경 사항을 원격 저장소에 올리는 것."
+401,The maintenance of a desired level of quality in a service or product.,"제품이 출시되기 전에 요구사항에 맞게 만들어졌는지, 버그는 없는지 등을 테스트하고 품질을 관리하는 활동."
+402,"A question, especially one addressed to an official or organization.",데이터베이스에서 원하는 정보를 가져오기 위해 보내는 요청문.
+403,"A list of items of data, commands, etc., stored so as to be retrievable in a definite order, usually the order of insertion.",작업을 들어온 순서대로 처리하기 위해 임시로 저장하는 자료구조.
+404,A fixed share of something that a person or group is entitled to receive or is bound to contribute.,사용자나 시스템이 사용할 수 있는 리소스의 최대 한도.
+405,"Work directed toward the innovation, introduction, and improvement of products and processes.",새로운 기술이나 제품을 만들어내기 위한 연구 및 개발 활동.
+406,A situation where the behavior of a system depends on the sequence or timing of other uncontrollable events.,여러 프로세스가 하나의 자원을 동시에 접근하려고 경쟁하면서 예상치 못한 결과가 발생하는 문제.
+407,"A framework, typically with bars, hooks, or pegs, for holding or storing things.",데이터센터에서 서버 등의 장비를 보관하는 선반.
+408,A large increase in activity or in the level of something.,프로젝트 초기 단계에서 생산성을 점차적으로 높여가는 기간.
+409,Data that has not been processed for use.,아무런 가공도 거치지 않은 순수한 데이터.
+410,The quality of being easy or enjoyable to read.,코드를 사람이 얼마나 쉽게 읽고 이해할 수 있는지를 나타내는 정도.
+411,A file containing information about the other files in a directory or archive.,"프로젝트의 개요, 설치 방법, 사용법 등을 설명하는 문서 파일."
+412,The actual time during which a process or event occurs.,데이터나 이벤트가 발생하는 즉시 처리되는 방식.
+413,To change the base of a branch from one commit to another.,"Git에서, 브랜치의 시작점(base)을 다른 커밋으로 옮겨서 커밋 히스토리를 깔끔하게 정리하는 작업."
+414,To restart a computer.,컴퓨터 시스템을 껐다가 다시 켜는 것.
+415,The restoration of friendly relations.,서로 다른 두 데이터 소스의 정보가 일치하도록 맞추는 작업.
+416,The state of being not or no longer needed or useful.,"시스템 장애에 대비하여, 동일한 기능을 하는 시스템이나 구성 요소를 여러 개 준비해두는 것."
+417,The process of restructuring existing computer code without changing its external behavior.,"코드의 겉동작은 그대로 둔 채, 내부 구조를 개선하여 가독성과 유지보수성을 높이는 작업."
+418,"An act of referring someone or something for consultation, review, or further action.",기존 사용자의 추천을 통해 새로운 사용자가 유입되는 것.
+419,A type of software testing that verifies that a recent program or code change has not adversely affected existing features.,"코드를 수정한 후, 기존에 잘 동작하던 기능에 문제가 생기지 않았는지 다시 테스트하는 것."
+420,A sequence of characters that specifies a search pattern in text.,특정 규칙을 가진 문자열의 집합을 표현하는 데 사용하는 형식 언어.
+421,"To make (a film, recording, or computer software) available to the public.",개발이 완료된 소프트웨어를 사용자에게 공식적으로 공개하는 것.
+422,The quality of being trustworthy or of performing consistently well.,시스템이 주어진 환경에서 의도된 기능을 고장 없이 수행할 수 있는 능력.
+423,Situated far from the main centers of population; distant.,물리적으로 떨어져 있는 컴퓨터나 시스템에 네트워크를 통해 접속하는 것.
+424,To cause to be or become; make.,"HTML, CSS, JavaScript 등의 코드를 웹 브라우저가 해석해서 사용자에게 보이는 화면으로 만드는 과정."
+425,To make an exact copy of; reproduce.,데이터를 다른 저장소에 똑같이 복사하여 데이터 유실을 방지하거나 부하를 분산하는 것.
+426,"A place, building, or receptacle where things are or may be stored.",소스 코드나 프로젝트 파일들이 저장되고 관리되는 공간. (예: Git 저장소)
+427,An act of asking politely or formally for something.,클라이언트가 서버에게 특정 데이터를 보내달라고 하거나 작업을 처리해달라고 보내는 신호.
+428,A thing that is needed or wanted.,개발해야 할 기능이나 시스템이 갖추어야 할 조건에 대한 명세.
+429,Able to withstand or recover quickly from difficult conditions.,시스템에 장애가 발생하더라도 빠르게 정상 상태로 복구할 수 있는 능력.
+430,The quality of being determined or resolute.,디스플레이나 이미지가 얼마나 많은 픽셀로 이루어져 있는지를 나타내는 값.
+431,"A stock or supply of money, materials, staff, and other assets.","컴퓨터 시스템에서 사용되는 CPU, 메모리, 디스크 등 모든 요소."
+432,A verbal or written answer.,서버가 클라이언트의 요청(Request)을 처리한 후 보내주는 결과.
+433,Reacting quickly and positively.,"웹사이트가 접속하는 기기(PC, 모바일 등)의 화면 크기에 맞춰 자동으로 최적화된 화면을 보여주는 디자인."
+434,To continue to have (something); keep possession of.,사용자가 서비스를 이탈하지 않고 계속해서 사용하도록 유지하는 것.
+435,Looking back on or dealing with past events or situations.,"스프린트나 프로젝트가 끝난 후, 팀원들이 모여 잘한 점과 개선할 점을 논의하는 미팅."
+436,Able to be used again or more than once.,한 번 만들어서 여러 곳에서 반복적으로 사용할 수 있는. (예: 재사용 가능한 컴포넌트)
+437,"To return to (a previous state, practice, topic, etc.).","버전 관리 시스템에서, 특정 변경 사항을 취소하고 이전 상태로 되돌리는 작업."
+438,A situation involving exposure to danger.,프로젝트나 비즈니스에 부정적인 영향을 미칠 수 있는 잠재적인 문제점.
+439,A plan or strategy intended to achieve a particular goal.,제품이나 프로젝트의 장기적인 목표와 개발 계획을 시각적으로 표현한 문서.
+440,A performance measure used to evaluate the efficiency or profitability of an investment.,투자한 비용 대비 얼마나 많은 이익이 발생했는지를 나타내는 지표.
+441,To restore a system to a previously stable state.,"시스템에 문제가 생겼을 때, 업데이트 이전의 안정적인 버전으로 되돌리는 작업."
+442,The official launch or introduction of a new product or service.,새로운 제품이나 기능을 사용자에게 점진적으로 공개하는 과정.
+443,"The basic cause, source, or origin of something.",시스템의 최상위 디렉토리 또는 최고 관리자 권한.
+444,The fundamental reason for the occurrence of a problem.,"문제 현상의 표면적인 이유가 아닌, 가장 깊숙한 곳에 있는 핵심 원인."
+445,A device that forwards data packets between computer networks.,서로 다른 네트워크를 연결하고 데이터가 최적의 경로로 이동하도록 안내하는 장치.
+446,A protocol that one program can use to request a service from a program located in another computer on a network.,다른 컴퓨터에 있는 함수를 마치 자신의 것처럼 호출하여 사용하는 통신 기술.
+447,"A broadly accurate guide or principle, based on practice rather than theory.","이론보다는 경험에 기반한, 일반적으로 통용되는 간편한 원칙이나 방법."
+448,The period of time during which a program is running.,프로그램이 실행되고 있는 동안의 시간.
+449,A software licensing and delivery model in which software is licensed on a subscription basis.,"소프트웨어를 구매하여 설치하는 방식이 아닌, 월 구독료를 내고 웹을 통해 사용하는 서비스. (예: 구글 워크스페이스)"
+450,"A safe, isolated environment in which to run and test unverified programs or code.",외부와 격리된 테스트 환경. 이곳에서의 작업은 실제 시스템에 영향을 주지 않음.
+451,A basic test to quickly evaluate whether a claim or the result of a calculation can possibly be true.,"본격적인 테스트에 앞서, 가장 기본적인 핵심 기능이 정상적으로 동작하는지 간단히 확인하는 테스트."
+452,The capacity of a system to handle a growing amount of work by adding resources.,사용자가 늘거나 데이터가 증가해도 시스템이 성능 저하 없이 안정적으로 처리할 수 있는 능력.
+453,A program that manages and allocates computer resources or time to tasks.,정해진 시간에 특정 작업을 자동으로 실행하도록 관리하는 프로그램.
+454,A representation of a plan or theory in the form of an outline or model.,"데이터베이스의 구조, 자료형, 제약 조건 등을 정의한 것."
+455,The extent of the area or subject matter that something deals with or to which it is relevant.,프로젝트나 작업에서 다루어야 할 영역의 한계.
+456,"From the beginning, without using anything that already exists.",아무것도 없는 상태에서 처음부터 새로 만드는 것.
+457,A set of instructions for a computer.,특정 작업을 자동화하거나 간단한 기능을 수행하기 위해 작성된 짧은 프로그램.
+458,A set of software development tools that allows the creation of applications for a certain platform.,개발자들이 특정 플랫폼용 애플리케이션을 쉽게 만들 수 있도록 제공하는 도구 모음.
+459,"Smooth and continuous, with no apparent gaps or spaces between one part and the next.","여러 서비스나 기능이 연결될 때, 사용자가 불편함이나 이질감을 느끼지 않고 자연스럽게 이어지는 경험."
+460,Each of the parts into which something is or may be divided.,특정 기준에 따라 나눈 사용자 그룹.
+461,The process of maximizing the number of visitors to a particular website by ensuring that the site appears high on the list of results returned by a search engine.,웹사이트가 구글 등 검색 엔진의 결과 페이지 상단에 노출되도록 콘텐츠와 구조를 개선하는 작업.
+462,Forming or following in a logical order or sequence.,정해진 순서에 따라 차례대로 처리되는. (반대: 병렬적 - Parallel)
+463,A computer or computer program that manages access to a centralized resource or service in a network.,네트워크를 통해 클라이언트에게 정보나 서비스를 제공하는 컴퓨터.
+464,A cloud-computing execution model in which the cloud provider runs the server.,"개발자가 서버를 직접 관리할 필요 없이, 코드를 실행할 때만 클라우드 제공업체의 서버를 사용하는 방식."
+465,A period devoted to a particular activity.,사용자가 웹사이트에 접속해서 활동하다가 떠날 때까지의 기간.
+466,The fact or condition of being severe.,버그나 장애가 시스템에 미치는 영향의 정도.
+467,"A piece of broken ceramic, metal, glass, or rock, typically having sharp edges.",대용량 데이터베이스를 여러 개의 작은 단위로 나누어 분산 저장하는 것.
+468,A user interface for access to an operating system's services.,운영체제의 커널과 사용자 사이를 연결해주는 인터페이스.
+469,To approve or authorize (something) officially.,프로젝트나 작업물이 완료되었음을 공식적으로 확인하고 승인하는 절차.
+470,An isolated viewpoint in which one part of an organization is unable or unwilling to operate with other parts.,조직 내의 부서들이 서로 정보를 공유하지 않고 고립되어 협업이 이루어지지 않는 상태.
+471,To imitate the appearance or character of.,실제와 유사한 환경을 만들어 테스트하거나 결과를 예측하는 것.
+472,The supporting framework of a structure.,"UI 화면에서, 실제 콘텐츠가 로딩되기 전에 먼저 보여주는 윤곽선 형태의 임시 화면."
+473,A commitment between a service provider and a client.,서비스 제공업체가 고객에게 보장하는 서비스의 품질 수준에 대한 약속. (예: 가용성 99.9%)
+474,An informal photograph taken quickly.,특정 시점의 시스템이나 데이터 상태를 그대로 사진 찍듯이 저장한 것.
+475,A psychological and social phenomenon wherein people copy the actions of others in an attempt to undertake behavior in a given situation.,"다른 사람들도 많이 사용한다'는 사실을 보여주어 제품에 대한 신뢰를 높이는 것. (예: ""10만 명이 선택한"")"
+476,A preview release of a new product to a limited audience prior to the general public.,"대대적인 마케팅 없이, 제한된 사용자에게 먼저 제품을 공개하는 것."
+477,To make or become hard or solid.,추상적인 아이디어나 계획을 명확하고 실행 가능하게 만드는 것.
+478,Unstructured and difficult-to-maintain source code.,코드의 흐름이 복잡하게 얽혀 있어 이해하고 수정하기 매우 어려운 코드.
+479,A detailed description of the design and materials used to make something.,개발해야 할 기능이나 제품의 요구사항을 상세하게 기술한 문서.
+480,To run at full speed over a short distance.,"애자일 개발에서, 1~4주 정도의 짧은 기간 동안 정해진 목표를 개발하는 반복 주기."
+481,An environment for testing that exactly resembles a production environment.,실제 운영 환경과 거의 동일하게 구성하여 배포 직전에 최종 테스트를 하는 환경.
+482,"A person with an interest or concern in something, especially a business.","프로젝트의 성공 여부에 영향을 받거나 영향을 주는 모든 사람. (고객, 팀원, 경영진 등)"
+483,A daily team meeting held to provide a status update to the team members.,"매일 짧게 서서 진행하는 회의로, 각자 어제 한 일, 오늘 할 일, 어려운 점을 공유."
+484,The particular condition that someone or something is in at a specific time.,"애플리케이션이나 컴포넌트가 가지고 있는, 시간이 지남에 따라 변할 수 있는 데이터."
+485,"Lacking in movement, action, or change.",내용이 변하지 않고 고정되어 있는. (반대: 동적 - Dynamic)
+486,(Of a user interface element) remaining in a fixed position on the screen when the user scrolls.,스크롤을 내려도 화면의 특정 위치에 고정되어 따라다니는 UI 요소.
+487,The action or method of storing something for future use.,"데이터를 영구적으로 보관하는 장치. (HDD, SSD 등)"
+488,To make (an organization or system) more efficient and effective by employing simpler working methods.,불필요한 절차를 없애고 업무 프로세스를 더 효율적으로 개선하는 것.
+489,A form of deliberately intense or thorough testing.,시스템이 과부하 상태에서도 정상적으로 작동하는지 확인하기 위해 한계치까지 부하를 주는 테스트.
+490,A sequence of characters.,hello world'처럼 글자들의 나열로 이루어진 데이터 타입.
+491,A piece of code used to stand in for some other programming functionality.,"다른 모듈이 아직 개발되지 않았을 때, 임시로 만들어 사용하는 가짜 모듈."
+492,A subdivision of an IP network.,대규모 네트워크를 더 작은 단위의 네트워크로 나눈 것.
+493,"To arrange to receive something regularly, typically a publication, by paying in advance.",정기적으로 비용을 지불하고 서비스나 콘텐츠를 이용하는 것.
+494,A command that allows users to run programs with the security privileges of another user.,"유닉스/리눅스에서, 일반 사용자가 관리자(root) 권한으로 명령을 실행하게 해주는 명령어."
+495,A cost that has already been incurred and cannot be recovered.,이미 지출해서 회수할 수 없는 비용. 의사결정 시 고려해서는 안 되는 비용.
+496,An XML-based vector image format for two-dimensional graphics.,"이미지를 수학적인 공식으로 표현하여, 크기를 키우거나 줄여도 깨지지 않는 벡터 이미지 형식."
+497,To take part in an exchange of.,"메모리가 부족할 때, 사용하지 않는 데이터를 디스크의 특정 공간(스왑 공간)으로 옮기는 것."
+498,Made up of exactly similar parts facing each other or around an axis.,암호화와 복호화에 동일한 키를 사용하는 방식.
+499,To synchronize.,여러 장치나 시스템의 데이터를 최신 상태로 동일하게 일치시키는 것.
+500,The interaction or cooperation of two or more organizations to produce a combined effect greater than the sum of their separate effects.,서로 다른 두 요소가 결합하여 각자일 때보다 더 큰 효과를 내는 것.
+501,The arrangement of words and phrases to create well-formed sentences in a language.,프로그래밍 언어에서 코드를 작성하는 규칙.
+502,Used to indicate that a decision has not yet been made.,아직 결정되지 않아 나중에 정해야 하는 사항.
+503,The basic communication language or protocol of the Internet.,인터넷에서 컴퓨터들이 서로 데이터를 주고받기 위해 사용하는 통신 프로토콜의 모음.
+504,The implied cost of rework caused by choosing an easy solution now instead of using a better approach that would take longer.,"빠른 개발을 위해 당장 쉬운 방법을 선택했지만, 나중에 더 큰 수정 비용을 초래하게 되는 상황."
+505,The process of recording and transmitting the readings of an instrument.,원격에 있는 시스템의 상태나 데이터를 수집하고 전송하는 기술.
+506,"A preset format for a document or file, used so that the format does not have to be recreated each time it is used.",반복적으로 사용되는 문서나 코드의 틀.
+507,The temporary possession or occupancy of property that belongs to another.,"클라우드 환경에서, 여러 사용자가 하나의 시스템 자원을 공유하여 사용하는 방식."
+508,Not certain or fixed; provisional.,확정되지 않고 임시로 정해진. (예: 잠정적인 일정)
+509,A device at which a user enters data or commands for a computer system.,사용자가 컴퓨터에 명령을 입력하고 결과를 볼 수 있는 텍스트 기반 인터페이스.
+510,To bring to an end.,실행 중인 프로세스나 프로그램을 끝내는 것.
+511,A set of conditions under which a tester will determine whether an application is working correctly.,"특정 기능을 검증하기 위한 입력값, 실행 조건, 예상 결과 등을 상세히 기술한 문서."
+512,"A test environment used for rigorous, transparent, and replicable testing of scientific theories.",새로운 기술이나 제품을 실제 환경에 적용하기 전에 시험해 볼 수 있는 환경.
+513,A person or group besides the two primarily involved in a situation.,"해당 서비스를 직접 개발한 회사가 아닌, 외부 업체나 개발자가 만든. (예: 서드파티 라이브러리)"
+514,A thread of execution is the smallest sequence of programmed instructions that can be managed independently by a scheduler.,프로세스 내에서 실행되는 작업의 가장 작은 단위.
+515,"A level, point, or value above which something is true or will take place and below which it is not or will not.",어떤 상태가 변하거나 특정 동작이 일어나게 되는 기준이 되는 값.
+516,To control the flow or speed of something.,"시스템의 과부하를 막기 위해, 단위 시간당 처리하는 요청의 수를 인위적으로 제어하는 것."
+517,The amount of material or items passing through a system or process.,시스템이 단위 시간 동안 처리할 수 있는 작업의 양.
+518,A small image representation of a larger image.,전체 내용을 알아볼 수 있도록 작게 줄여놓은 이미지.
+519,Each in a series of rows or levels of a structure placed one above the other.,시스템 아키텍처에서 기능별로 나눈 논리적인 구분. (예: 3-Tier 아키텍처)
+520,A fixed period of time after which an uncompleted operation is automatically aborted.,정해진 시간 안에 응답이 오지 않으면 연결을 끊거나 작업을 실패로 간주하는 것.
+521,A sequence of characters or encoded information identifying when a certain event occurred.,특정 이벤트가 발생한 시각을 기록한 데이터.
+522,A key or command on a computer that is used to switch between two different functions or states.,하나의 버튼으로 두 가지 이상의 상태(On/Off 등)를 번갈아 전환하는 기능.
+523,"A thing serving as a visible or tangible representation of a fact, quality, feeling, etc.",사용자의 신원을 증명하거나 권한을 부여하기 위해 사용하는 암호화된 문자열.
+524,"A style of processing information by which a system is broken down from a whole into its smaller, constituent parts.",전체 시스템의 개요에서 시작하여 점차 세부적인 부분으로 구체화해 나가는 방식.
+525,The way in which constituent parts are interrelated or arranged.,네트워크에서 컴퓨터나 장치들이 연결된 물리적 또는 논리적 구조.
+526,Any point of contact between a buyer and a seller.,고객이 기업이나 서비스를 경험하게 되는 모든 순간.
+527,To find or discover by investigation.,프로그램의 실행 흐름이나 데이터의 변경 과정을 따라가며 확인하는 것.
+528,To follow the course or progress of.,사용자의 행동이나 데이터의 변화를 기록하고 관리하는 것.
+529,A balance achieved between two desirable but incompatible features; a compromise.,하나를 얻으면 다른 하나를 포기해야 하는 관계. (예: 시간과 비용의 관계)
+530,"The movement of vehicles, ships, persons, etc., in an area.",서버나 네트워크를 통해 오고 가는 데이터의 양.
+531,An instance of buying or selling something; a business deal.,"데이터베이스에서, 모두 성공하거나 모두 실패해야 하는 하나의 논리적인 작업 단위."
+532,"To put (thoughts, speech, or data) into written or printed form.",음성 데이터를 텍스트 데이터로 변환하는 것.
+533,Easy to perceive or detect.,내부 동작을 알 필요 없이 쉽게 사용할 수 있는. 또는 배경이 비치는.
+534,To travel across or through.,트리나 그래프 같은 자료구조의 모든 노드를 한 번씩 방문하는 것.
+535,The assignment of degrees of urgency to wounds or illnesses to decide the order of treatment.,여러 버그나 이슈 중에서 심각도와 중요도에 따라 처리 우선순위를 정하는 것.
+536,A small device that releases a spring or catch and so sets off a mechanism.,"데이터베이스에서, 특정 이벤트(수정, 삭제 등)가 발생했을 때 자동으로 실행되는 동작."
+537,To trace and correct faults in a mechanical or electronic system.,"시스템의 문제가 발생했을 때, 원인을 찾아 해결하는 과정."
+538,To shorten (something) by cutting off the top or the end.,문자열이나 데이터의 일부를 잘라내는 것.
+539,A value that is considered true when encountered in a Boolean context.,"프로그래밍에서 true는 아니지만, 1, 'hello' 등 불리언 문맥에서 참으로 취급되는 값."
+540,A way to move data across a network using protocols that are not supported by that network.,하나의 네트워크 프로토콜 위에 다른 프로토콜을 캡슐화하여 데이터를 전송하는 기술.
+541,To twist or pull (something) sharply.,시스템의 설정값이나 디자인을 약간씩 수정하여 최적화하는 작업.
+542,A security process where users provide two different authentication factors to verify themselves.,아이디/비밀번호 외에 OTP나 SMS 인증 등 추가적인 인증 수단을 거치는 방식.
+543,The style and appearance of printed matter.,"텍스트의 글꼴, 크기, 간격 등을 시각적으로 보기 좋게 디자인하는 것."
+544,The means by which the user and a computer system interact.,"사용자가 컴퓨터나 서비스와 상호작용하는 화면, 버튼, 메뉴 등의 시각적인 요소."
+545,"A general-purpose, developmental, modeling language in the field of software engineering.",소프트웨어 시스템을 시각적으로 표현하고 모델링하기 위한 표준 언어.
+546,(Of an exception) not caught or captured by a program's error-handling code.,"프로그램에서 예외(에러)가 발생했지만, 이를 처리하는 코드가 없어 프로그램이 비정상 종료되는 상황."
+547,Real but not immediately obvious.,겉으로 드러나지 않는 시스템의 핵심적인 부분.
+548,A level of software testing where individual units or components of a software are tested.,"코드의 가장 작은 단위(함수, 메서드 등)가 의도한 대로 정확히 작동하는지 검증하는 테스트."
+549,A widely used multi-user operating system.,"서버에서 널리 사용되는 다중 사용자, 다중 작업 운영체제."
+550,Not able to be reached or contacted.,네트워크에서 특정 서버나 장치에 접속할 수 없는 상태.
+551,Likely to change or fail; not firm or fixed.,시스템이나 서비스가 자주 오류를 일으키거나 예기치 않게 동작하는 상태.
+552,Incorporating the latest information or developments.,가장 최근의 정보나 버전으로 업데이트된.
+553,To make (something) more modern or up to date.,소프트웨어나 데이터를 최신 버전으로 변경하는 것.
+554,"To raise (something) to a higher standard, in particular improve (equipment or machinery) by adding or replacing components.",하드웨어나 소프트웨어의 성능을 더 좋은 버전으로 향상시키는 것.
+555,"To transfer (data) from one computer to another, typically to one that is larger or remote from the user or functioning as a server.",내 컴퓨터의 파일을 서버나 다른 컴퓨터로 전송하는 것.
+556,A reference to a web resource that specifies its location on a computer network.,"웹상에 있는 특정 자원(페이지, 이미지 등)의 위치를 나타내는 고유한 주소."
+557,The ease of use and learnability of a human-made object such as a tool or device.,사용자가 특정 제품이나 서비스를 얼마나 쉽고 편리하게 사용할 수 있는지의 정도.
+558,A list of actions or event steps typically defining the interactions between a role and a system to achieve a goal.,사용자가 시스템을 통해 특정 목표를 달성하는 과정을 시나리오 형태로 설명한 것.
+559,Simple for people to use.,사용자가 복잡하게 느끼지 않고 쉽고 편하게 사용할 수 있도록 만들어진.
+560,The path a user takes to complete a task on a website or app.,사용자가 특정 목표를 달성하기 위해 서비스 내에서 거치는 모든 과정과 경험.
+561,A program designed to perform a specific task related to the operation of the computer.,운영체제를 보조하거나 특정 작업을 편리하게 해주는 작은 프로그램.
+562,A 128-bit number used to identify information in computer systems.,"소프트웨어에서 객체나 데이터를 식별하기 위해 사용하는, 전 세계적으로 중복되지 않는 고유한 값."
+563,Having no special or extra features; basic or standard.,아무런 커스터마이징이나 추가 기능 없이 가장 기본적인 상태 그대로를 의미.
+564,A data item that may take on more than one value during the runtime of a program.,프로그램 실행 중에 값이 변할 수 있는 데이터를 저장하는 공간.
+565,"A quantity having direction as well as magnitude, especially as determining the position of one point in space relative to another.",크기와 방향을 가지는 값. 2D/3D 그래픽이나 수학적 계산에서 사용됨.
+566,A person or company offering something for sale.,"특정 기술, 소프트웨어, 하드웨어 등을 판매하는 회사."
+567,Using or expressed in more words than are needed.,로그나 출력 메시지가 필요 이상으로 상세하고 길게 나오는 상태.
+568,The task of keeping a software system consisting of many versions and configurations well-organized.,코드의 변경 이력을 체계적으로 관리하여 특정 시점의 버전으로 되돌리거나 여러 개발자가 협업할 수 있도록 돕는 시스템. (예: Git)
+569,Capable of working successfully; feasible.,사업적 또는 기술적으로 성공할 가능성이 있는.
+570,The part of an MVC architecture that is responsible for displaying the data to the user.,"MVC 패턴에서, 사용자에게 보여지는 UI 부분을 담당하는 계층."
+571,An emulation of a computer system.,물리적인 컴퓨터 위에 소프트웨어로 구현된 또 하나의 컴퓨터. 하나의 하드웨어에서 여러 운영체제를 실행할 수 있음.
+572,"The act of creating a virtual version of something, including virtual computer hardware platforms, storage devices, and computer network resources.","물리적인 하드웨어 자원을 논리적인 단위로 나누어 여러 개처럼 보이게 하거나, 여러 개를 하나처럼 보이게 하는 기술."
+573,(Of a substance) easily evaporated at normal temperatures. (Of data) liable to be lost when power is turned off.,전원 공급이 중단되면 데이터가 사라지는 성질. (예: RAM)
+574,A network that uses a public telecommunication infrastructure to provide remote offices or individual users with secure access to their organization's network.,인터넷과 같은 공용 네트워크를 마치 전용선처럼 암호화하여 안전하게 데이터를 주고받을 수 있게 하는 기술.
+575,The quality or state of being exposed to the possibility of being attacked or harmed.,해커의 공격 대상이 될 수 있는 시스템의 보안상의 약점.
+576,A step-by-step demonstration of a procedure or process.,코드나 기획안 등을 처음부터 끝까지 함께 훑어보며 검토하고 설명하는 과정.
+577,"A sequential (non-iterative) design process, used in software development processes, in which progress is seen as flowing steadily downwards.",기획-분석-설계-개발-테스트-배포의 각 단계가 순차적으로 진행되는 전통적인 개발 방법론.
+578,"An online seminar or other presentation that takes place on the internet, allowing participants in different locations to see and hear the presenter.","웹(Web)과 세미나(Seminar)의 합성어로, 온라인으로 진행되는 세미나."
+579,A method of augmenting or altering the behavior of a web page or web application with custom callbacks.,"특정 이벤트가 발생했을 때, 서버가 클라이언트에게 역으로 데이터를 보내주는 방식."
+580,A value indicating the importance of a connection in a neural network.,"머신러닝 모델에서, 각 입력값이 결과에 미치는 영향의 중요도를 나타내는 값."
+581,A product or service produced by one company that other companies rebrand to make it appear as if they had made it.,한 회사에서 만든 제품이나 서비스를 다른 회사가 자사 브랜드로 판매할 수 있도록 허용하는 것.
+582,A list or register of people or things that are considered acceptable or trustworthy.,접근이나 실행을 허용하는 대상들의 목록. 이 목록에 없는 것은 모두 차단됨. (반대: 블랙리스트)
+583,An authoritative report or guide that informs readers concisely about a complex issue.,특정 기술이나 제품에 대한 정보와 비전을 상세하게 설명하는 공식 보고서.
+584,A small application with limited functionality that can be installed and executed within a web page by an end user.,"운영체제나 웹페이지의 특정 영역에서 날씨, 시계 등 간단한 기능을 제공하는 미니 애플리케이션."
+585,A character that will match any character or sequence of characters in a search.,"파일 검색 등에서 여러 개의 문자나 문자열을 대체하여 사용할 수 있는 특수 문자. (예: *, ?)"
+586,A skeletal three-dimensional model in which only lines and vertices are represented.,"UI/UX 설계 초기 단계에서, 페이지의 레이아웃과 기능 요소들의 배치만을 단순한 선과 상자로 표현한 화면 설계도."
+587,A part of a computer program that helps you to do a difficult task by asking you a series of simple questions.,복잡한 설정이나 설치 과정을 여러 단계로 나누어 사용자 안내에 따라 쉽게 완료할 수 있도록 돕는 인터페이스.
+588,A method for overcoming a problem or limitation in a program or system.,"문제의 근본적인 해결책은 아니지만, 당장 원하는 결과를 얻기 위해 임시로 사용하는 방법."
+589,"The sequence of industrial, administrative, or other processes through which a piece of work passes from initiation to completion.",특정 업무가 시작부터 끝날 때까지 거치는 일련의 절차나 과정.
+590,The amount of work to be done by someone or something.,특정 시간 동안 시스템이나 사람이 처리해야 하는 작업의 양.
+591,A space used for work.,"특정 프로젝트나 작업을 위해 필요한 파일, 설정, 도구 등을 모아놓은 환경."
+592,To bring (something) to a conclusion; conclude.,회의나 프로젝트의 마지막에 내용을 요약하고 정리하는 것.
+593,Something that is wrapped around something else.,기존의 클래스나 코드를 감싸서 새로운 기능을 추가하거나 인터페이스를 변경하는 코드.
+594,Denoting a system in which content displayed during editing appears very similar to the final output.,"""보는 대로 얻는다""는 뜻으로, 편집 화면의 모습이 실제 결과물과 동일하게 보이는 편집 방식."
+595,A markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable.,"데이터를 저장하고 전송하기 위해 사용하는, 태그로 구조를 정의하는 마크업 언어."
+596,A type of security vulnerability that allows an attacker to inject malicious scripts into websites viewed by other users.,공격자가 웹사이트에 악성 스크립트를 삽입하여 다른 사용자의 쿠키나 개인정보를 탈취하는 웹 해킹 공격.
+597,A human-readable data-serialization language. It is commonly used for configuration files.,사람이 쉽게 읽고 쓸 수 있는 형태로 데이터를 표현하는 방식. 주로 설정 파일(config) 작성에 사용됨.
+598,A principle of extreme programming that states a programmer should not add functionality until deemed necessary.,"""넌 그게 필요 없을 거야""라는 뜻으로, 지금 당장 필요하지 않은 기능은 미리 만들지 말라는 애자일 개발 원칙."
+599,A vulnerability that is exploited by attackers before the vendor is aware of it or has a patch.,소프트웨어의 보안 취약점이 발견되고 아직 해결책(패치)이 나오지 않은 상태에서 이루어지는 공격.
+600,Refers to a system that experiences no interruption in service.,시스템 업데이트나 배포 시에도 서비스가 중단되지 않고 계속 운영되는 상태.
+601,A process that has completed execution but still has an entry in the process table.,"실행이 종료되었지만, 자원이 완전히 정리되지 않고 프로세스 목록에 남아있는 프로세스."
+602,"An area or stretch of land having a particular characteristic, purpose, or use, or subject to particular restrictions.","클라우드 서비스에서, 하나의 리전(Region) 내에 위치한 물리적으로 분리된 데이터 센터."
+603,To increase/decrease the magnification of the image on a screen.,화면이나 이미지를 확대하거나 축소하여 보는 기능.

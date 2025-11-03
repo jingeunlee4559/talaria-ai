@@ -1,0 +1,1308 @@
+﻿def_id,Language,Word
+1,English,A/B Testing
+1,Korean,A/B 테스트
+2,Korean,스크롤 없는 첫 화면
+2,English,Above the Fold
+3,English,Acceptance Criteria
+3,Korean,인수 기준
+4,Korean,접근성
+4,English,Accessibility
+5,Korean,실행 가능한
+5,English,Actionable
+6,Korean,"애드혹, 임시의"
+6,English,Ad Hoc
+7,English,Agile
+7,Korean,애자일
+8,English,Align
+8,Korean,"얼라인 맞추다, 싱크 맞추다"
+9,English,Algorithm
+9,Korean,알고리즘
+10,English,Allocation
+10,Korean,"할당, 배분"
+11,English,Alpha Test
+11,Korean,알파 테스트
+12,Korean,애매모호함
+12,English,Ambiguity
+13,English,Analytics
+13,Korean,"애널리틱스, 데이터 분석"
+14,Korean,API
+14,English,Application Programming Interface
+14,English,API
+15,English,Append
+15,Korean,"추가하다, 덧붙이다"
+16,Korean,아키텍처
+16,English,Architecture
+17,Korean,아카이빙
+17,English,Archive
+18,Korean,"현상태 그대로, As-is"
+18,Korean,애즈이즈
+18,English,As-is
+19,English,ASAP
+19,Korean,"아삽, 최대한 빨리"
+19,English,As Soon As Possible
+20,Korean,"애셋, 자산"
+20,English,Asset
+21,English,Asynchronous
+21,Korean,비동기
+22,English,Atomic
+22,Korean,"원자적, 최소 단위의"
+23,English,Authentication
+23,Korean,인증
+24,Korean,"인가, 권한 부여"
+24,English,Authorization
+25,Korean,오토스케일링
+25,English,Auto-scaling
+26,Korean,가용성
+26,English,Availability
+27,English,B2B
+27,English,Business-to-Business
+27,Korean,B2B
+28,English,Business-to-Consumer
+28,English,B2C
+28,Korean,B2C
+29,Korean,백본
+29,English,Backbone
+30,Korean,백엔드
+30,English,Back-end
+31,Korean,백필
+31,English,Backfill
+32,English,Backlog
+32,Korean,백로그
+33,English,Backport
+33,Korean,백포팅
+34,English,Backup
+34,Korean,백업
+35,Korean,하위 호환성
+35,English,Backward Compatibility
+36,Korean,"어림잡은 수치, 대략적인 견적"
+36,English,Ballpark figure
+37,English,Band-Aid
+37,Korean,"임시방편, 땜질 처방"
+38,English,Bandwidth
+38,Korean,대역폭
+39,Korean,베이스라인
+39,English,Baseline
+40,English,Batch
+40,Korean,배치
+41,English,Bear in mind
+41,Korean,"염두에 두다, 인지하다"
+42,Korean,벤치마크
+42,English,Benchmark
+43,Korean,베스트 프랙티스
+43,English,Best Practice
+44,Korean,베타 테스트
+44,English,Beta Test
+45,English,Big Picture
+45,Korean,큰 그림
+46,Korean,청구 가능한
+46,English,Billable
+47,Korean,바이너리
+47,English,Binary
+48,English,Binding
+48,Korean,바인딩
+49,English,Biometrics
+49,Korean,생체 인식
+50,English,Blacklist
+50,Korean,블랙리스트
+51,Korean,블리딩 엣지
+51,English,Bleeding Edge
+52,Korean,블로트웨어
+52,English,Bloatware
+53,English,Blocker
+53,Korean,블로커
+54,Korean,보일러플레이트
+54,English,Boilerplate
+55,Korean,병목 현상
+55,English,Bottleneck
+56,English,Bottom line
+56,Korean,"핵심, 결론"
+57,English,Bottom-up approach
+57,Korean,바텀업
+57,Korean,상향식 접근
+58,English,Bounce Rate
+58,Korean,이탈률
+59,Korean,브레인스토밍
+59,English,Brainstorming
+60,Korean,브랜치
+60,English,Branch
+61,English,Break down
+61,Korean,"태스크를 쪼개다, 세분화하다"
+62,Korean,브리핑
+62,English,Briefing
+63,Korean,버퍼
+63,English,Buffer
+64,English,Bug
+64,Korean,버그
+65,English,Build
+65,Korean,빌드
+66,Korean,"벌크, 대량"
+66,English,Bulk
+67,English,Burn Rate
+67,Korean,번 레이트
+68,Korean,비즈니스 로직
+68,English,Business Logic
+69,English,Buy-in
+69,Korean,"동의, 지지"
+70,Korean,캐시
+70,English,Cache
+71,English,CTA
+71,Korean,"CTA, 행동 유도"
+71,English,Call to Action
+72,English,Camel Case
+72,Korean,카멜 케이스
+73,Korean,"용량, 처리량"
+73,Korean,캐파
+73,English,Capacity
+74,Korean,설비 투자 비용
+74,English,CapEx
+74,English,Capital Expenditure
+75,English,Capture
+75,Korean,캡처하다
+76,Korean,대소문자 구분
+76,English,Case-sensitive
+77,Korean,"싱크업 미팅, 캐치업"
+77,English,Catch-up
+78,Korean,CDN
+78,English,CDN
+78,English,Content Delivery Network
+79,Korean,인증서
+79,English,Certificate
+80,English,CR
+80,Korean,변경 요청서
+80,English,Change Request
+81,Korean,"문자 집합, 캐릭터셋"
+81,English,Charset
+82,English,Check-in
+82,Korean,"체크인, 커밋"
+83,English,Checkpoint
+83,Korean,체크포인트
+84,Korean,고객 이탈률
+84,English,Churn Rate
+85,English,Continuous Integration/Continuous Delivery
+85,Korean,CI/CD
+85,English,CI/CD
+86,Korean,나중에 다시 논의하다
+86,English,Circle back
+87,English,CLI
+87,Korean,CLI
+87,English,Command-Line Interface
+88,English,Client-side
+88,Korean,클라이언트 사이드
+89,Korean,"클러스터, 군집"
+89,English,Cluster
+90,English,Code Freeze
+90,Korean,코드 프리즈
+91,Korean,코드 리뷰
+91,English,Code Review
+92,English,Co-location
+92,Korean,코로케이션
+93,English,Commit
+93,Korean,커밋
+94,Korean,"공통 분모, 공감대"
+94,English,Common ground
+95,Korean,호환성
+95,English,Compatibility
+96,Korean,컴파일
+96,English,Compile
+97,English,Component
+97,Korean,컴포넌트
+98,English,Concurrency
+98,Korean,동시성
+99,Korean,컨피그
+99,Korean,"설정, 구성"
+99,English,Configuration
+99,English,Config
+100,English,Consensus
+100,Korean,"총의, 합의"
+101,Korean,일관성
+101,English,Consistency
+102,Korean,제약 조건
+102,English,Constraint
+103,Korean,컨테이너
+103,English,Container
+104,English,Context
+104,Korean,"컨텍스트, 문맥"
+105,Korean,"비상 계획, 컨틴전시 플랜"
+105,English,Contingency Plan
+106,English,Conversion
+106,Korean,전환
+107,Korean,쿠키
+107,English,Cookie
+108,English,Core
+108,Korean,코어
+109,Korean,"코너 케이스, 엣지 케이스"
+109,English,Corner Case
+110,English,Corrupt
+110,Korean,손상된
+111,Korean,비용 편익 분석
+111,English,Cost-benefit analysis
+112,English,C-level
+112,Korean,C-레벨
+113,Korean,"크래시, 뻗음"
+113,English,Crash
+114,English,Credentials
+114,Korean,"자격 증명, 인증 정보"
+115,Korean,"크리티컬 패스, 핵심 경로"
+115,English,Critical Path
+116,Korean,"CRM, 고객 관계 관리"
+116,English,Customer Relationship Management
+116,English,CRM
+117,English,Cron Job
+117,Korean,크론잡
+118,Korean,"다기능의, 여러 부서가 협력하는"
+118,English,Cross-functional
+119,English,"Create, Read, Update, Delete"
+119,Korean,CRUD
+119,English,CRUD
+120,English,Cryptography
+120,Korean,암호학
+121,Korean,컬처덱
+121,English,Culture Deck
+122,English,Customization
+122,Korean,"커스터마이징, 맞춤 제작"
+123,Korean,시스템 전환
+123,English,Cutover
+124,English,Dashboard
+124,Korean,대시보드
+125,Korean,데이터 정제
+125,English,Data Cleansing
+126,English,Data-driven
+126,Korean,데이터 기반의
+127,Korean,데이터 레이크
+127,English,Data Lake
+128,English,Data Mart
+128,Korean,데이터 마트
+129,Korean,데이터 마이닝
+129,English,Data Mining
+130,Korean,데이터 웨어하우스
+130,English,Data Warehouse
+131,English,Data Center
+131,Korean,"데이터센터, IDC"
+131,English,DC
+132,English,Deadline
+132,Korean,"데드라인, 마감 기한"
+133,Korean,"교착 상태, 데드락"
+133,English,Deadlock
+134,Korean,"디브리핑, 사후 검토"
+134,English,Debrief
+135,English,Debugging
+135,Korean,디버깅
+136,English,Deep Dive
+136,Korean,딥다이브
+137,Korean,"기본값, 디폴트"
+137,English,Default
+138,Korean,"미루다, 연기하다"
+138,English,Defer
+139,Korean,산출물
+139,English,Deliverable
+140,Korean,"데모, 시연"
+140,English,Demo
+141,Korean,의존성
+141,English,Dependency
+142,Korean,배포
+142,English,Deploy
+143,English,Deprecate
+143,Korean,데프리케이트
+143,Korean,사용을 권장하지 않음
+144,Korean,디자인 패턴
+144,English,Design Pattern
+145,English,Design Sprint
+145,Korean,디자인 스프린트
+146,Korean,데브옵스
+146,English,DevOps
+147,Korean,차별화된
+147,English,Differentiated
+148,English,Digest
+148,Korean,다이제스트
+149,English,Directory
+149,Korean,"디렉토리, 폴더"
+150,English,DR
+150,Korean,재해 복구
+150,English,Disaster Recovery
+151,English,Disclaimer
+151,Korean,면책 조항
+152,Korean,디스커버리
+152,English,Discovery
+153,English,Discrepancy
+153,Korean,불일치
+154,Korean,"파괴적인, 혁신적인"
+154,English,Disruptive
+155,English,DNS
+155,English,Domain Name System
+155,Korean,DNS
+156,English,Docker
+156,Korean,도커
+157,Korean,"문서화, 도큐멘테이션"
+157,English,Documentation
+158,English,Dogfooding
+158,Korean,"도그푸딩, 개밥먹기"
+159,English,Domain
+159,Korean,도메인
+160,English,Downtime
+160,Korean,"다운타임, 서비스 중단 시간"
+161,English,Drill down
+161,Korean,드릴다운
+162,Korean,드라이버
+162,English,Driver
+163,Korean,드롭다운
+163,English,Dropdown
+164,English,Dry Run
+164,Korean,"드라이런, 사전 리허설"
+165,Korean,"실사, 듀딜리전스"
+165,English,Due diligence
+166,English,Dump
+166,Korean,덤프
+167,Korean,양방향 통신
+167,English,Duplex
+168,Korean,내구성
+168,English,Durability
+169,Korean,동적
+169,English,Dynamic
+170,Korean,"종단 간, E2E"
+170,English,End-to-End
+170,English,E2E
+171,English,Early Adopter
+171,Korean,얼리 어답터
+172,Korean,"지정하다, 배정하다"
+172,English,Earmark
+173,English,Edge Case
+173,Korean,"엣지 케이스, 코너 케이스"
+174,Korean,탄력성
+174,English,Elasticity
+175,English,Elevator Pitch
+175,Korean,엘리베이터 피치
+176,Korean,임베디드
+176,English,Embedded
+177,English,Emulate
+177,Korean,에뮬레이트
+178,Korean,캡슐화
+178,English,Encapsulation
+179,English,Encoding
+179,Korean,인코딩
+180,Korean,암호화
+180,English,Encryption
+181,English,Endpoint
+181,Korean,엔드포인트
+182,Korean,"인게이지먼트, 참여도"
+182,English,Engagement
+183,English,Enhance
+183,Korean,"개선하다, 고도화하다"
+184,Korean,"엔터프라이즈, 대기업용"
+184,English,Enterprise
+185,English,Environment
+185,Korean,환경
+186,Korean,에픽
+186,English,Epic
+187,English,Ergonomics
+187,Korean,인간공학
+188,Korean,"에스컬레이션, 상급자에게 보고하다"
+188,English,Escalate
+189,English,Estimated Time of Arrival
+189,English,ETA
+189,Korean,예상 완료 시간
+190,English,"Extract, Transform, Load"
+190,Korean,ETL
+190,English,ETL
+191,English,Evergreen
+191,Korean,에버그린
+192,Korean,"예외, 익셉션"
+192,English,Exception
+193,English,Execute
+193,Korean,실행하다
+194,Korean,확장 가능한
+194,English,Extensible
+195,English,External
+195,Korean,외부의
+196,Korean,대면 회의
+196,English,Face-to-face
+197,English,Facelift
+197,Korean,"개편, 리뉴얼"
+198,Korean,"촉진하다, 용이하게 하다"
+198,English,Facilitate
+199,English,Failover
+199,Korean,"페일오버, 장애 조치"
+200,Korean,폴백
+200,English,Fallback
+201,English,Falsy
+201,Korean,거짓 같은 값
+201,Korean,Falsy
+202,English,Frequently Asked Questions
+202,English,FAQ
+202,Korean,"FAQ, 자주 묻는 질문"
+203,Korean,"장애 허용, 내결함성"
+203,English,Fault Tolerance
+204,English,Feasibility Study
+204,Korean,타당성 조사
+205,Korean,"기능, 피처"
+205,English,Feature
+206,English,Federation
+206,Korean,"연합, 페더레이션"
+207,Korean,I/O
+207,Korean,입출력
+207,English,Input/Output
+207,English,I/O
+208,English,Internationalization
+208,English,i18n
+208,Korean,국제화
+209,Korean,통합 개발 환경
+209,English,IDE
+209,English,Integrated Development Environment
+210,Korean,"idempotent, 멱등성"
+210,English,Idempotent
+211,English,Identifier
+211,Korean,식별자
+212,Korean,유휴 상태
+212,English,Idle
+213,English,iframe
+213,English,Inline Frame
+213,Korean,아이프레임
+214,English,Immutable
+214,Korean,불변의
+215,Korean,"장애물, 임페디먼트"
+215,English,Impediment
+216,English,Implementation
+216,Korean,구현
+217,English,Implicit
+217,Korean,"암묵적인, 암시적인"
+218,Korean,"인하우스, 사내의"
+218,English,In-house
+219,Korean,"인센티브, 동기 부여"
+219,English,Incentive
+220,English,Incident
+220,Korean,"인시던트, 장애"
+221,English,Increment
+221,Korean,"증분, 인크리먼트"
+222,English,Index
+222,Korean,"인덱스, 색인"
+223,Korean,인프라
+223,English,Infrastructure
+224,Korean,"수집, 인제스트"
+224,English,Ingest
+225,English,Inheritance
+225,Korean,상속
+226,Korean,두문자어
+226,English,Initialism
+227,Korean,인젝션 공격
+227,English,Injection
+228,Korean,인라인
+228,English,Inline
+229,English,Insight
+229,Korean,"인사이트, 통찰력"
+230,English,Instance
+230,Korean,인스턴스
+231,Korean,인스턴스화하다
+231,English,Instantiate
+232,Korean,무형의
+232,English,Intangible
+233,English,Integral
+233,Korean,"필수적인, 핵심적인"
+234,Korean,"통합하다, 연동하다"
+234,English,Integrate
+235,Korean,통합 테스트
+235,English,Integration Test
+236,English,Integrity
+236,Korean,무결성
+237,English,Interface
+237,Korean,인터페이스
+238,English,Intermittent
+238,Korean,간헐적인
+239,Korean,내부의
+239,English,Internal
+240,English,Interpolation
+240,Korean,보간법
+241,English,Intuitive
+241,Korean,직관적인
+242,Korean,호출하다
+242,English,Invoke
+243,Korean,지적 재산권
+243,English,Intellectual Property
+243,English,IP
+244,Korean,IP 주소
+244,English,IP Address
+245,English,Iron out
+245,Korean,"해결하다, 다듬다"
+245,Korean,문제를
+246,Korean,격리하다
+246,English,Isolate
+247,English,Issue
+247,Korean,"이슈, 문제"
+248,English,Iterate
+248,Korean,"반복하다, 이터레이션 돌다"
+249,Korean,"전문 용어, jargon"
+249,English,Jargon
+250,Korean,지터
+250,English,Jitter
+251,English,Job
+251,Korean,"작업, 잡"
+251,Korean,job
+252,Korean,조인
+252,English,Join
+253,English,JSON
+253,Korean,제이슨
+253,Korean,JSON
+253,English,JavaScript Object Notation
+254,Korean,자바 가상 머신
+254,English,JVM
+254,English,Java Virtual Machine
+255,English,K.I.S.S
+255,English,"Keep It Simple, Stupid"
+255,Korean,키스 원칙
+256,Korean,키
+256,English,Key
+257,English,Key-value store
+257,Korean,키-값 저장소
+258,Korean,"키워드, 예약어"
+258,English,Keyword
+259,English,Kick-off meeting
+259,Korean,킥오프 미팅
+260,Korean,죽이다
+260,English,Kill
+260,Korean,프로세스를
+261,Korean,"클루지, 임시방편 코드"
+261,English,Kludge
+262,English,KPI
+262,English,Key Performance Indicator
+262,Korean,핵심 성과 지표
+263,Korean,지식 베이스
+263,English,Knowledge Base
+264,English,Localization
+264,Korean,현지화
+264,English,l10n
+265,English,Latency
+265,Korean,레이턴시
+265,Korean,지연 시간
+266,Korean,"레이어, 계층"
+266,English,Layer
+267,English,Layout
+267,Korean,레이아웃
+268,Korean,지연 로딩
+268,English,Lazy Loading
+269,English,Legacy System
+269,Korean,레거시 시스템
+270,Korean,"레버리지하다, 활용하다"
+270,English,Leverage
+271,English,Library
+271,Korean,라이브러리
+272,Korean,라이선스
+272,English,License
+273,English,Man/Month
+273,English,M/M
+273,Korean,맨먼스
+274,Korean,머신러닝
+274,English,Machine Learning
+275,Korean,"메인스트림, 주류"
+275,English,Mainstream
+276,Korean,유지보수
+276,English,Maintenance
+277,English,Malicious
+277,Korean,악의적인
+278,Korean,"의무, 필수 사항"
+278,English,Mandate
+279,Korean,"필수적인, 의무적인"
+279,English,Mandatory
+280,English,Manifest
+280,Korean,매니페스트
+281,English,Manual
+281,Korean,"수동의, 매뉴얼"
+282,Korean,"마진, 여백"
+282,English,Margin
+283,Korean,마크다운
+283,English,Markdown
+284,Korean,마켓핏
+284,English,Market Fit
+285,English,Mashup
+285,Korean,매시업
+286,English,Master
+286,Korean,마스터
+287,Korean,성숙도
+287,English,Maturity
+288,English,Measure
+288,Korean,측정하다
+289,English,Media Query
+289,Korean,미디어 쿼리
+290,English,Meeting minutes
+290,Korean,회의록
+291,Korean,메모리 누수
+291,English,Memory Leak
+292,Korean,"머지, 병합"
+292,English,Merge
+293,English,Metadata
+293,Korean,메타데이터
+294,Korean,"메트릭, 지표"
+294,English,Metric
+295,Korean,"MSA, 마이크로서비스 아키텍처"
+295,English,MSA
+295,English,Microservice Architecture
+296,Korean,미들웨어
+296,English,Middleware
+297,English,Milestone
+297,Korean,"마일스톤, 이정표"
+298,Korean,마인드맵
+298,English,Mind Map
+299,Korean,Minify
+299,Korean,코드 경량화
+299,English,Minify
+300,English,Mission-critical
+300,Korean,미션 크리티컬
+301,English,Mock-up
+301,Korean,목업
+302,Korean,모듈
+302,English,Module
+303,English,Monetization
+303,Korean,수익화
+304,English,Monitor
+304,Korean,모니터링하다
+305,Korean,모놀리식
+305,English,Monolithic
+306,English,Mount
+306,Korean,마운트하다
+307,Korean,최소 기능 제품
+307,English,MVP
+307,English,Minimum Viable Product
+307,Korean,MVP
+308,Korean,네이티브 앱
+308,English,Native App
+309,English,Navigate
+309,Korean,"내비게이션, 탐색하다"
+310,English,NDA
+310,English,Non-Disclosure Agreement
+310,Korean,비밀유지계약서
+311,English,Nesting
+311,Korean,중첩
+312,Korean,네트워크
+312,English,Network
+313,Korean,"틈새시장, 니치마켓"
+313,English,Niche
+314,English,Node
+314,Korean,노드
+315,Korean,비기능적 요구사항
+315,English,Non-functional Requirements
+316,Korean,정규화
+316,English,Normalize
+317,Korean,노치
+317,English,Notch
+318,Korean,알림
+318,English,Notification
+319,English,Nudge
+319,Korean,넛지
+320,Korean,널
+320,English,Null
+320,Korean,Null
+321,Korean,"객체, 오브젝트"
+321,English,Object
+322,Korean,"목표, 오브젝티브"
+322,English,Objective
+323,English,Obsolete
+323,Korean,"구식의, 더 이상 사용되지 않는"
+324,Korean,기성품의
+324,English,Off-the-shelf
+325,English,Offline
+325,Korean,오프라인
+326,Korean,"오프로딩, 부하 분산"
+326,English,Offload
+327,English,On-premise
+327,Korean,온프레미스
+328,Korean,"즉석에서, 실시간으로"
+328,English,On the fly
+329,Korean,온보딩
+329,English,Onboarding
+330,Korean,일회성의
+330,English,One-off
+331,English,Open Source
+331,Korean,오픈소스
+332,Korean,운영체제
+332,English,OS
+332,English,Operating System
+333,Korean,운영상의
+333,English,Operational
+334,English,Operational Expenditure
+334,Korean,운영 비용
+334,English,OpEx
+335,English,Optimize
+335,Korean,최적화하다
+336,Korean,옵트인 / 옵트아웃
+336,English,Opt-in / Opt-out
+337,English,Orchestration
+337,Korean,오케스트레이션
+338,Korean,"오가닉, 자연 유입"
+338,English,Organic
+339,English,Outage
+339,Korean,"서비스 장애, 아우티지"
+340,Korean,즉시 사용 가능한
+340,Korean,아웃오브더박스
+340,English,Out-of-the-box
+341,English,Overhead
+341,Korean,오버헤드
+342,English,Overload
+342,Korean,과부하
+343,English,Override
+343,Korean,오버라이드
+344,English,Packet
+344,Korean,패킷
+345,English,Padding
+345,Korean,패딩
+346,Korean,페이지네이션
+346,English,Pagination
+347,Korean,"페인 포인트, 고객 불편점"
+347,English,Pain Point
+348,English,Paired Programming
+348,Korean,페어 프로그래밍
+349,Korean,병렬 처리
+349,English,Parallel
+350,Korean,"파라미터, 매개변수"
+350,English,Parameter
+351,English,Parse
+351,Korean,파싱하다
+352,English,Patch
+352,Korean,패치
+353,English,Path
+353,Korean,"경로, 패스"
+354,Korean,패턴
+354,English,Pattern
+355,English,Payload
+355,Korean,페이로드
+356,English,Peak
+356,Korean,피크
+357,Korean,피어
+357,English,Peer
+358,English,Penetration Test
+358,Korean,"모의 해킹, 침투 테스트"
+359,English,Performance
+359,Korean,성능
+360,Korean,주변 장치
+360,English,Peripheral
+361,English,Permission
+361,Korean,"권한, 퍼미션"
+362,English,Persona
+362,Korean,페르소나
+363,Korean,"관점, 퍼스펙티브"
+363,English,Perspective
+364,English,Personally Identifiable Information
+364,English,PII
+364,Korean,개인 식별 정보
+365,English,Pilot Test
+365,Korean,파일럿 테스트
+366,Korean,핑
+366,English,Ping
+367,Korean,원인을
+367,Korean,정확히 찾아내다
+367,English,Pinpoint
+368,Korean,파이프라인
+368,English,Pipeline
+369,Korean,"피봇, 방향 전환"
+369,English,Pivot
+370,Korean,픽셀
+370,English,Pixel
+371,Korean,플레이스홀더
+371,English,Placeholder
+372,Korean,플레인 텍스트
+372,English,Plain Text
+373,English,Platform
+373,Korean,플랫폼
+374,English,Plug-in
+374,Korean,플러그인
+375,English,Proof of Concept
+375,Korean,개념 증명
+375,Korean,PoC
+375,English,PoC
+376,English,Policy
+376,Korean,"정책, 폴리시"
+377,Korean,"폴리싱, 다듬기"
+377,English,Polish
+378,English,Poll
+378,Korean,폴링
+379,Korean,다형성
+379,English,Polymorphism
+380,English,Port
+380,Korean,포트
+381,Korean,포털
+381,English,Portal
+382,English,Post-mortem
+382,Korean,"포스트모템, 장애 회고"
+383,Korean,"선수 조건, 필수 요건"
+383,English,Prerequisite
+384,English,Prioritize
+384,Korean,우선순위를 정하다
+385,English,Private
+385,Korean,"비공개의, 프라이빗"
+386,Korean,"특권, 권한"
+386,English,Privilege
+387,Korean,"선제적인, 주도적인"
+387,English,Proactive
+388,English,Process
+388,Korean,프로세스
+389,Korean,"프로덕션, 운영 환경"
+389,English,Production
+390,Korean,프로필
+390,English,Profile
+391,English,Proposal
+391,Korean,제안서
+392,Korean,"독점적인, 전용의"
+392,English,Proprietary
+393,English,Protocol
+393,Korean,"프로토콜, 통신 규약"
+394,Korean,프로토타입
+394,English,Prototype
+395,English,Provisioning
+395,Korean,프로비저닝
+396,Korean,프록시
+396,English,Proxy
+397,Korean,"공개의, 퍼블릭"
+397,English,Public
+398,English,Pull
+398,Korean,풀
+398,Korean,Pull
+399,English,PR
+399,Korean,풀 리퀘스트
+399,English,Pull Request
+399,Korean,PR
+400,Korean,푸시
+400,English,Push
+400,Korean,Push
+401,English,Quality Assurance
+401,English,QA
+401,Korean,"QA, 품질 보증"
+402,English,Query
+402,Korean,"쿼리, 질의"
+403,Korean,큐
+403,English,Queue
+404,English,Quota
+404,Korean,"쿼터, 할당량"
+405,Korean,"R&D, 연구 개발"
+405,English,Research and Development
+405,English,R&D
+406,English,Race Condition
+406,Korean,경쟁 상태
+407,English,Rack
+407,Korean,랙
+408,Korean,램프업
+408,English,Ramp up
+409,Korean,원본 데이터
+409,Korean,로우 데이터
+409,English,Raw Data
+410,English,Readability
+410,Korean,가독성
+411,Korean,리드미
+411,English,ReadMe
+412,English,Real-time
+412,Korean,실시간
+413,English,Rebase
+413,Korean,리베이스
+414,English,Reboot
+414,Korean,재부팅
+415,Korean,데이터 정합
+415,English,Reconciliation
+416,English,Redundancy
+416,Korean,"이중화, 리던던시"
+417,Korean,리팩토링
+417,English,Refactoring
+418,Korean,"리퍼럴, 추천"
+418,English,Referral
+419,English,Regression Test
+419,Korean,"리그레션 테스트, 회귀 테스트"
+420,English,Regex
+420,Korean,정규표현식
+420,English,Regular Expression
+421,English,Release
+421,Korean,"릴리즈, 배포"
+422,Korean,신뢰성
+422,English,Reliability
+423,English,Remote
+423,Korean,"원격의, 리모트"
+424,Korean,렌더링
+424,English,Render
+425,Korean,복제하다
+425,English,Replicate
+426,English,Repository
+426,Korean,"리포지토리, 저장소"
+427,Korean,"요청, 리퀘스트"
+427,English,Request
+428,English,Requirement
+428,Korean,요구사항
+429,Korean,회복탄력성
+429,English,Resilient
+430,English,Resolution
+430,Korean,해상도
+431,Korean,"리소스, 자원"
+431,English,Resource
+432,Korean,"응답, 리스폰스"
+432,English,Response
+433,English,Responsive
+433,Korean,반응형
+434,Korean,"리텐션, 고객 유지"
+434,English,Retain
+435,English,Retrospective
+435,Korean,"회고, 레트로"
+436,Korean,재사용 가능한
+436,English,Reusable
+437,English,Revert
+437,Korean,"리버트, 되돌리기"
+438,Korean,"리스크, 위험 요소"
+438,English,Risk
+439,Korean,로드맵
+439,English,Roadmap
+440,English,Return on Investment
+440,English,ROI
+440,Korean,투자수익률
+441,Korean,롤백
+441,English,Rollback
+442,English,Rollout
+442,Korean,"롤아웃, 출시"
+443,Korean,루트
+443,English,Root
+444,English,Root Cause
+444,Korean,근본 원인
+445,Korean,라우터
+445,English,Router
+446,English,RPC
+446,English,Remote Procedure Call
+446,Korean,원격 프로시저 호출
+447,English,Rule of thumb
+447,Korean,경험 법칙
+448,English,Runtime
+448,Korean,런타임
+449,Korean,SaaS
+449,Korean,사스
+449,English,SaaS
+449,English,Software as a Service
+450,Korean,샌드박스
+450,English,Sandbox
+451,Korean,새니티 체크
+451,English,Sanity Check
+452,English,Scalability
+452,Korean,"확장성, 스케일러빌리티"
+453,Korean,스케줄러
+453,English,Scheduler
+454,English,Schema
+454,Korean,스키마
+455,Korean,"스코프, 범위"
+455,English,Scope
+456,English,Scratch
+456,Korean,"스크래치, 맨땅에서부터"
+457,Korean,스크립트
+457,English,Script
+458,English,SDK
+458,English,Software Development Kit
+458,Korean,"SDK, 소프트웨어 개발 키트"
+459,English,Seamless
+459,Korean,"심리스, 끊김 없는"
+460,Korean,"세그먼트, 고객군"
+460,English,Segment
+461,English,SEO
+461,Korean,검색 엔진 최적화
+461,English,Search Engine Optimization
+462,English,Sequential
+462,Korean,순차적인
+463,Korean,서버
+463,English,Server
+464,English,Serverless
+464,Korean,서버리스
+465,English,Session
+465,Korean,세션
+466,Korean,심각도
+466,English,Severity
+467,English,Shard
+467,Korean,샤드
+468,Korean,쉘
+468,English,Shell
+469,English,Sign-off
+469,Korean,"사인오프, 최종 승인"
+470,Korean,"사일로, 부서 이기주의"
+470,English,Silo
+471,English,Simulate
+471,Korean,시뮬레이션하다
+472,Korean,스켈레톤
+472,English,Skeleton
+473,English,Service Level Agreement
+473,English,SLA
+473,Korean,서비스 수준 협약
+474,Korean,스냅샷
+474,English,Snapshot
+475,English,Social Proof
+475,Korean,"소셜 프루프, 사회적 증거"
+476,Korean,소프트 론칭
+476,English,Soft Launch
+477,English,Solidify
+477,Korean,구체화하다
+478,Korean,스파게티 코드
+478,English,Spaghetti Code
+479,English,Specification
+479,Korean,"스펙, 명세서"
+479,English,Spec
+480,English,Sprint
+480,Korean,스프린트
+481,Korean,스테이징 환경
+481,English,Staging
+482,English,Stakeholder
+482,Korean,이해관계자
+483,Korean,스탠드업 미팅
+483,English,Stand-up Meeting
+484,Korean,상태
+484,Korean,스테이트
+484,English,State
+485,English,Static
+485,Korean,"정적인, 스태틱"
+486,English,Sticky
+486,Korean,스티키
+487,Korean,"스토리지, 저장소"
+487,English,Storage
+488,Korean,"간소화하다, 능률적으로 만들다"
+488,English,Streamline
+489,Korean,스트레스 테스트
+489,English,Stress Test
+490,English,String
+490,Korean,문자열
+491,English,Stub
+491,Korean,스텁
+492,English,Subnet
+492,Korean,서브넷
+493,English,Subscribe
+493,Korean,구독하다
+494,English,Sudo
+494,Korean,수두
+494,Korean,Sudo
+495,English,Sunk cost
+495,Korean,매몰 비용
+496,English,Scalable Vector Graphics
+496,English,SVG
+496,Korean,SVG
+497,Korean,스왑
+497,English,Swap
+498,Korean,대칭
+498,English,Symmetric
+499,Korean,싱크 맞추다
+499,English,Sync
+500,English,Synergy
+500,Korean,시너지
+501,English,Syntax
+501,Korean,"신택스, 문법"
+502,English,To Be Determined
+502,English,TBD
+502,Korean,추후 결정
+503,English,Transmission Control Protocol/Internet Protocol
+503,English,TCP/IP
+503,Korean,TCP/IP
+504,Korean,기술 부채
+504,English,Technical Debt
+505,Korean,"텔레메트리, 원격 측정"
+505,English,Telemetry
+506,Korean,템플릿
+506,English,Template
+507,English,Tenancy
+507,Korean,테넌시
+508,English,Tentative
+508,Korean,잠정적인
+509,Korean,터미널
+509,English,Terminal
+510,English,Terminate
+510,Korean,종료하다
+511,English,Test case
+511,Korean,테스트 케이스
+512,Korean,테스트베드
+512,English,Testbed
+513,English,Third-party
+513,Korean,"서드파티, 제3자"
+514,Korean,스레드
+514,English,Thread
+515,Korean,"임계값, 스레시홀드"
+515,English,Threshold
+516,English,Throttle
+516,Korean,스로틀링
+517,English,Throughput
+517,Korean,처리량
+518,English,Thumbnail
+518,Korean,썸네일
+519,Korean,"티어, 계층"
+519,English,Tier
+520,Korean,타임아웃
+520,English,Timeout
+521,English,Timestamp
+521,Korean,타임스탬프
+522,English,Toggle
+522,Korean,토글
+523,Korean,토큰
+523,English,Token
+524,English,Top-down approach
+524,Korean,탑다운
+524,Korean,하향식 접근
+525,English,Topology
+525,Korean,토폴로지
+526,Korean,"터치포인트, 고객 접점"
+526,English,Touchpoint
+527,English,Trace
+527,Korean,추적하다
+528,Korean,"트래킹하다, 추적하다"
+528,English,Track
+529,English,Trade-off
+529,Korean,"트레이드오프, 상충 관계"
+530,Korean,트래픽
+530,English,Traffic
+531,English,Transaction
+531,Korean,트랜잭션
+532,Korean,음성을 텍스트로 변환하다
+532,English,Transcribe
+533,English,Transparent
+533,Korean,투명한
+534,Korean,순회하다
+534,English,Traverse
+535,English,Triage
+535,Korean,"트리아지, 우선순위 분류"
+536,English,Trigger
+536,Korean,트리거
+537,Korean,"트러블슈팅, 문제 해결"
+537,English,Troubleshoot
+538,English,Truncate
+538,Korean,잘라내다
+539,Korean,Truthy
+539,Korean,참 같은 값
+539,English,Truthy
+540,English,Tunneling
+540,Korean,터널링
+541,Korean,미세 조정하다
+541,English,Tweak
+542,Korean,2단계 인증
+542,English,2FA
+542,English,Two-factor authentication
+543,Korean,타이포그래피
+543,English,Typography
+544,English,User Interface
+544,English,UI
+544,Korean,"UI, 사용자 인터페이스"
+545,Korean,UML
+545,English,Unified Modeling Language
+545,English,UML
+546,Korean,처리되지 않은
+546,Korean,예외가
+546,English,Uncaught
+547,English,Underlying
+547,Korean,"근본적인, 기저의"
+548,Korean,단위 테스트
+548,English,Unit Test
+549,English,Unix
+549,Korean,유닉스
+550,English,Unreachable
+550,Korean,도달할 수 없는
+551,Korean,불안정한
+551,English,Unstable
+552,English,Up-to-date
+552,Korean,최신의
+553,Korean,"업데이트, 갱신하다"
+553,English,Update
+554,Korean,업그레이드
+554,English,Upgrade
+555,English,Upload
+555,Korean,업로드
+556,Korean,"URL, 주소"
+556,English,Uniform Resource Locator
+556,English,URL
+557,Korean,사용성
+557,English,Usability
+558,Korean,"유스 케이스, 사용 사례"
+558,English,Use Case
+559,English,User-friendly
+559,Korean,사용자 친화적인
+560,Korean,사용자 여정
+560,English,User Journey
+561,English,Utility
+561,Korean,유틸리티
+562,Korean,"UUID, 고유 식별자"
+562,English,Universally Unique Identifier
+562,English,UUID
+563,English,Vanilla
+563,Korean,"바닐라, 순정"
+564,Korean,변수
+564,English,Variable
+565,English,Vector
+565,Korean,벡터
+566,Korean,"벤더, 공급업체"
+566,English,Vendor
+567,Korean,장황한
+567,English,Verbose
+567,Korean,Verbose
+568,Korean,버전 관리
+568,English,Version Control
+569,Korean,"실행 가능한, 실현 가능한"
+569,English,Viable
+570,English,View
+570,Korean,뷰
+570,Korean,View
+571,English,Virtual Machine
+571,Korean,가상 머신
+571,English,VM
+571,Korean,VM
+572,English,Virtualization
+572,Korean,가상화
+573,English,Volatile
+573,Korean,휘발성
+574,Korean,가상 사설망
+574,English,VPN
+574,English,Virtual Private Network
+574,Korean,VPN
+575,English,Vulnerability
+575,Korean,취약점
+576,Korean,워크스루
+576,English,Walkthrough
+577,English,Waterfall Model
+577,Korean,폭포수 모델
+578,Korean,웨비나
+578,English,Webinar
+579,English,Webhook
+579,Korean,웹훅
+580,Korean,가중치
+580,English,Weight
+581,English,White Label
+581,Korean,화이트 라벨
+582,Korean,화이트리스트
+582,English,Whitelist
+583,English,White paper
+583,Korean,백서
+584,Korean,위젯
+584,English,Widget
+585,English,Wildcard
+585,Korean,와일드카드
+586,Korean,와이어프레임
+586,English,Wireframe
+587,Korean,위자드
+587,English,Wizard
+587,Korean,마법사
+588,English,Workaround
+588,Korean,우회 방법
+589,Korean,"워크플로우, 업무 흐름"
+589,English,Workflow
+590,Korean,"워크로드, 작업 부하"
+590,English,Workload
+591,English,Workspace
+591,Korean,"워크스페이스, 작업 공간"
+592,Korean,"랩업, 마무리"
+592,English,Wrap-up
+593,Korean,래퍼
+593,Korean,Wrapper
+593,English,Wrapper
+594,Korean,위지윅
+594,English,What You See Is What You Get
+594,English,WYSIWYG
+595,Korean,XML
+595,English,XML
+595,English,eXtensible Markup Language
+596,Korean,XSS
+596,Korean,크로스 사이트 스크립팅
+596,English,XSS
+596,English,Cross-Site Scripting
+597,English,YAML
+597,English,YAML Ain't Markup Language
+597,Korean,야믈
+597,Korean,YAML
+598,Korean,야그니 원칙
+598,English,YAGNI
+598,English,You Ain't Gonna Need It
+599,Korean,제로데이 공격
+599,English,Zero-day
+600,English,Zero-downtime
+600,Korean,무중단
+601,English,Zombie Process
+601,Korean,좀비 프로세스
+602,Korean,Zone
+602,Korean,존
+602,English,Zone
+603,English,Zoom in / Zoom out
+603,Korean,줌인 / 줌아웃
