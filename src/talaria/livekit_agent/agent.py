@@ -82,6 +82,32 @@ async def entrypoint(ctx: agents.JobContext):
                 logging.exception("[RoomIO] set_participant failed")
 
     # ------------------------------
+    # 🆕 유틸: participant로부터 실제 표시용 이름 가져오기
+    # ------------------------------
+    def _get_display_name(participant) -> str:
+        """
+        participant의 metadata에서 username을 추출하거나,
+        없으면 name 또는 identity를 반환
+        """
+        try:
+            # 1) metadata에 username이 있는지 확인
+            metadata_str = getattr(participant, "metadata", "")
+            if metadata_str:
+                metadata = json.loads(metadata_str)
+                if "username" in metadata:
+                    return metadata["username"]
+            
+            # 2) name 속성 확인
+            name = getattr(participant, "name", "")
+            if name:
+                return name
+            
+            # 3) fallback: identity
+            return getattr(participant, "identity", "Unknown")
+        except Exception:
+            return getattr(participant, "identity", "Unknown")
+
+    # ------------------------------
     # 액티브 스피커 변경 이벤트: 현재 화자를 추적하고 STT 입력 전환
     # ------------------------------
     @ctx.room.on("active_speakers_changed")
@@ -111,17 +137,20 @@ async def entrypoint(ctx: agents.JobContext):
     # ------------------------------
     # DataChannel 퍼블리시 (v1 시그니처)
     # ------------------------------
-    async def _publish_stt(text: str, final: bool, identity_hint: Optional[str], psid_hint: Optional[str]):
+    async def _publish_stt(text: str, final: bool, identity: Optional[str], psid: Optional[str], username: Optional[str]):
+        """
+        🆕 username 파라미터 추가: 프론트엔드에서 표시할 실제 이름
+        """
         payload = {
             "type": "stt",
             "final": final,
             "text": text or "",
-            # 🔖 identity는 우리가 추적한 current_speaker_*를 우선 사용
-            "identity": identity_hint or current_speaker_identity or "",
-            "participant_sid": psid_hint or current_speaker_sid,
+            "identity": identity or current_speaker_identity or "",  # 원본 identity는 유지
+            "username": username or identity or current_speaker_identity or "",  # 🆕 표시용 이름
+            "participant_sid": psid or current_speaker_sid,
             "ts": time.time(),
         }
-        logging.info(f"📤 STT publish [{'FINAL' if final else 'PARTIAL'}]: {payload}")
+        logging.info(f"📤 STT publish [{'FINAL' if final else 'PARTIAL'}]: username={username}, text={text[:30]}...")
         try:
             # ✅ Python RTC v1: payload(bytes), reliable=True, topic="stt"
             await ctx.room.local_participant.publish_data(
@@ -134,8 +163,7 @@ async def entrypoint(ctx: agents.JobContext):
             logging.exception(f"❌ publish_data 실패: {e}")
 
     # ------------------------------
-    # 전사 이벤트: 여기서는 ev.speaker_id에 의존하지 않는다
-    # (대부분 None이므로, 우리가 추적한 current_speaker_* 사용)
+    # 전사 이벤트: 실제 오디오 트랙의 참가자를 정확하게 추출
     # ------------------------------
     @session.on("user_input_transcribed")
     def on_user_input_transcribed(ev):
@@ -144,20 +172,67 @@ async def entrypoint(ctx: agents.JobContext):
         try:
             text = getattr(ev, "transcript", "")
             is_final = bool(getattr(ev, "is_final", False))
-            # OpenAI/Clova 플러그인 대부분에서 speaker_id는 None
-            speaker_id = getattr(ev, "speaker_id", None)
-
-            # 만약 ev에 participant가 들어온 버전이라면 참고 (있으면 identity/sid 힌트로 사용)
-            identity_hint = None
-            psid_hint = None
+            
+            # 🔍 실제 말한 사람 찾기 (우선순위 순서)
+            identity = None
+            psid = None
+            username = None
+            participant_obj = None
+            
+            # 1) 이벤트에서 직접 participant 정보 확인
             p = getattr(ev, "participant", None)
             if p is not None:
-                identity_hint = getattr(p, "identity", None)
-                psid_hint = getattr(p, "sid", None) or getattr(p, "participant_sid", None)
+                identity = getattr(p, "identity", None)
+                psid = getattr(p, "sid", None) or getattr(p, "participant_sid", None)
+                username = _get_display_name(p)
+                participant_obj = p
+                logging.info(f"🎤 Speaker from ev.participant: {username} (identity={identity})")
+            
+            # 2) track_sid가 있으면 room에서 해당 트랙의 참가자 찾기
+            if not identity:
+                track_sid = getattr(ev, "track_sid", None)
+                if track_sid:
+                    # local participant 확인
+                    for track_pub in ctx.room.local_participant.track_publications.values():
+                        if track_pub.sid == track_sid:
+                            identity = ctx.room.local_participant.identity
+                            psid = ctx.room.local_participant.sid
+                            username = _get_display_name(ctx.room.local_participant)
+                            participant_obj = ctx.room.local_participant
+                            logging.info(f"🎤 Found LOCAL speaker by track_sid: {username}")
+                            break
+                    
+                    # remote participants 확인
+                    if not identity:
+                        for participant in ctx.room.remote_participants.values():
+                            for track_pub in participant.track_publications.values():
+                                if track_pub.sid == track_sid:
+                                    identity = participant.identity
+                                    psid = participant.sid
+                                    username = _get_display_name(participant)
+                                    participant_obj = participant
+                                    logging.info(f"🎤 Found REMOTE speaker by track_sid: {username}")
+                                    break
+                            if identity:
+                                break
+            
+            # 3) fallback: 우리가 추적한 active speaker 사용
+            if not identity:
+                identity = current_speaker_identity
+                psid = current_speaker_sid
+                # active speaker의 username 찾기
+                if identity:
+                    if ctx.room.local_participant.identity == identity:
+                        username = _get_display_name(ctx.room.local_participant)
+                    else:
+                        for p in ctx.room.remote_participants.values():
+                            if p.identity == identity:
+                                username = _get_display_name(p)
+                                break
+                logging.info(f"🎤 Using active speaker fallback: {username}")
 
-            # fallback: ev에 별 힌트가 없으면 우리가 추적한 값 사용
             loop = asyncio.get_running_loop()
-            loop.create_task(_publish_stt(text, is_final, identity_hint, psid_hint))
+            loop.create_task(_publish_stt(text, is_final, identity, psid, username))
 
         except Exception:
             logging.exception("transcribed 이벤트 파싱 실패")
