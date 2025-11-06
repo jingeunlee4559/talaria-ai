@@ -28,93 +28,137 @@ class STTAgent(Agent):
 # ------------------------------
 # 🆕 각 참가자별 STT 스트림 관리 클래스
 # ------------------------------
+
+
 class ParticipantSTTHandler:
+    """참가자별 실시간 음성(STT) 처리 핸들러"""
+
     def __init__(self, participant, track, stt_model, room, publish_callback):
         self.participant = participant
         self.track = track
         self.stt = stt_model
         self.room = room
         self.publish_callback = publish_callback
+
         self.stream = None
         self.task = None
         self._is_running = True
-        
+
+    # --------------------------------------------------
+    # 🎤 STT 시작 (자동 재시작 로직 포함)
+    # --------------------------------------------------
     async def start(self):
-        """오디오 트랙으로 STT 시작"""
+        audio_stream = rtc.AudioStream(self.track)
+
         try:
-            logging.info(f"[{self.participant.identity}] Starting Clova STT with track: {self.track.sid}")
-            
-            # STT 스트림 생성
-            self.stream = self.stt.stream()
-            self.task = asyncio.create_task(self._process_stream())
-            
-            # 오디오 데이터를 STT로 전송
-            async for event in rtc.AudioStream(self.track):
+            while self._is_running:
+                pid = getattr(self.participant, "identity", "unknown")
+                logging.info(f"[{pid}] 🔄 Starting new STT stream...")
+
+                # 1️⃣ 새 STT 스트림 생성
+                self.stream = self.stt.stream()
+                self.task = asyncio.create_task(self._process_stream())
+
+                try:
+                    # 2️⃣ 오디오 프레임 전달
+                    async for event in audio_stream:
+                        if not self._is_running:
+                            break
+                        if self.stream:
+                            self.stream.push_frame(event.frame)
+
+                    # 트랙이 unpublish된 경우 종료
+                    break
+
+                except RuntimeError as e:
+                    msg = str(e)
+                    if "is closed" in msg:
+                        logging.warning(f"[{pid}] ⚠️ Stream closed (likely silence). Restarting...")
+                    else:
+                        logging.error(f"[{pid}] Audio push runtime error: {msg}", exc_info=True)
+                        raise
+
+                # 3️⃣ 스트림 및 태스크 정리
+                await self._cleanup_stream_task()
+
+                # stop() 호출로 중단되었는지 확인
                 if not self._is_running:
                     break
-                if self.stream:
-                    try:
-                        self.stream.push_frame(event.frame)
-                    except RuntimeError as e:
-                        if "is closed" in str(e):
-                            logging.warning(f"[{self.participant.identity}] Stream closed, stopping")
-                            break
-                        raise
-                    
+
+                await asyncio.sleep(0.1)  # 재시작 대기
+
         except asyncio.CancelledError:
-            logging.info(f"[{self.participant.identity}] STT handler cancelled")
+            logging.info(f"[{self.participant.identity}] STT handler task cancelled")
+
         except Exception as e:
-            logging.error(f"[{self.participant.identity}] STT handler error: {e}")
+            logging.error(
+                f"[{self.participant.identity}] STT handler failed catastrophically: {e}",
+                exc_info=True
+            )
+
         finally:
+            logging.info(f"[{self.participant.identity}] 🛑 Cleaning up STT handler...")
             self._is_running = False
-    
+            await self._cleanup_stream_task()
+            await audio_stream.aclose()
+
+    # --------------------------------------------------
+    # 🧩 STT 결과 처리 루프
+    # --------------------------------------------------
     async def _process_stream(self):
-        """STT 결과 처리"""
+        pid = getattr(self.participant, "identity", "unknown")
         try:
             async for event in self.stream:
                 if not self._is_running:
                     break
                 await self._handle_transcription(event)
+
         except StopAsyncIteration:
-            logging.info(f"[{self.participant.identity}] STT stream ended")
+            logging.info(f"[{pid}] STT stream ended normally")
+
         except Exception as e:
-            # 빈 응답 에러는 무시하고 계속 진행
             error_msg = str(e)
-            if "Unexpected response" in error_msg and "'text': ''" in error_msg:
-                logging.debug(f"[{self.participant.identity}] Empty response from Clova (silence detected)")
-            else:
-                logging.error(f"[{self.participant.identity}] Stream processing error: {e}")
-    
+            try:
+                # 1️⃣ Clova: 빈 응답 (무음)
+                if "Unexpected response" in error_msg and "'text': ''" in error_msg:
+                    logging.debug(f"[{pid}] 💤 Clova: 빈 응답 감지 (무음 처리됨)")
+
+                # 2️⃣ StreamAdapter: 신뢰도 임계값 미만
+                elif "Confidence" in error_msg and "bellow threshold" in error_msg:
+                    logging.debug(f"[{pid}] ⚠️ 낮은 신뢰도 결과 무시: {error_msg}")
+
+                # 3️⃣ 기타 오류
+                else:
+                    logging.error(f"[{pid}] ❌ STT 스트림 처리 오류: {error_msg}", exc_info=False)
+
+            except Exception as log_error:
+                logging.error(f"[{pid}] 🚨 예외 로깅 중 오류: {log_error}")
+
+    # --------------------------------------------------
+    # 🗣️ 전사 결과 처리 및 전송
+    # --------------------------------------------------
     async def _handle_transcription(self, event):
-        """전사 결과를 DataChannel로 발행"""
+        pid = getattr(self.participant, "identity", "unknown")
         try:
-            # 이벤트 타입 확인
-            event_type = getattr(event, 'type', None)
-            
-            # Clova STT는 SPEECH_FINAL, SPEECH_INTERIM으로 구분
-            is_final = True
-            if event_type:
-                event_type_str = str(event_type).lower()
-                if 'interim' in event_type_str or 'partial' in event_type_str:
-                    is_final = False
-                elif 'final' in event_type_str:
-                    is_final = True
-            
+            # 이벤트 타입 식별
+            event_type = getattr(event, 'type', '').lower()
+            is_final = 'final' in event_type and 'interim' not in event_type
+
             # 텍스트 추출
             text = ""
             if hasattr(event, 'alternatives') and event.alternatives:
                 text = event.alternatives[0].text
             elif hasattr(event, 'text'):
                 text = event.text
-            
+
             # 빈 텍스트는 무시
             if not text or not text.strip():
-                logging.debug(f"[{self.participant.identity}] Empty text, skipping")
+                logging.debug(f"[{pid}] Empty text skipped")
                 return
-            
-            # username 추출
+
             username = self._get_username()
-            
+
+            # DataChannel 전송
             await self.publish_callback(
                 text=text,
                 final=is_final,
@@ -122,38 +166,51 @@ class ParticipantSTTHandler:
                 psid=self.participant.sid,
                 username=username
             )
-            
+
         except Exception as e:
-            logging.error(f"[{self.participant.identity}] Transcription handling error: {e}")
-    
+            logging.error(f"[{pid}] 🧩 Transcription handling error: {e}", exc_info=True)
+
+    # --------------------------------------------------
+    # 👤 username 추출
+    # --------------------------------------------------
     def _get_username(self) -> str:
-        """participant의 username 추출"""
         try:
             metadata = json.loads(self.participant.metadata or '{}')
             if "username" in metadata:
                 return metadata["username"]
-        except:
+        except Exception:
             pass
         return self.participant.name or self.participant.identity
-    
-    async def stop(self):
-        """STT 스트림 정리"""
-        self._is_running = False
-        
+
+    # --------------------------------------------------
+    # 🧹 스트림/태스크 정리
+    # --------------------------------------------------
+    async def _cleanup_stream_task(self):
+        """스트림 및 태스크 안전 종료"""
         if self.task:
             self.task.cancel()
             try:
                 await self.task
             except asyncio.CancelledError:
                 pass
-        
+            self.task = None
+
         if self.stream:
             try:
                 await self.stream.aclose()
-            except:
+            except Exception:
                 pass
-        
-        logging.info(f"[{self.participant.identity}] STT handler stopped")
+            self.stream = None
+
+    # --------------------------------------------------
+    # 🛑 STT 정지
+    # --------------------------------------------------
+    async def stop(self):
+        pid = getattr(self.participant, "identity", "unknown")
+        logging.info(f"[{pid}] Received stop signal. Cleaning up...")
+        self._is_running = False
+        await self._cleanup_stream_task()
+        logging.info(f"[{pid}] STT handler stopped cleanly")
 
 
 async def entrypoint(ctx: agents.JobContext):
@@ -162,7 +219,7 @@ async def entrypoint(ctx: agents.JobContext):
     # ✅ Clova STT 초기화 (StreamAdapter 사용)
     try:
         base_stt = clova_stt.STT(
-            language=os.getenv("CLOVA_LANG", "ko-KR"),
+            language=os.getenv("CLOVA_LANG", "enko"),
         )
         
         # StreamAdapter로 래핑 (더 긴 VAD 설정)
@@ -177,6 +234,8 @@ async def entrypoint(ctx: agents.JobContext):
 
             ),
         )
+        
+        
         
         logging.info("✅ STT provider = CLOVA (with StreamAdapter)")
         logging.info(f"   Language: {os.getenv('CLOVA_LANG', 'ko-KR')}")
