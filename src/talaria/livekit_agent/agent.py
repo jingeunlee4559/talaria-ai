@@ -1,11 +1,14 @@
 import os, json, sys, asyncio, logging, time
-from typing import Optional, Tuple, Any, List
+from typing import Optional, Tuple, Any, List, Dict
 
 from dotenv import load_dotenv
-from livekit import agents
-from livekit.agents import Agent, AgentSession, RoomInputOptions, WorkerOptions, cli
+from livekit import agents, rtc
+from livekit.agents import Agent, WorkerOptions, cli
 from livekit.plugins import silero
-from livekit.plugins import openai  # ← 현재 OpenAI STT 사용
+from livekit.agents.stt import StreamAdapter
+
+# Clova STT import
+from livekit.plugins import clova as clova_stt
 
 load_dotenv()
 
@@ -18,255 +21,304 @@ if src_path not in sys.path:
 
 class STTAgent(Agent):
     def __init__(self, room):
-        super().__init__(instructions="STT-function agent")
+        super().__init__(instructions="Multi-user STT agent with Clova")
         self.room = room
 
 
 # ------------------------------
-# 유틸: 디바운스 (active speaker 스위칭 과도 시 진동 방지)
+# 🆕 각 참가자별 STT 스트림 관리 클래스
 # ------------------------------
-class Debouncer:
-    def __init__(self, delay_sec: float = 0.3):
-        self._delay = delay_sec
-        self._task: Optional[asyncio.Task] = None
-
-    def run(self, coro_func, *args, **kwargs):
-        if self._task and not self._task.done():
-            self._task.cancel()
-        async def _job():
+class ParticipantSTTHandler:
+    def __init__(self, participant, track, stt_model, room, publish_callback):
+        self.participant = participant
+        self.track = track
+        self.stt = stt_model
+        self.room = room
+        self.publish_callback = publish_callback
+        self.stream = None
+        self.task = None
+        self._is_running = True
+        
+    async def start(self):
+        """오디오 트랙으로 STT 시작"""
+        try:
+            logging.info(f"[{self.participant.identity}] Starting Clova STT with track: {self.track.sid}")
+            
+            # STT 스트림 생성
+            self.stream = self.stt.stream()
+            self.task = asyncio.create_task(self._process_stream())
+            
+            # 오디오 데이터를 STT로 전송
+            async for event in rtc.AudioStream(self.track):
+                if not self._is_running:
+                    break
+                if self.stream:
+                    try:
+                        self.stream.push_frame(event.frame)
+                    except RuntimeError as e:
+                        if "is closed" in str(e):
+                            logging.warning(f"[{self.participant.identity}] Stream closed, stopping")
+                            break
+                        raise
+                    
+        except asyncio.CancelledError:
+            logging.info(f"[{self.participant.identity}] STT handler cancelled")
+        except Exception as e:
+            logging.error(f"[{self.participant.identity}] STT handler error: {e}")
+        finally:
+            self._is_running = False
+    
+    async def _process_stream(self):
+        """STT 결과 처리"""
+        try:
+            async for event in self.stream:
+                if not self._is_running:
+                    break
+                await self._handle_transcription(event)
+        except StopAsyncIteration:
+            logging.info(f"[{self.participant.identity}] STT stream ended")
+        except Exception as e:
+            # 빈 응답 에러는 무시하고 계속 진행
+            error_msg = str(e)
+            if "Unexpected response" in error_msg and "'text': ''" in error_msg:
+                logging.debug(f"[{self.participant.identity}] Empty response from Clova (silence detected)")
+            else:
+                logging.error(f"[{self.participant.identity}] Stream processing error: {e}")
+    
+    async def _handle_transcription(self, event):
+        """전사 결과를 DataChannel로 발행"""
+        try:
+            # 이벤트 타입 확인
+            event_type = getattr(event, 'type', None)
+            
+            # Clova STT는 SPEECH_FINAL, SPEECH_INTERIM으로 구분
+            is_final = True
+            if event_type:
+                event_type_str = str(event_type).lower()
+                if 'interim' in event_type_str or 'partial' in event_type_str:
+                    is_final = False
+                elif 'final' in event_type_str:
+                    is_final = True
+            
+            # 텍스트 추출
+            text = ""
+            if hasattr(event, 'alternatives') and event.alternatives:
+                text = event.alternatives[0].text
+            elif hasattr(event, 'text'):
+                text = event.text
+            
+            # 빈 텍스트는 무시
+            if not text or not text.strip():
+                logging.debug(f"[{self.participant.identity}] Empty text, skipping")
+                return
+            
+            # username 추출
+            username = self._get_username()
+            
+            await self.publish_callback(
+                text=text,
+                final=is_final,
+                identity=self.participant.identity,
+                psid=self.participant.sid,
+                username=username
+            )
+            
+        except Exception as e:
+            logging.error(f"[{self.participant.identity}] Transcription handling error: {e}")
+    
+    def _get_username(self) -> str:
+        """participant의 username 추출"""
+        try:
+            metadata = json.loads(self.participant.metadata or '{}')
+            if "username" in metadata:
+                return metadata["username"]
+        except:
+            pass
+        return self.participant.name or self.participant.identity
+    
+    async def stop(self):
+        """STT 스트림 정리"""
+        self._is_running = False
+        
+        if self.task:
+            self.task.cancel()
             try:
-                await asyncio.sleep(self._delay)
-                await coro_func(*args, **kwargs)
+                await self.task
             except asyncio.CancelledError:
                 pass
-            except Exception:
-                logging.exception("[Debouncer] job error")
-        loop = asyncio.get_running_loop()
-        self._task = loop.create_task(_job())
+        
+        if self.stream:
+            try:
+                await self.stream.aclose()
+            except:
+                pass
+        
+        logging.info(f"[{self.participant.identity}] STT handler stopped")
 
 
 async def entrypoint(ctx: agents.JobContext):
     agent = STTAgent(ctx.room)
-
-    # --- AgentSession 구성 ---
-    session = AgentSession(
-        stt=openai.STT(
-            model="gpt-4o-transcribe",
-            language="ko",        # OpenAI STT에 맞춘 언어 코드
-        ),
-        vad=silero.VAD.load(),   # 필요 시 민감도 조정: threshold는 STT 쪽, 여기선 기본
-    )
-
-    # 현재 STT 입력을 누구로 볼지 추적 (액티브 스피커 기반)
-    current_speaker_identity: Optional[str] = None
-    current_speaker_sid: Optional[str] = None
-    switch_debouncer = Debouncer(delay_sec=0.35)  # 빠른 스위칭 완화
-
-    # room_io가 있는 버전이면 사용 (없으면 스위칭만 추적)
-    room_io = getattr(session, "room_io", None)
-    has_set_participant = hasattr(room_io, "set_participant") if room_io else False
-
-    async def _switch_stt_input_to(identity: Optional[str], sid: Optional[str]):
-        nonlocal current_speaker_identity, current_speaker_sid
-        if identity:
-            current_speaker_identity = identity
-        if sid:
-            current_speaker_sid = sid
-
-        if has_set_participant and identity:
-            try:
-                # 🔁 STT 입력 참가자 전환 (지원 버전에서만)
-                room_io.set_participant(identity)
-                logging.info(f"[RoomIO] switched STT input to participant identity={identity} sid={sid}")
-            except Exception:
-                logging.exception("[RoomIO] set_participant failed")
-
-    # ------------------------------
-    # 🆕 유틸: participant로부터 실제 표시용 이름 가져오기
-    # ------------------------------
-    def _get_display_name(participant) -> str:
-        """
-        participant의 metadata에서 username을 추출하거나,
-        없으면 name 또는 identity를 반환
-        """
-        try:
-            # 1) metadata에 username이 있는지 확인
-            metadata_str = getattr(participant, "metadata", "")
-            if metadata_str:
-                metadata = json.loads(metadata_str)
-                if "username" in metadata:
-                    return metadata["username"]
+    
+    # ✅ Clova STT 초기화 (StreamAdapter 사용)
+    try:
+        base_stt = clova_stt.STT(
+            language=os.getenv("CLOVA_LANG", "ko-KR"),
+        )
+        
+        # StreamAdapter로 래핑 (더 긴 VAD 설정)
+        stt_model = StreamAdapter(
+            stt=base_stt,
+            # vad=silero.VAD.load(
+            #     min_speech_duration=0.5,  # 최소 음성 길이 (초)
+            #     min_silence_duration=0.8,  # 최소 침묵 길이 (초)
+            # ),
             
-            # 2) name 속성 확인
-            name = getattr(participant, "name", "")
-            if name:
-                return name
-            
-            # 3) fallback: identity
-            return getattr(participant, "identity", "Unknown")
-        except Exception:
-            return getattr(participant, "identity", "Unknown")
+            vad=silero.VAD.load(
 
+            ),
+        )
+        
+        logging.info("✅ STT provider = CLOVA (with StreamAdapter)")
+        logging.info(f"   Language: {os.getenv('CLOVA_LANG', 'ko-KR')}")
+    except Exception as e:
+        logging.exception(f"❌ Failed to initialize Clova STT: {e}")
+        return
+    
+    # 참가자별 STT 핸들러 관리
+    handlers: Dict[str, ParticipantSTTHandler] = {}
+    
     # ------------------------------
-    # 액티브 스피커 변경 이벤트: 현재 화자를 추적하고 STT 입력 전환
+    # DataChannel 퍼블리시
     # ------------------------------
-    @ctx.room.on("active_speakers_changed")
-    def _on_active_speakers_changed(*args: Any):
-        """
-        SDK/버전별 시그니처 차이를 흡수하기 위해 가변 인자 처리:
-        보통 첫 인자에 speakers(list[Participant])가 옵니다.
-        """
-        try:
-            speakers: Optional[List[Any]] = None
-            # args 예: (speakers,) 또는 (room, speakers) 등일 수 있으니 유연 처리
-            for a in args:
-                if isinstance(a, list):
-                    speakers = a
-                    break
-            if not speakers:
-                return
-            # 가장 우선 스피커를 택함
-            top = speakers[0]
-            pid = getattr(top, "identity", None)
-            psid = getattr(top, "sid", None) or getattr(top, "participant_sid", None)
-            if pid or psid:
-                switch_debouncer.run(_switch_stt_input_to, pid, psid)
-        except Exception:
-            logging.exception("active_speakers_changed handler error")
-
-    # ------------------------------
-    # DataChannel 퍼블리시 (v1 시그니처)
-    # ------------------------------
-    async def _publish_stt(text: str, final: bool, identity: Optional[str], psid: Optional[str], username: Optional[str]):
-        """
-        🆕 username 파라미터 추가: 프론트엔드에서 표시할 실제 이름
-        """
+    async def _publish_stt(text: str, final: bool, identity: str, psid: str, username: str):
+        """STT 결과를 DataChannel로 발행"""
         payload = {
             "type": "stt",
             "final": final,
             "text": text or "",
-            "identity": identity or current_speaker_identity or "",  # 원본 identity는 유지
-            "username": username or identity or current_speaker_identity or "",  # 🆕 표시용 이름
-            "participant_sid": psid or current_speaker_sid,
+            "identity": identity,
+            "username": username,
+            "participant_sid": psid,
             "ts": time.time(),
         }
-        logging.info(f"📤 STT publish [{'FINAL' if final else 'PARTIAL'}]: username={username}, text={text[:30]}...")
+        
+        log_type = "FINAL" if final else "PARTIAL"
+        logging.info(f"📤 STT [{log_type}] {username}: {text[:50]}...")
+        
         try:
-            # ✅ Python RTC v1: payload(bytes), reliable=True, topic="stt"
             await ctx.room.local_participant.publish_data(
                 json.dumps(payload, ensure_ascii=False).encode("utf-8"),
                 reliable=True,
                 topic="stt",
             )
-            logging.info(f"✅ Published STT: {text[:50]}...")
         except Exception as e:
-            logging.exception(f"❌ publish_data 실패: {e}")
-
+            logging.exception(f"❌ publish_data failed: {e}")
+    
     # ------------------------------
-    # 전사 이벤트: 실제 오디오 트랙의 참가자를 정확하게 추출
+    # 트랙 발행 이벤트
     # ------------------------------
-    @session.on("user_input_transcribed")
-    def on_user_input_transcribed(ev):
-        # 디버깅용 원본 출력
-        logging.debug(f"[ev] {ev}")
-        try:
-            text = getattr(ev, "transcript", "")
-            is_final = bool(getattr(ev, "is_final", False))
-            
-            # 🔍 실제 말한 사람 찾기 (우선순위 순서)
-            identity = None
-            psid = None
-            username = None
-            participant_obj = None
-            
-            # 1) 이벤트에서 직접 participant 정보 확인
-            p = getattr(ev, "participant", None)
-            if p is not None:
-                identity = getattr(p, "identity", None)
-                psid = getattr(p, "sid", None) or getattr(p, "participant_sid", None)
-                username = _get_display_name(p)
-                participant_obj = p
-                logging.info(f"🎤 Speaker from ev.participant: {username} (identity={identity})")
-            
-            # 2) track_sid가 있으면 room에서 해당 트랙의 참가자 찾기
-            if not identity:
-                track_sid = getattr(ev, "track_sid", None)
-                if track_sid:
-                    # local participant 확인
-                    for track_pub in ctx.room.local_participant.track_publications.values():
-                        if track_pub.sid == track_sid:
-                            identity = ctx.room.local_participant.identity
-                            psid = ctx.room.local_participant.sid
-                            username = _get_display_name(ctx.room.local_participant)
-                            participant_obj = ctx.room.local_participant
-                            logging.info(f"🎤 Found LOCAL speaker by track_sid: {username}")
-                            break
-                    
-                    # remote participants 확인
-                    if not identity:
-                        for participant in ctx.room.remote_participants.values():
-                            for track_pub in participant.track_publications.values():
-                                if track_pub.sid == track_sid:
-                                    identity = participant.identity
-                                    psid = participant.sid
-                                    username = _get_display_name(participant)
-                                    participant_obj = participant
-                                    logging.info(f"🎤 Found REMOTE speaker by track_sid: {username}")
-                                    break
-                            if identity:
-                                break
-            
-            # 3) fallback: 우리가 추적한 active speaker 사용
-            if not identity:
-                identity = current_speaker_identity
-                psid = current_speaker_sid
-                # active speaker의 username 찾기
-                if identity:
-                    if ctx.room.local_participant.identity == identity:
-                        username = _get_display_name(ctx.room.local_participant)
-                    else:
-                        for p in ctx.room.remote_participants.values():
-                            if p.identity == identity:
-                                username = _get_display_name(p)
-                                break
-                logging.info(f"🎤 Using active speaker fallback: {username}")
-
-            loop = asyncio.get_running_loop()
-            loop.create_task(_publish_stt(text, is_final, identity, psid, username))
-
-        except Exception:
-            logging.exception("transcribed 이벤트 파싱 실패")
+    def _on_track_published(publication, participant):
+        """트랙이 발행되면 호출 (동기 콜백)"""
+        asyncio.create_task(_handle_track_published(publication, participant))
+    
+    async def _handle_track_published(publication, participant):
+        """오디오 트랙 발행 처리 (비동기 로직)"""
+        if publication.kind != rtc.TrackKind.KIND_AUDIO:
             return
-
+        
+        handler_key = f"{participant.sid}_{publication.sid}"
+        if handler_key in handlers:
+            logging.info(f"[{participant.identity}] Audio track already being processed")
+            return
+        
+        logging.info(f"🎤 [{participant.identity}] Audio track published: {publication.sid}")
+        
+        track = publication.track
+        if not track:
+            logging.info(f"[{participant.identity}] Waiting for track to be available...")
+            await asyncio.sleep(0.5)
+            track = publication.track
+        
+        if not track:
+            logging.warning(f"[{participant.identity}] Track still not available, skipping")
+            return
+        
+        handler = ParticipantSTTHandler(
+            participant=participant,
+            track=track,
+            stt_model=stt_model,
+            room=ctx.room,
+            publish_callback=_publish_stt
+        )
+        handlers[handler_key] = handler
+        asyncio.create_task(handler.start())
+    
     # ------------------------------
-    # 종료/에러 로깅
+    # 트랙 제거 이벤트
     # ------------------------------
-    @session.on("end")
-    def on_end(ev=None):
-        logging.info(f"[AgentSession END] ev={ev}")
-
-    @session.on("error")
-    def on_error(err):
-        logging.exception(f"[AgentSession ERROR] {err}")
-
+    def _on_track_unpublished(publication, participant):
+        """트랙이 제거되면 호출 (동기 콜백)"""
+        asyncio.create_task(_handle_track_unpublished(publication, participant))
+    
+    async def _handle_track_unpublished(publication, participant):
+        """트랙 제거 처리 (비동기 로직)"""
+        if publication.kind != rtc.TrackKind.KIND_AUDIO:
+            return
+        
+        handler_key = f"{participant.sid}_{publication.sid}"
+        handler = handlers.pop(handler_key, None)
+        
+        if handler:
+            logging.info(f"🔇 [{participant.identity}] Audio track unpublished: {publication.sid}")
+            await handler.stop()
+    
     # ------------------------------
-    # 세션 시작
+    # 이벤트 리스너 등록
+    # ------------------------------
+    ctx.room.on("track_published", _on_track_published)
+    ctx.room.on("track_unpublished", _on_track_unpublished)
+    
+    logging.info("🎙️ Multi-user STT Agent starting...")
+    
+    # ------------------------------
+    # 룸 연결 대기
     # ------------------------------
     try:
-        await session.start(
-            room=ctx.room,
-            agent=agent,
-            room_input_options=RoomInputOptions(
-                noise_cancellation=None,
-                close_on_disconnect=False,  # 잠깐 이탈해도 세션 유지
-            ),
-        )
+        await ctx.connect()
+        logging.info("✅ Connected to room")
+    except Exception as e:
+        logging.exception(f"❌ Failed to connect to room: {e}")
+        return
+    
+    # ------------------------------
+    # 이미 발행된 트랙 처리
+    # ------------------------------
+    await asyncio.sleep(1)
+    
+    logging.info("🔍 Processing existing tracks...")
+    
+    for participant in ctx.room.remote_participants.values():
+        for publication in participant.track_publications.values():
+            if publication.kind == rtc.TrackKind.KIND_AUDIO and publication.track:
+                logging.info(f"📌 Found existing audio track from {participant.identity}")
+                await _handle_track_published(publication, participant)
+    
+    logging.info("🎙️ Multi-user STT Agent ready (Clova)")
+    
+    # ------------------------------
+    # Agent 유지
+    # ------------------------------
+    try:
+        while ctx.room.connection_state == rtc.ConnectionState.CONN_CONNECTED:
+            await asyncio.sleep(1)
     except asyncio.CancelledError:
         logging.warning("[JobContext] cancelled by dispatcher")
-        raise
     except Exception as e:
-        logging.exception(f"[entrypoint] session.start 예외: {e}")
-        raise
+        logging.exception(f"[entrypoint] error: {e}")
+    finally:
+        for handler in list(handlers.values()):
+            await handler.stop()
+        logging.info("🛑 STT Agent stopped")
 
 
 if __name__ == "__main__":
