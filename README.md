@@ -23,6 +23,11 @@ conda env export > environment.yml
 python src/talaria/livekit_agent/agent.py dev
 ```
 
+임시파일 실행
+```
+python src/talaria/livekit_agent/temp.py dev 
+```
+
 운영모드로 실행
 ```
 python src/talaria/livekit_agent/agent.py start
