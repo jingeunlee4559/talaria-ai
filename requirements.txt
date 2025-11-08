@@ -28,3 +28,8 @@ pyahocorasick
 pydantic
 python-multipart
 python-dotenv
+
+# ---rag_processeor (RAG) ---
+PyMuPDF      # PDF 텍스트 추출용
+python-docx    # .docx (워드) 텍스트 추출용
+python-pptx    # .pptx (파워포인트) 텍스트 추출용

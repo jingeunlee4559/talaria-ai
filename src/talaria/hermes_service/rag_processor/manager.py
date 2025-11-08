@@ -1,0 +1,1 @@
+# parser -> chunker -> embedder -> vector_store의 과정 파이프라인을 하나로 관리하는 파일
