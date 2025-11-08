@@ -73,4 +73,7 @@ Thumbs.db
 
 # data raw file
 gartner_glossary_raw.html
-test_files
+test_files/
+
+# VectorDB
+persistent_data/
