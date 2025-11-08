@@ -1,75 +1,86 @@
-import os, json, sys, asyncio, logging, time
-from typing import Optional, Tuple, Any, List, Dict
+
+import os
+import sys
+
+_THIS_FILE = os.path.abspath(__file__)                              # .../src/talaria/livekit_agent/agent.py
+_THIS_DIR  = os.path.dirname(_THIS_FILE)                            # .../src/talaria/livekit_agent
+_SRC_DIR   = os.path.abspath(os.path.join(_THIS_DIR, "../../"))     # .../src
+if _SRC_DIR not in sys.path:
+    sys.path.insert(0, _SRC_DIR)
+
+import json
+import asyncio
+import logging
+import time
+from typing import Optional, Any, List, Dict
 
 from dotenv import load_dotenv
 from livekit import agents, rtc
 from livekit.agents import Agent, WorkerOptions, cli
 from livekit.plugins import silero
 from livekit.agents.stt import StreamAdapter
-
-# Clova STT import
 from livekit.plugins import clova as clova_stt
+from talaria.livekit_agent.manner_checker import MannerChecker
 
 load_dotenv()
-
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../"))
-src_path = os.path.abspath(os.path.join(PROJECT_ROOT, "src"))
-if src_path not in sys.path:
-    sys.path.insert(0, src_path)
 
 
 class STTAgent(Agent):
     def __init__(self, room):
-        super().__init__(instructions="Multi-user STT agent with Clova")
+        super().__init__(instructions="Multi-user STT agent with Clova + MannerChecker")
         self.room = room
 
 
-# ------------------------------
-# 🆕 각 참가자별 STT 스트림 관리 클래스
-# ------------------------------
-
-
 class ParticipantSTTHandler:
-    """참가자별 실시간 음성(STT) 처리 핸들러"""
+    """Handle realtime STT for a participant's audio track."""
 
-    def __init__(self, participant, track, stt_model, room, publish_callback):
+    def __init__(
+        self,
+        participant,
+        track,
+        stt_model,
+        room,
+        publish_callback,
+        *,
+        manner_checker: Optional[MannerChecker] = None,
+        publish_manner_callback=None,
+        stt_language: str = "ko-KR",
+    ):
         self.participant = participant
         self.track = track
         self.stt = stt_model
         self.room = room
         self.publish_callback = publish_callback
 
+        # ✅ Manner
+        self.mchecker = manner_checker
+        self.publish_manner_callback = publish_manner_callback
+        self.stt_language = stt_language
+
         self.stream = None
         self.task = None
         self._is_running = True
 
-    # --------------------------------------------------
-    # 🎤 STT 시작 (자동 재시작 로직 포함)
-    # --------------------------------------------------
     async def start(self):
         audio_stream = rtc.AudioStream(self.track)
-
+        pid = getattr(self.participant, "identity", "unknown")
         try:
             while self._is_running:
-                pid = getattr(self.participant, "identity", "unknown")
                 logging.info(f"[{pid}] 🔄 Starting new STT stream...")
-
-                # 1️⃣ 새 STT 스트림 생성
+                # 1) open a new STT stream
                 self.stream = self.stt.stream()
                 self.task = asyncio.create_task(self._process_stream())
 
                 try:
-                    # 2️⃣ 오디오 프레임 전달
+                    # 2) forward audio frames
                     async for event in audio_stream:
                         if not self._is_running:
                             break
                         if self.stream:
                             self.stream.push_frame(event.frame)
-
-                    # 트랙이 unpublish된 경우 종료
+                    # track unpublished => exit loop
                     break
-
                 except RuntimeError as e:
                     msg = str(e)
                     if "is closed" in msg:
@@ -78,33 +89,20 @@ class ParticipantSTTHandler:
                         logging.error(f"[{pid}] Audio push runtime error: {msg}", exc_info=True)
                         raise
 
-                # 3️⃣ 스트림 및 태스크 정리
                 await self._cleanup_stream_task()
-
-                # stop() 호출로 중단되었는지 확인
                 if not self._is_running:
                     break
-
-                await asyncio.sleep(0.1)  # 재시작 대기
-
+                await asyncio.sleep(0.1)
         except asyncio.CancelledError:
-            logging.info(f"[{self.participant.identity}] STT handler task cancelled")
-
+            logging.info(f"[{pid}] STT handler task cancelled")
         except Exception as e:
-            logging.error(
-                f"[{self.participant.identity}] STT handler failed catastrophically: {e}",
-                exc_info=True
-            )
-
+            logging.error(f"[{pid}] STT handler failed catastrophically: {e}", exc_info=True)
         finally:
-            logging.info(f"[{self.participant.identity}] 🛑 Cleaning up STT handler...")
+            logging.info(f"[{pid}] 🛑 Cleaning up STT handler...")
             self._is_running = False
             await self._cleanup_stream_task()
             await audio_stream.aclose()
 
-    # --------------------------------------------------
-    # 🧩 STT 결과 처리 루프
-    # --------------------------------------------------
     async def _process_stream(self):
         pid = getattr(self.participant, "identity", "unknown")
         try:
@@ -112,53 +110,39 @@ class ParticipantSTTHandler:
                 if not self._is_running:
                     break
                 await self._handle_transcription(event)
-
         except StopAsyncIteration:
             logging.info(f"[{pid}] STT stream ended normally")
-
         except Exception as e:
             error_msg = str(e)
             try:
-                # 1️⃣ Clova: 빈 응답 (무음)
                 if "Unexpected response" in error_msg and "'text': ''" in error_msg:
-                    logging.debug(f"[{pid}] 💤 Clova: 빈 응답 감지 (무음 처리됨)")
-
-                # 2️⃣ StreamAdapter: 신뢰도 임계값 미만
+                    logging.debug(f"[{pid}] 💤 Clova: empty response (silence)")
                 elif "Confidence" in error_msg and "bellow threshold" in error_msg:
-                    logging.debug(f"[{pid}] ⚠️ 낮은 신뢰도 결과 무시: {error_msg}")
-
-                # 3️⃣ 기타 오류
+                    logging.debug(f"[{pid}] ⚠️ low-confidence result ignored: {error_msg}")
                 else:
-                    logging.error(f"[{pid}] ❌ STT 스트림 처리 오류: {error_msg}", exc_info=False)
-
+                    logging.error(f"[{pid}] ❌ STT stream error: {error_msg}")
             except Exception as log_error:
-                logging.error(f"[{pid}] 🚨 예외 로깅 중 오류: {log_error}")
+                logging.error(f"[{pid}] 🚨 error while logging: {log_error}")
 
-    # --------------------------------------------------
-    # 🗣️ 전사 결과 처리 및 전송
-    # --------------------------------------------------
     async def _handle_transcription(self, event):
         pid = getattr(self.participant, "identity", "unknown")
         try:
-            # 이벤트 타입 식별
             event_type = getattr(event, 'type', '').lower()
             is_final = 'final' in event_type and 'interim' not in event_type
 
-            # 텍스트 추출
             text = ""
             if hasattr(event, 'alternatives') and event.alternatives:
                 text = event.alternatives[0].text
             elif hasattr(event, 'text'):
                 text = event.text
 
-            # 빈 텍스트는 무시
             if not text or not text.strip():
                 logging.debug(f"[{pid}] Empty text skipped")
                 return
 
             username = self._get_username()
 
-            # DataChannel 전송
+            # 1) publish STT
             await self.publish_callback(
                 text=text,
                 final=is_final,
@@ -167,12 +151,23 @@ class ParticipantSTTHandler:
                 username=username
             )
 
+            # 2) Manner check only for FINAL
+            if is_final and self.mchecker and self.publish_manner_callback:
+                try:
+                    alerts = await self.mchecker.process_text(
+                        text=text,
+                        room_name=self.room.name,
+                        speaker_identity=self.participant.identity,
+                        speaker_username=username,
+                        language=self.stt_language,
+                    )
+                    for payload in alerts:
+                        await self.publish_manner_callback(payload)
+                except Exception:
+                    logging.exception(f"[{pid}] manner checking failed")
         except Exception as e:
-            logging.error(f"[{pid}] 🧩 Transcription handling error: {e}", exc_info=True)
+            logging.error(f"[{pid}] 🧩 transcription handling error: {e}", exc_info=True)
 
-    # --------------------------------------------------
-    # 👤 username 추출
-    # --------------------------------------------------
     def _get_username(self) -> str:
         try:
             metadata = json.loads(self.participant.metadata or '{}')
@@ -182,11 +177,7 @@ class ParticipantSTTHandler:
             pass
         return self.participant.name or self.participant.identity
 
-    # --------------------------------------------------
-    # 🧹 스트림/태스크 정리
-    # --------------------------------------------------
     async def _cleanup_stream_task(self):
-        """스트림 및 태스크 안전 종료"""
         if self.task:
             self.task.cancel()
             try:
@@ -194,7 +185,6 @@ class ParticipantSTTHandler:
             except asyncio.CancelledError:
                 pass
             self.task = None
-
         if self.stream:
             try:
                 await self.stream.aclose()
@@ -202,9 +192,6 @@ class ParticipantSTTHandler:
                 pass
             self.stream = None
 
-    # --------------------------------------------------
-    # 🛑 STT 정지
-    # --------------------------------------------------
     async def stop(self):
         pid = getattr(self.participant, "identity", "unknown")
         logging.info(f"[{pid}] Received stop signal. Cleaning up...")
@@ -213,44 +200,57 @@ class ParticipantSTTHandler:
         logging.info(f"[{pid}] STT handler stopped cleanly")
 
 
+# ---------------------------------------------------------------------------
+# Job entrypoint
+# ---------------------------------------------------------------------------
 async def entrypoint(ctx: agents.JobContext):
     agent = STTAgent(ctx.room)
-    
-    # ✅ Clova STT 초기화 (StreamAdapter 사용)
+
+    # STT init (Clova + StreamAdapter + Silero VAD)
     try:
         base_stt = clova_stt.STT(
-            language=os.getenv("CLOVA_LANG", "enko"),
+            language=os.getenv("CLOVA_LANG", "ko-KR"),
         )
-        
-        # StreamAdapter로 래핑 (더 긴 VAD 설정)
         stt_model = StreamAdapter(
             stt=base_stt,
-            # vad=silero.VAD.load(
-            #     min_speech_duration=0.5,  # 최소 음성 길이 (초)
-            #     min_silence_duration=0.8,  # 최소 침묵 길이 (초)
-            # ),
-            
             vad=silero.VAD.load(
-
+                # Optional tuning:
+                # min_speech_duration=0.5,
+                # min_silence_duration=0.8,
             ),
         )
-        
-        
-        
         logging.info("✅ STT provider = CLOVA (with StreamAdapter)")
         logging.info(f"   Language: {os.getenv('CLOVA_LANG', 'ko-KR')}")
     except Exception as e:
         logging.exception(f"❌ Failed to initialize Clova STT: {e}")
         return
-    
-    # 참가자별 STT 핸들러 관리
+
+    # MannerChecker init
+    base_url = os.getenv("BACKEND_BASE_URL", "http://localhost:8080")
+    api_token = os.getenv("BACKEND_API_TOKEN", None)
+    refresh_sec = int(os.getenv("MANNER_RULES_REFRESH_SEC", "30"))
+    agent_codes = [x.strip() for x in os.getenv("MANNER_AGENT_CODES", "direct,address,tone,negative").split(",") if x.strip()]
+    app_locale = os.getenv("APP_LOCALE", "ko")
+    target_locale = os.getenv("TARGET_LOCALE", "") or None
+    culture_pair = None
+    if app_locale and target_locale:
+        culture_pair = f"{app_locale.split('-')[0]}->{target_locale.split('-')[0]}"
+
+    mchecker = MannerChecker(
+        base_url=base_url,
+        api_token=api_token,
+        refresh_sec=refresh_sec,
+        agent_codes=agent_codes,
+        app_locale_prefix=app_locale,
+        target_locale_prefix=target_locale,
+        culture_pair=culture_pair,
+    )
+    await mchecker.start()
+
     handlers: Dict[str, ParticipantSTTHandler] = {}
-    
-    # ------------------------------
-    # DataChannel 퍼블리시
-    # ------------------------------
+
+    # DataChannel publishers
     async def _publish_stt(text: str, final: bool, identity: str, psid: str, username: str):
-        """STT 결과를 DataChannel로 발행"""
         payload = {
             "type": "stt",
             "final": final,
@@ -260,10 +260,8 @@ async def entrypoint(ctx: agents.JobContext):
             "participant_sid": psid,
             "ts": time.time(),
         }
-        
         log_type = "FINAL" if final else "PARTIAL"
         logging.info(f"📤 STT [{log_type}] {username}: {text[:50]}...")
-        
         try:
             await ctx.room.local_participant.publish_data(
                 json.dumps(payload, ensure_ascii=False).encode("utf-8"),
@@ -272,101 +270,90 @@ async def entrypoint(ctx: agents.JobContext):
             )
         except Exception as e:
             logging.exception(f"❌ publish_data failed: {e}")
-    
-    # ------------------------------
-    # 트랙 발행 이벤트
-    # ------------------------------
+
+    async def _publish_manner(payload: dict):
+        try:
+            await ctx.room.local_participant.publish_data(
+                json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+                reliable=True,
+                topic="manner",
+            )
+            logging.info(f"✅ Published MANNER: rule={payload.get('rule_id')} match={payload.get('match')}")
+        except Exception as e:
+            logging.exception(f"❌ publish manner failed: {e}")
+
+    # Room event handlers (sync -> create_task)
     def _on_track_published(publication, participant):
-        """트랙이 발행되면 호출 (동기 콜백)"""
         asyncio.create_task(_handle_track_published(publication, participant))
-    
+
     async def _handle_track_published(publication, participant):
-        """오디오 트랙 발행 처리 (비동기 로직)"""
         if publication.kind != rtc.TrackKind.KIND_AUDIO:
             return
-        
         handler_key = f"{participant.sid}_{publication.sid}"
         if handler_key in handlers:
             logging.info(f"[{participant.identity}] Audio track already being processed")
             return
-        
         logging.info(f"🎤 [{participant.identity}] Audio track published: {publication.sid}")
-        
         track = publication.track
         if not track:
             logging.info(f"[{participant.identity}] Waiting for track to be available...")
             await asyncio.sleep(0.5)
             track = publication.track
-        
         if not track:
             logging.warning(f"[{participant.identity}] Track still not available, skipping")
             return
-        
         handler = ParticipantSTTHandler(
             participant=participant,
             track=track,
             stt_model=stt_model,
             room=ctx.room,
-            publish_callback=_publish_stt
+            publish_callback=_publish_stt,
+            manner_checker=mchecker,
+            publish_manner_callback=_publish_manner,
+            stt_language=os.getenv("CLOVA_LANG", "ko-KR"),
         )
         handlers[handler_key] = handler
         asyncio.create_task(handler.start())
-    
-    # ------------------------------
-    # 트랙 제거 이벤트
-    # ------------------------------
+
     def _on_track_unpublished(publication, participant):
-        """트랙이 제거되면 호출 (동기 콜백)"""
         asyncio.create_task(_handle_track_unpublished(publication, participant))
-    
+
     async def _handle_track_unpublished(publication, participant):
-        """트랙 제거 처리 (비동기 로직)"""
         if publication.kind != rtc.TrackKind.KIND_AUDIO:
             return
-        
         handler_key = f"{participant.sid}_{publication.sid}"
         handler = handlers.pop(handler_key, None)
-        
         if handler:
             logging.info(f"🔇 [{participant.identity}] Audio track unpublished: {publication.sid}")
             await handler.stop()
-    
-    # ------------------------------
-    # 이벤트 리스너 등록
-    # ------------------------------
+
+    # Register listeners
     ctx.room.on("track_published", _on_track_published)
     ctx.room.on("track_unpublished", _on_track_unpublished)
-    
+
     logging.info("🎙️ Multi-user STT Agent starting...")
-    
-    # ------------------------------
-    # 룸 연결 대기
-    # ------------------------------
+
+    # Connect room
     try:
         await ctx.connect()
         logging.info("✅ Connected to room")
     except Exception as e:
         logging.exception(f"❌ Failed to connect to room: {e}")
+        await mchecker.close()
         return
-    
-    # ------------------------------
-    # 이미 발행된 트랙 처리
-    # ------------------------------
+
+    # Sweep pre-existing tracks
     await asyncio.sleep(1)
-    
     logging.info("🔍 Processing existing tracks...")
-    
     for participant in ctx.room.remote_participants.values():
         for publication in participant.track_publications.values():
             if publication.kind == rtc.TrackKind.KIND_AUDIO and publication.track:
                 logging.info(f"📌 Found existing audio track from {participant.identity}")
                 await _handle_track_published(publication, participant)
-    
-    logging.info("🎙️ Multi-user STT Agent ready (Clova)")
-    
-    # ------------------------------
-    # Agent 유지
-    # ------------------------------
+
+    logging.info("🎙️ Multi-user STT Agent ready (Clova + MannerChecker)")
+
+    # Keep alive
     try:
         while ctx.room.connection_state == rtc.ConnectionState.CONN_CONNECTED:
             await asyncio.sleep(1)
@@ -377,6 +364,7 @@ async def entrypoint(ctx: agents.JobContext):
     finally:
         for handler in list(handlers.values()):
             await handler.stop()
+        await mchecker.close()
         logging.info("🛑 STT Agent stopped")
 
 
