@@ -1,1 +1,0 @@
-# FastAPI 앱, /process_transcript 엔드포인트

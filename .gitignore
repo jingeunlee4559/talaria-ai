@@ -81,3 +81,5 @@ persistent_data/
 
 # test
 test.py
+
+data/uploads/docs/
