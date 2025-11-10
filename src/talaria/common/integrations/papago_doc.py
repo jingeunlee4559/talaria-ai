@@ -30,21 +30,19 @@ class PapagoDocClient:
 
         ct = r.headers.get("content-type", "")
         if r.status_code >= 400:
-            # Papago가 주는 원문 에러를 그대로 노출
             raise RuntimeError(f"[translate] {r.status_code} {r.text}")
 
-        # 이하: 성공이어도 예상 JSON 구조가 아니면 원문을 보여주고 중단
         try:
             js = r.json()
         except Exception:
             raise RuntimeError(f"[translate] non-JSON response: {r.status_code} {ct} {r.text[:400]}")
 
-        rid = js.get("requestId")
+        # ✅ data 객체 안에서 requestId 찾기
+        rid = js.get("data", {}).get("requestId")
         if not rid:
-            # 에러 JSON(예: {"error":{...}})을 그대로 노출
             raise RuntimeError(f"[translate] unexpected response: {r.status_code} {js}")
         return rid
-
+    
     def wait_until_done(self, request_id: str, poll_interval=2, timeout=600):
         url = f"{self.base}/doc-trans/v1/status"
         t0 = time.time()
@@ -53,9 +51,18 @@ class PapagoDocClient:
             if r.status_code >= 400:
                 raise RuntimeError(f"[status] {r.status_code} {r.text}")
             js = r.json()
-            st = js.get("status")
-            if st == "COMPLETED": return js
-            if st == "FAILED":    raise RuntimeError(f"[status] FAILED {js}")
+            
+            # 🔍 실제 응답 구조 확인
+            print(f"[PAPAGO STATUS] {js}")
+            
+            # data 객체 안에 있을 수 있음
+            data = js.get("data", {})
+            st = data.get("status") or js.get("status")
+            
+            if st == "COMPLETED": 
+                return data if data else js
+            if st == "FAILED":    
+                raise RuntimeError(f"[status] FAILED {js}")
             if time.time() - t0 > timeout:
                 raise TimeoutError(f"[status] Timeout waiting {request_id}")
             time.sleep(poll_interval)
