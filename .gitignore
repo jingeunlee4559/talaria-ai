@@ -74,6 +74,10 @@ Thumbs.db
 # data raw file
 gartner_glossary_raw.html
 test_files/
+data/
 
 # VectorDB
 persistent_data/
+
+# test
+test.py

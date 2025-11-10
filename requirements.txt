@@ -10,9 +10,10 @@ langgraph
 openai
 livekit-api
 aiohttp
+langchain-openai
 
 # --- LiveKit 에이전트 (livekit_agents) ---
-livekit-agents[silero,turn-detector,clova,openai,google]~=1.2
+livekit-agents[silero,turn-detector,clova,openai]~=1.2
 
 # --- 데이터베이스 (DB) ---
 SQLAlchemy
