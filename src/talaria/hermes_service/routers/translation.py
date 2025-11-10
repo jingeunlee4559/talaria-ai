@@ -14,8 +14,11 @@ router = APIRouter(prefix="/jobs", tags=["translation"])
 # ---- 상태 스키마 (Pydantic v1/2 호환) ----
 class JobStatus(str, Enum):
     COMPLETED = "COMPLETED"
+    COMPLETE = "COMPLETE"  # ✅ Papago가 반환하는 값
     FAILED = "FAILED"
+    FAIL = "FAIL"  # ✅ 혹시 모르니 추가
     PROCESSING = "PROCESSING"
+    PROGRESS = "PROGRESS"  # ✅ 로그에서 본 값
     PENDING = "PENDING"
 
 # ---- 입력: abs_path 또는 rel_path 중 하나 필수 ----
@@ -98,7 +101,6 @@ def translate_doc(payload: TranslateDocIn = Body(
     print("DOC_UPLOAD_ROOT =", root)
     print("REQUEST_PATH   =", p)
 
-
     # 날짜 폴더 규칙 확인: [..., YYYY, MM, DD, file]
     parts = p.parts[-4:-1]
     if len(parts) != 3 or not all(x.isdigit() for x in parts):
@@ -126,8 +128,21 @@ def translate_doc(payload: TranslateDocIn = Body(
     out = p.with_name(f"{p.stem}.translated.{payload.target}{p.suffix}")
     out.write_bytes(content)
 
+    # ✅ Papago 상태를 표준 JobStatus Enum으로 매핑
+    papago_status = meta.get("status", "COMPLETE")
+    status_mapping = {
+        "COMPLETE": JobStatus.COMPLETED,
+        "COMPLETED": JobStatus.COMPLETED,
+        "FAIL": JobStatus.FAILED,
+        "FAILED": JobStatus.FAILED,
+        "PROGRESS": JobStatus.PROCESSING,
+        "PROCESSING": JobStatus.PROCESSING,
+        "PENDING": JobStatus.PENDING,
+    }
+    final_status = status_mapping.get(papago_status, JobStatus.COMPLETED)
+
     return TranslateDocOut(
-        status=meta.get("status", "COMPLETED"),
+        status=final_status,  # ✅ 매핑된 Enum 값 사용
         requestId=meta.get("requestId", req_id),
         output_path=str(out),
         source_lang=payload.source,

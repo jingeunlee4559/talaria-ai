@@ -52,17 +52,17 @@ class PapagoDocClient:
                 raise RuntimeError(f"[status] {r.status_code} {r.text}")
             js = r.json()
             
-            # 🔍 실제 응답 구조 확인
             print(f"[PAPAGO STATUS] {js}")
             
-            # data 객체 안에 있을 수 있음
+            # ✅ data 객체 안에서 status 가져오기
             data = js.get("data", {})
             st = data.get("status") or js.get("status")
             
-            if st == "COMPLETED": 
+            # ✅ COMPLETE (D 없음!)
+            if st == "COMPLETE":  # COMPLETED 아님!
                 return data if data else js
-            if st == "FAILED":    
-                raise RuntimeError(f"[status] FAILED {js}")
+            if st == "FAIL":  # FAILED도 아닐 수 있음
+                raise RuntimeError(f"[status] FAIL {js}")
             if time.time() - t0 > timeout:
                 raise TimeoutError(f"[status] Timeout waiting {request_id}")
             time.sleep(poll_interval)
