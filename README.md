@@ -17,6 +17,14 @@ conda 사용시
 conda env export > environment.yml
 ```
 
+## 파이썬 서버 실행
+```
+python -m uvicorn talaria.hermes_service.main:app --reload --port 8000 --app-dir src --env-file .env
+```
+### swagger
+http://localhost:8000/docs#/translation/translate_doc_jobs_translate_doc_post
+
+
 ## livekit agent 실행
 개발모드로 실행
 ```

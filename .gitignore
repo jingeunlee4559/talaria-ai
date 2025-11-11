@@ -81,5 +81,7 @@ persistent_data/
 
 # test
 test.py
+test_rag.py
 
+# uploaded documents
 data/uploads/docs/
