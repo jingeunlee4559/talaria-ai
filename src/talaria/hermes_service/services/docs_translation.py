@@ -5,6 +5,7 @@ from typing import Optional, AsyncGenerator, Dict, Any
 from fastapi import HTTPException
 import asyncio
 import json
+import logging 
 from ...common.integrations.papago_doc import PapagoDocClient
 from ...core.database import get_db_cursor
 
@@ -20,6 +21,7 @@ from ..utils.file_utils import (
     _ensure_under_root
 )
 
+log = logging.getLogger(__name__)
 
 def _get_original_doc_id(original_rel_path: str) -> Optional[int]:
     """
@@ -176,58 +178,44 @@ def _sse_event(payload: dict) -> bytes:
     return f"data: {json.dumps(payload, ensure_ascii=False)}\n\n".encode("utf-8")
 
 
-# --- (신규) 비동기식(Async) 스트리밍 로직 ---
-async def stream_document_translation(
-    rel_path: Optional[str],
-    abs_path: Optional[str],
+# --- (신규) 실제 백그라운드 작업을 수행할 함수 ---
+async def _run_translation_background(
+    queue: asyncio.Queue,
+    p: Path,
+    root: Path,
     source: str,
     target: str,
     glossary_id: Optional[str]
-) -> AsyncGenerator[bytes, Any]:
+):
     """
-    문서 번역을 비동기 생성기(async generator)로 스트리밍합니다.
-    (기존 router의 event_gen 로직)
+    (백그라운드 실행) Papago 요청, 폴링, 다운로드, DB 저장을 수행하고
+    Queue를 통해 진행 상황을 전송합니다.
     """
-    
-    # --- 1. 경로 유효성 검사 (로직 시작점) ---
-    try:
-        root = _get_root()
-        # Pydantic 모델을 임시로 사용해 유효성 검사 로직 재사용
-        tmp_payload = TranslateDocIn(abs_path=abs_path, rel_path=rel_path, source=source, target=target, glossary_id=glossary_id)
-        p = _build_abs_path(tmp_payload, root)
-        _ensure_under_root(p, root)
-    except HTTPException as e:
-        yield _sse_event({"type": "failed", "status": "FAILED", "error": f"validation_error: {e.detail}"})
-        return
-    except Exception as e:
-        yield _sse_event({"type": "failed", "status": "FAILED", "error": f"validation_error: {str(e)}"})
-        return
-
-    # --- 2. Papago 클라이언트 및 번역 제출 ---
     client = PapagoDocClient()
-
+    req_id = None
     try:
+        # --- 2. Papago 클라이언트 및 번역 제출 ---
         req_id = client.translate(p, source, target, glossary_id)
-    except Exception as e:
-        yield _sse_event({"type": "failed", "status": "FAILED", "error": f"submit_error: {e}"})
-        return
 
-    # --- 3. 시작 이벤트 전송 ---
-    yield _sse_event({"type": "started", "requestId": req_id, "status": "PENDING", "percent": 0})
-    
-    # --- 4. 상태 폴링 및 완료/실패 처리 ---
-    try:
+        # --- 3. 시작 이벤트 전송 ---
+        await queue.put(_sse_event({"type": "started", "requestId": req_id, "status": "PENDING", "percent": 0}))
+
+        # --- 4. 상태 폴링 및 완료/실패 처리 ---
         while True:
-            # (중요) PapagoDocClient에 get_status가 있어야 함
-            meta = client.get_status(req_id) 
+            
+            # --- (핵심 수정) ---
+            # 'wait_until_done' 대신 'get_status'를 호출합니다.
+            meta = client.get_status(req_id)
+            # --- (핵심 수정 완료) ---
+
             data = (meta or {}).get("data", {})
             status_raw = str(data.get("status", "")).upper()
             percent = int(data.get("progressPercent", 0))
 
             # 진행 이벤트
             if status_raw in ("PROGRESS", "PROCESSING"):
-                yield _sse_event({"type": "progress", "status": "PROCESSING", "percent": max(0, min(99, percent))})
-                await asyncio.sleep(1.2) # (중요) DB 부하를 줄이기 위해 sleep은 service 쪽에
+                await queue.put(_sse_event({"type": "progress", "status": "PROCESSING", "percent": max(0, min(99, percent))}))
+                await asyncio.sleep(1.2) # (중요) DB 부하를 줄이기 위해 sleep
                 continue
 
             # 완료
@@ -237,14 +225,14 @@ async def stream_document_translation(
                 out.write_bytes(content)
                 content_size_bytes = len(content)
 
-                # --- (신규) 완료 시 DB 저장 ---
+                # --- 완료 시 DB 저장 ---
                 try:
-                    original_rel_path = str(p.relative_to(_get_root())).replace("\\", "/")
+                    original_rel_path = str(p.relative_to(root)).replace("\\", "/") # (수정) root 사용
                     original_doc_id = _get_original_doc_id(original_rel_path)
                     if original_doc_id is None:
-                        print(f"⚠️ [SSE] 경고: 원본 문서를 DB에서 찾을 수 없습니다. (경로: {original_rel_path})")
+                        log.warning(f"⚠️ [SSE] 경고: 원본 문서를 DB에서 찾을 수 없습니다. (경로: {original_rel_path})")
 
-                    translated_rel_path = str(out.relative_to(_get_root())).replace("\\", "/")
+                    translated_rel_path = str(out.relative_to(root)).replace("\\", "/") # (수정) root 사용
                     request_id = meta.get("requestId", req_id)
                     
                     _save_translation_record(
@@ -255,24 +243,86 @@ async def stream_document_translation(
                         size_bytes=content_size_bytes
                     )
                 except Exception as e:
-                    print(f"❌ [SSE] 번역 후 DB 기록 작업 중 예기치 않은 오류 발생: {e}")
+                    log.error(f"❌ [SSE] 번역 후 DB 기록 작업 중 예기치 않은 오류 발생: {e}", exc_info=True)
                 # --- DB 저장 끝 ---
 
-                yield _sse_event({
+                await queue.put(_sse_event({
                     "type": "complete", "status": "COMPLETED", "percent": 100,
                     "requestId": req_id, "output_path": str(out),
                     "source_lang": source, "target_lang": target,
-                })
+                }))
                 break # 루프 종료
 
             # 실패
             if status_raw in ("FAIL", "FAILED"):
-                yield _sse_event({"type": "failed", "status": "FAILED", "percent": percent, "requestId": req_id})
+                await queue.put(_sse_event({"type": "failed", "status": "FAILED", "percent": percent, "requestId": req_id}))
                 break # 루프 종료
 
             # 알 수 없는 상태 (일단 진행 중으로 처리)
-            yield _sse_event({"type": "progress", "status": status_raw or "PROCESSING", "percent": percent})
+            await queue.put(_sse_event({"type": "progress", "status": status_raw or "PROCESSING", "percent": percent}))
             await asyncio.sleep(1.2)
 
     except Exception as e:
-        yield _sse_event({"type": "failed", "status": "FAILED", "error": f"poll_error: {e}"})
+        log.error(f"❌ 백그라운드 번역 작업 실패: {e}", exc_info=True)
+        # (수정) 에러 객체에 str()을 적용하여 JSON 직렬화가 가능하도록 함
+        await queue.put(_sse_event({"type": "failed", "status": "FAILED", "error": f"background_task_error: {str(e)}", "requestId": req_id}))
+
+# --- (수정) 비동기식(Async) 스트리밍 함수 (이제 작업을 분리함) ---
+async def stream_document_translation(
+    rel_path: Optional[str],
+    abs_path: Optional[str],
+    source: str,
+    target: str,
+    glossary_id: Optional[str]
+) -> AsyncGenerator[bytes, Any]:
+    """
+    문서 번역 작업을 백그라운드 Task로 시작시키고,
+    Queue를 통해 진행 상황을 스트리밍합니다.
+    """
+    
+    # --- 1. 경로 유효성 검사 (로직 시작점) ---
+    try:
+        root = _get_root()
+        tmp_payload = TranslateDocIn(abs_path=abs_path, rel_path=rel_path, source=source, target=target, glossary_id=glossary_id)
+        p = _build_abs_path(tmp_payload, root)
+        _ensure_under_root(p, root)
+    except HTTPException as e:
+        yield _sse_event({"type": "failed", "status": "FAILED", "error": f"validation_error: {e.detail}"})
+        return
+    except Exception as e:
+        yield _sse_event({"type": "failed", "status": "FAILED", "error": f"validation_error: {str(e)}"})
+        return
+
+    # --- 2. Queue 및 Background Task 생성 ---
+    queue = asyncio.Queue()
+    
+    # (핵심) 실제 작업(poll, download, save)을 별도의 Task로 분리하여 실행
+    asyncio.create_task(_run_translation_background(
+        queue=queue,
+        p=p,
+        root=root,
+        source=source,
+        target=target,
+        glossary_id=glossary_id
+    ))
+
+    # --- 3. 클라이언트 연결 유지 및 Queue 대기 ---
+    try:
+        while True:
+            # Queue에서 메시지가 올 때까지 대기
+            data = await queue.get()
+            
+            # 클라이언트에게 메시지(진행률) 전송
+            yield data
+            
+            # 완료 또는 실패 메시지면 스트림 종료
+            data_str = data.decode('utf-8')
+            if '"type": "complete"' in data_str or '"type": "failed"' in data_str:
+                break
+                
+    except asyncio.CancelledError:
+        # (핵심) 사용자가 페이지를 이탈하면 (연결이 끊기면) 이 오류가 발생
+        # 오류를 다시 발생시키지 않고, 그냥 함수를 종료(return)시킵니다.
+        # 이때 asyncio.create_task()로 생성된 백그라운드 작업은 **계속 실행됩니다.**
+        log.info(f"ℹ️  SSE 클라이언트 연결이 중단되었습니다. (페이지 이탈) 백그라운드 작업은 계속됩니다.")
+        return
