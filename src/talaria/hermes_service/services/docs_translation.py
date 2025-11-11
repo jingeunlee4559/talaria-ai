@@ -1,8 +1,12 @@
 import os
 import os.path as osp
 from pathlib import Path
-from typing import Optional
+from typing import Optional, AsyncGenerator, Dict, Any
 from fastapi import HTTPException
+import asyncio
+import json
+from ...common.integrations.papago_doc import PapagoDocClient
+from ...core.database import get_db_cursor
 
 from ..schemas.docs_translation import (
     TranslateDocIn, 
@@ -10,8 +14,6 @@ from ..schemas.docs_translation import (
     JobStatus
 )
 
-from ...common.integrations.papago_doc import PapagoDocClient
-from ...core.database import get_db_cursor
 from ..utils.file_utils import (
     _get_root,
     _build_abs_path,
@@ -167,3 +169,110 @@ def process_document_translation(payload: TranslateDocIn) -> TranslateDocOut:
         source_lang=payload.source,
         target_lang=payload.target,
     )
+
+# --- (신규) SSE 포맷 헬퍼 ---
+def _sse_event(payload: dict) -> bytes:
+    """SSE 포맷: data: <json>\n\n"""
+    return f"data: {json.dumps(payload, ensure_ascii=False)}\n\n".encode("utf-8")
+
+
+# --- (신규) 비동기식(Async) 스트리밍 로직 ---
+async def stream_document_translation(
+    rel_path: Optional[str],
+    abs_path: Optional[str],
+    source: str,
+    target: str,
+    glossary_id: Optional[str]
+) -> AsyncGenerator[bytes, Any]:
+    """
+    문서 번역을 비동기 생성기(async generator)로 스트리밍합니다.
+    (기존 router의 event_gen 로직)
+    """
+    
+    # --- 1. 경로 유효성 검사 (로직 시작점) ---
+    try:
+        root = _get_root()
+        # Pydantic 모델을 임시로 사용해 유효성 검사 로직 재사용
+        tmp_payload = TranslateDocIn(abs_path=abs_path, rel_path=rel_path, source=source, target=target, glossary_id=glossary_id)
+        p = _build_abs_path(tmp_payload, root)
+        _ensure_under_root(p, root)
+    except HTTPException as e:
+        yield _sse_event({"type": "failed", "status": "FAILED", "error": f"validation_error: {e.detail}"})
+        return
+    except Exception as e:
+        yield _sse_event({"type": "failed", "status": "FAILED", "error": f"validation_error: {str(e)}"})
+        return
+
+    # --- 2. Papago 클라이언트 및 번역 제출 ---
+    client = PapagoDocClient()
+
+    try:
+        req_id = client.translate(p, source, target, glossary_id)
+    except Exception as e:
+        yield _sse_event({"type": "failed", "status": "FAILED", "error": f"submit_error: {e}"})
+        return
+
+    # --- 3. 시작 이벤트 전송 ---
+    yield _sse_event({"type": "started", "requestId": req_id, "status": "PENDING", "percent": 0})
+    
+    # --- 4. 상태 폴링 및 완료/실패 처리 ---
+    try:
+        while True:
+            # (중요) PapagoDocClient에 get_status가 있어야 함
+            meta = client.get_status(req_id) 
+            data = (meta or {}).get("data", {})
+            status_raw = str(data.get("status", "")).upper()
+            percent = int(data.get("progressPercent", 0))
+
+            # 진행 이벤트
+            if status_raw in ("PROGRESS", "PROCESSING"):
+                yield _sse_event({"type": "progress", "status": "PROCESSING", "percent": max(0, min(99, percent))})
+                await asyncio.sleep(1.2) # (중요) DB 부하를 줄이기 위해 sleep은 service 쪽에
+                continue
+
+            # 완료
+            if status_raw in ("COMPLETE", "COMPLETED"):
+                content = client.download(req_id)
+                out = p.with_name(f"{p.stem}.translated.{target}{p.suffix}")
+                out.write_bytes(content)
+                content_size_bytes = len(content)
+
+                # --- (신규) 완료 시 DB 저장 ---
+                try:
+                    original_rel_path = str(p.relative_to(_get_root())).replace("\\", "/")
+                    original_doc_id = _get_original_doc_id(original_rel_path)
+                    if original_doc_id is None:
+                        print(f"⚠️ [SSE] 경고: 원본 문서를 DB에서 찾을 수 없습니다. (경로: {original_rel_path})")
+
+                    translated_rel_path = str(out.relative_to(_get_root())).replace("\\", "/")
+                    request_id = meta.get("requestId", req_id)
+                    
+                    _save_translation_record(
+                        original_doc_id=original_doc_id,
+                        target_language=target,
+                        translated_rel_path=translated_rel_path,
+                        request_id=request_id,
+                        size_bytes=content_size_bytes
+                    )
+                except Exception as e:
+                    print(f"❌ [SSE] 번역 후 DB 기록 작업 중 예기치 않은 오류 발생: {e}")
+                # --- DB 저장 끝 ---
+
+                yield _sse_event({
+                    "type": "complete", "status": "COMPLETED", "percent": 100,
+                    "requestId": req_id, "output_path": str(out),
+                    "source_lang": source, "target_lang": target,
+                })
+                break # 루프 종료
+
+            # 실패
+            if status_raw in ("FAIL", "FAILED"):
+                yield _sse_event({"type": "failed", "status": "FAILED", "percent": percent, "requestId": req_id})
+                break # 루프 종료
+
+            # 알 수 없는 상태 (일단 진행 중으로 처리)
+            yield _sse_event({"type": "progress", "status": status_raw or "PROCESSING", "percent": percent})
+            await asyncio.sleep(1.2)
+
+    except Exception as e:
+        yield _sse_event({"type": "failed", "status": "FAILED", "error": f"poll_error: {e}"})

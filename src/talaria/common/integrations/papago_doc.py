@@ -43,6 +43,46 @@ class PapagoDocClient:
             raise RuntimeError(f"[translate] unexpected response: {r.status_code} {js}")
         return rid
     
+    
+    def get_status(self, request_id: str) -> dict:
+            """
+            문서 번역 상태를 1회 조회합니다. (SSE 폴링용)
+            wait_until_done과 동일한 엔드포인트를 호출합니다.
+            """
+            if not request_id:
+                raise ValueError("request_id가 필요합니다.")
+
+            # ✅ 'self.base' (self.base_url 아님)
+            # ✅ '.../status' (wait_until_done과 동일한 엔드포인트)
+            url = f"{self.base}/doc-trans/v1/status"
+            
+            try:
+                # ✅ 'self.h' (self.headers 아님)
+                # ✅ 'params'로 requestId 전달 (wait_until_done과 동일)
+                response = requests.get(
+                    url, 
+                    headers=self.h, 
+                    params={"requestId": request_id}, 
+                    timeout=10
+                )
+                
+                response.raise_for_status() 
+                js = response.json()
+                
+                # ✅ FastAPI 라우터가 일관되게 js.get("data", ...)를 사용할 수 있도록
+                #    최상위 json을 그대로 반환합니다.
+                return js
+
+            except requests.exceptions.HTTPError as e:
+                try:
+                    error_data = e.response.json()
+                except Exception:
+                    error_data = e.response.text
+                raise Exception(f"Papago 상태 조회 실패 (HTTP {e.response.status_code}): {error_data}") from e
+            
+            except Exception as e:
+                raise Exception(f"Papago 상태 조회 중 네트워크 오류: {e}") from e
+    
     def wait_until_done(self, request_id: str, poll_interval=2, timeout=600):
         url = f"{self.base}/doc-trans/v1/status"
         t0 = time.time()

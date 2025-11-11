@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body, HTTPException, Query
+from starlette.responses import StreamingResponse
+from typing import Optional
 
 from ..schemas.docs_translation import (
     TranslateDocIn, 
@@ -45,3 +47,36 @@ def translate_doc(payload: TranslateDocIn = Body(
     except Exception as e:
         # 서비스에서 미처 처리하지 못한 일반 오류
         raise HTTPException(status_code=500, detail=f"내부 서버 오류: {e}")
+    
+@router.get(
+    "/translate-doc/stream",
+    summary="문서 번역 진행률 스트림(SSE/비동기)",
+)
+async def translate_doc_stream(
+    rel_path: Optional[str] = Query(None, description="업로드 루트 기준 상대경로"),
+    abs_path: Optional[str] = Query(None, description="절대경로"),
+    source: str = Query(..., description="원본 언어 코드"),
+    target: str = Query(..., description="타깃 언어 코드"),
+    glossary_id: Optional[str] = Query(None, description="(선택) 용어집 ID"),
+):
+    """
+    - SSE로 진행률(percent)과 상태를 연속 전송
+    - 최종 완료 시 결과 파일 저장 후 complete 이벤트 전송
+    """
+    
+    # --- (변경) 모든 로직을 service의 async generator로 위임 ---
+    event_generator = docs_translation.stream_document_translation(
+        rel_path=rel_path,
+        abs_path=abs_path,
+        source=source,
+        target=target,
+        glossary_id=glossary_id
+    )
+
+    headers = {
+        "Cache-Control": "no-cache",
+        "Content-Type": "text/event-stream; charset=utf-8",
+        "Connection": "keep-alive",
+    }
+    # --- (변경) 서비스가 반환한 생성기를 StreamingResponse로 감싸서 반환 ---
+    return StreamingResponse(event_generator, headers=headers, media_type="text/event-stream")
