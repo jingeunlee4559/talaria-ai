@@ -20,6 +20,9 @@ conda env export > environment.yml
 ## 파이썬 서버 실행
 ```
 python -m uvicorn talaria.hermes_service.main:app --reload --port 8000 --app-dir src --env-file .env
+
+# 디버그 로그 레벨 실행
+python -m uvicorn talaria.hermes_service.main:app --reload --port 8000 --app-dir src --env-file .env --log-level debug
 ```
 ### swagger
 http://localhost:8000/docs#/translation/translate_doc_jobs_translate_doc_post

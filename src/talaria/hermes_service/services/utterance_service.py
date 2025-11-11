@@ -6,6 +6,7 @@ from ..schemas.utterance import UtteranceProcessIn, UtteranceProcessOut
 from ...core.database import get_db_cursor
 from ...hermes_service.graph import app as langgraph_app # LangGraph 앱 import
 from ...hermes_service.state import TranslateState # Graph State import
+import time
 
 log = logging.getLogger(__name__)
 
@@ -57,12 +58,15 @@ def _save_utterance(payload: UtteranceProcessIn, final_answer: str, ai_tags: Dic
                     %s, %s, NOW()
                 )
             """
+
+            seq_val = payload.ended_ms or int(time.time() * 1000)
+
             # (참고) seq는 DDL에 AUTO_INCREMENT가 없으므로 임시로 0 처리
             params = (
                 payload.meeting_id,
                 payload.speaker_id,
                 payload.track_sid,
-                0, # seq (스키마에 A_I가 없네요. 0 또는 ended_ms로 임시 처리)
+                seq_val,
                 payload.started_ms,
                 payload.ended_ms,
                 payload.lang,

@@ -2,6 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
+
 tags_metadata = [
     {"name": "translation", "description": "Papago 문서 번역(doc-trans) 라우트."},
     {"name": "rag", "description": "RAG(VectorDB) 처리 라우트."},

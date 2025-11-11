@@ -4,6 +4,9 @@ from langgraph.graph import StateGraph, END
 from .state import TranslateState
 from .nodes.node_check_conditions import check_conditions_node
 from .nodes.node_context_translate import context_translate_node
+import logging 
+
+log = logging.getLogger(__name__)
 
 # --- 노드 함수 정의 ---
 
@@ -12,6 +15,8 @@ def fallback_translate_node(state: TranslateState) -> TranslateState:
     (ELSE) 'should_context_translate'가 False일 때 실행되는 노드.
     단순히 파파고 원본 번역을 'answer'로 복사합니다.
     """
+
+    log.warning(f"⚠️ [LLM 건너뜀] STT: '{state['stt_text']}' (이유: 3가지 조건 불충족)")
     state['answer'] = state['translated_text']
     return state
 

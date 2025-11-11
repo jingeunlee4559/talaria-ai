@@ -67,7 +67,7 @@ class _ConditionChecker:
     def _get_docs_for_meeting(self, meeting_id: int) -> Optional[List[int]]:
         """
         (Java DB 연동 1)
-        meeting_id를 기반으로 Java 백엔드의 'tbl_meetings_documents' 테이블을 조회하여
+        meeting_id를 기반으로 Java 백엔드의 'tl_meeting_documents' 테이블을 조회하여
         이 회의에 연결된 'document_id' 목록을 가져옵니다.
         """
         try:
@@ -75,14 +75,14 @@ class _ConditionChecker:
             with get_db_cursor(dictionary=True) as cursor:
                 # (사용자가 제공한 실제 쿼리 사용)
                 sql = """
-                    SELECT document_id
-                    FROM tbl_meetings_documents 
+                    SELECT doc_id
+                    FROM tl_meeting_documents 
                     WHERE meeting_id = %s
                 """
                 cursor.execute(sql, (meeting_id,))
                 results = cursor.fetchall()
                 
-                doc_ids = [row['document_id'] for row in results if row]
+                doc_ids = [row['doc_id'] for row in results if row]
                 
                 if doc_ids:
                     log.info(f"[Meeting: {meeting_id}] 참조 문서 ID {len(doc_ids)}개 조회 완료: {doc_ids}")

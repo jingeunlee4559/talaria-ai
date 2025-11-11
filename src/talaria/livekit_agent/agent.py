@@ -1,3 +1,5 @@
+# 다중 언어 번역 및 보여주기까지
+
 import os
 import sys
 

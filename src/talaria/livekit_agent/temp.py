@@ -1,3 +1,5 @@
+# 문맥기반 번역까지 구현.
+
 import os
 import sys
 
@@ -356,14 +358,18 @@ class ParticipantSTTHandler:
     async def _handle_transcription(self, event: agents.stt.SpeechEvent): # (타입 명시)
         pid = getattr(self.participant, "identity", "unknown")
         try:
-            # (수정) livekit-agents의 SpeechEvent 객체에서 직접 속성 사용
-            text = event.alternatives[0].text
-            confidence = event.alternatives[0].confidence if event.alternatives else 0.9
+            # (💥 수정) alternatives가 비어있을 수 있으므로, 먼저 확인합니다.
+            if not event.alternatives:
+                logging.debug(f"[{pid}] STT event에 alternatives가 없어 건너뜁니다.")
+                return 
+
+            alternative = event.alternatives[0]
+
+            text = alternative.text
+            confidence = alternative.confidence
             
-            # (수정) event.start_time, event.end_time은 timedelta 객체입니다.
-            # tl_utterances의 int unsigned 스키마에 맞게 총 밀리초(ms)로 변환합니다.
-            start_time_ms = int(event.start_time.total_seconds() * 1000)
-            end_time_ms = int(event.end_time.total_seconds() * 1000)
+            start_time_ms = int(alternative.start_time * 1000)
+            end_time_ms = int(alternative.end_time * 1000)
 
             is_final = event.type == agents.stt.SpeechEventType.FINAL_TRANSCRIPT
 
@@ -404,7 +410,7 @@ class ParticipantSTTHandler:
             # 2. (신규) hermes_service로 [문맥 보정 + DB 저장] 요청
             
             # (수정) 참가자 메타데이터에서 meeting_id 가져오기
-            meeting_id = self._get_metadata_field("meeting_id")
+            meeting_id = self._get_metadata_field("meetings_id")
             if not meeting_id:
                 logging.error(f"❌ hermes_service 호출 중단: meeting_id를 metadata에서 찾을 수 없습니다.")
                 # meeting_id가 없으면 DB 저장이 불가능하므로, 1차 번역본만 UI로 보냅니다.
