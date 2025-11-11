@@ -12,6 +12,7 @@ import asyncio
 import logging
 import time
 from typing import Optional, Any, List, Dict, Set
+import httpx
 
 import httpx
 from dotenv import load_dotenv
@@ -29,6 +30,10 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 PAPAGO_CLIENT_ID = os.getenv("PAPAGO_CLIENT_ID", "")
 PAPAGO_CLIENT_SECRET = os.getenv("PAPAGO_CLIENT_SECRET", "")
 PAPAGO_URL = "https://papago.apigw.ntruss.com/nmt/v1/translation"
+# hermes_service 주소 (포트 8000번)
+HERMES_SERVICE_URL = os.getenv("HERMES_SERVICE_URL", "http://localhost:8000")
+# 비동기 HTTP 클라이언트
+http_client = httpx.AsyncClient(timeout=10.0)
 
 print("=" * 80)
 print("🚀 AGENT STARTING WITH MULTI-LANGUAGE SUPPORT")
@@ -338,61 +343,111 @@ class ParticipantSTTHandler:
         # 지원하는 locale만 필터링
         return locales.intersection(self.supported_locales)
 
-    async def _handle_transcription(self, event):
+    # (신규) 참가자 메타데이터에서 meeting_id를 파싱하는 헬퍼 함수
+    def _get_metadata_field(self, field_name: str, default: Any = None) -> Any:
+        try:
+            if self.participant.metadata:
+                meta = json.loads(self.participant.metadata)
+                return meta.get(field_name, default)
+        except Exception:
+            logging.warning(f"[{self.participant.identity}] metadata 파싱 실패")
+        return default
+
+    async def _handle_transcription(self, event: agents.stt.SpeechEvent): # (타입 명시)
         pid = getattr(self.participant, "identity", "unknown")
         try:
-            event_type = getattr(event, 'type', '').lower()
-            is_final = 'final' in event_type and 'interim' not in event_type
+            # (수정) livekit-agents의 SpeechEvent 객체에서 직접 속성 사용
+            text = event.alternatives[0].text
+            confidence = event.alternatives[0].confidence if event.alternatives else 0.9
+            
+            # (수정) event.start_time, event.end_time은 timedelta 객체입니다.
+            # tl_utterances의 int unsigned 스키마에 맞게 총 밀리초(ms)로 변환합니다.
+            start_time_ms = int(event.start_time.total_seconds() * 1000)
+            end_time_ms = int(event.end_time.total_seconds() * 1000)
 
-            text = ""
-            if hasattr(event, 'alternatives') and event.alternatives:
-                text = event.alternatives[0].text
-            elif hasattr(event, 'text'):
-                text = event.text
+            is_final = event.type == agents.stt.SpeechEventType.FINAL_TRANSCRIPT
 
             if not text or not text.strip():
-                logging.debug(f"[{pid}] Empty text skipped")
                 return
 
             username = self._get_username()
             
-            # 🔥 다국어 번역: 자신의 locale을 제외한 모든 locale로 번역
-            translations = {}
-            
-            if is_final and self.translation_enabled:
-               # 🔥 (핵심 수정) 번역 시점의 최신 locale 목록을 가져옴
+            # (중요) 'interim' (중간) 결과는 이전처럼 바로 UI로 쏜다.
+            if not is_final:
+                await self.publish_callback(
+                    text=text, final=False,
+                    identity=self.participant.identity,
+                    psid=self.participant.sid,
+                    username=username,
+                    locale=self.participant_locale,
+                    translations={}, # 중간 결과는 번역 없음
+                )
+                return
+
+            # --- 이하는 'final' (최종) 결과일 때만 실행 ---
+
+            # 1. Papago로 1차 단순 번역 수행 (기존 로직)
+            simple_translations = {}
+            if self.translation_enabled:
                 current_locales = self._get_current_locales()
-                
-                # 번역 대상: 자신을 제외한 모든 참가자의 locale
                 target_locales = [loc for loc in current_locales if loc != self.participant_locale]
-                
                 if target_locales:
                     try:
-                        translations = await translate_to_multiple_languages(
+                        simple_translations = await translate_to_multiple_languages(
                             text, 
-                            self.participant_locale,  # 원본 언어
-                            target_locales  # 타겟 언어들
+                            self.participant_locale,
+                            target_locales
                         )
                     except Exception as trans_err:
-                        logging.error(f"❌ 번역 중 예외: {trans_err}", exc_info=True)
+                        logging.error(f"❌ Papago 번역 중 예외: {trans_err}", exc_info=True)
 
-            # 1) publish STT
-            await self.publish_callback(
-                text=text,
-                final=is_final,
-                identity=self.participant.identity,
-                psid=self.participant.sid,
-                username=username,
-                locale=self.participant_locale,  # 🔥 원본 locale
-                translations=translations,
-            )
+            # 2. (신규) hermes_service로 [문맥 보정 + DB 저장] 요청
+            
+            # (수정) 참가자 메타데이터에서 meeting_id 가져오기
+            meeting_id = self._get_metadata_field("meeting_id")
+            if not meeting_id:
+                logging.error(f"❌ hermes_service 호출 중단: meeting_id를 metadata에서 찾을 수 없습니다.")
+                # meeting_id가 없으면 DB 저장이 불가능하므로, 1차 번역본만 UI로 보냅니다.
+                final_translations = simple_translations
+            else:
+                try:
+                    # hermes_service에 보낼 payload (schemas/utterance.py 참조)
+                    payload = {
+                        "meeting_id": int(meeting_id), # (int로 변환)
+                        "speaker_id": self.participant.identity,
+                        "track_sid": self.track.sid,
+                        "stt_text": text,
+                        "lang": self.participant_locale,
+                        "confidence": confidence,
+                        "started_ms": start_time_ms,
+                        "ended_ms": end_time_ms,
+                        "simple_translations": simple_translations
+                    }
+                    
+                    response = await http_client.post(
+                        f"{HERMES_SERVICE_URL}/utterances/process",
+                        json=payload
+                    )
+                    response.raise_for_status() # 오류가 났으면 예외 발생
+                    
+                    # hermes_service가 보정한 최종 번역본
+                    result_data = response.json()
+                    final_translations = result_data.get("contextual_translations", simple_translations)
+                    
+                except httpx.HTTPStatusError as e:
+                    logging.error(f"❌ hermes_service API 오류: {e.response.status_code} - {e.response.text}")
+                    final_translations = simple_translations # 실패 시 1차 번역본 사용
+                except Exception as e:
+                    logging.error(f"❌ hermes_service 호출 실패: {e}")
+                    final_translations = simple_translations # 실패 시 1차 번역본 사용
 
-            # 2) Manner check only for FINAL
-            if is_final and self.mchecker and self.publish_manner_callback:
+            # 3. (추가) Manner Check 로직 (기존 코드 복원)
+            # hermes_service 호출 여부와 관계없이, STT 원본(text)을 기준으로 로컬에서 실행
+            if self.mchecker and self.publish_manner_callback:
                 try:
                     clova_lang = locale_to_clova_lang(self.participant_locale)
                     alerts = await self.mchecker.process_text(
-                        text=text,
+                        text=text, # (보정된 텍스트가 아닌 원본 STT 기준)
                         room_name=self.room.name,
                         speaker_identity=self.participant.identity,
                         speaker_username=username,
@@ -402,8 +457,20 @@ class ParticipantSTTHandler:
                         await self.publish_manner_callback(payload)
                 except Exception:
                     logging.exception(f"[{pid}] manner checking failed")
+
+            # 4. (수정) 최종 결과를 UI (DataChannel)로 전송
+            await self.publish_callback(
+                text=text,
+                final=True,
+                identity=self.participant.identity,
+                psid=self.participant.sid,
+                username=username,
+                locale=self.participant_locale,
+                translations=final_translations, # (중요) 보정된 번역본 사용
+            )
+            
         except Exception as e:
-            logging.error(f"[{pid}] 🧩 transcription handling error: {e}", exc_info=True)
+            logging.error(f"[{pid}] 🧩 _handle_transcription 처리 중 심각한 오류: {e}", exc_info=True)
 
     def _get_username(self) -> str:
         try:

@@ -5,6 +5,7 @@ import logging
 tags_metadata = [
     {"name": "translation", "description": "Papago 문서 번역(doc-trans) 라우트."},
     {"name": "rag", "description": "RAG(VectorDB) 처리 라우트."},
+    {"name": "utterances", "description": "실시간 발화 처리 및 저장"},
     {"name": "health", "description": "헬스체크 라우트."},
 ]
 
@@ -36,6 +37,13 @@ try:
     app.include_router(rag_router, tags=["rag"])
 except Exception as e:
     logging.getLogger(__name__).warning("rag router not loaded: %s", e)
+
+# Utterance 라우터
+try:
+    from talaria.hermes_service.routers.utterance import router as utterance_router
+    app.include_router(utterance_router, tags=["utterances"])
+except Exception as e:
+    logging.getLogger(__name__).warning("utterance router not loaded: %s", e)
 
 @app.get("/health", tags=["health"], summary="Liveness/Readiness probe")
 def health(): return {"status": "ok"}

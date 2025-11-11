@@ -229,7 +229,7 @@ class ParticipantSTTHandler:
         manner_checker: Optional[MannerChecker] = None,
         publish_manner_callback=None,
         translation_enabled: bool = False,
-        all_locales: Set[str] = None,  # 🔥 회의의 모든 locale
+        supported_locales: Set[str] = None,  # 🔥 회의의 모든 locale
     ):
         self.participant = participant
         self.track = track
@@ -244,7 +244,7 @@ class ParticipantSTTHandler:
 
         # ✅ Translation
         self.translation_enabled = translation_enabled
-        self.all_locales = all_locales or set()
+        self.supported_locales = supported_locales or set()
         
         clova_lang = locale_to_clova_lang(participant_locale)
         logging.info(f"🎯 ParticipantSTTHandler: locale={participant_locale}, clova_lang={clova_lang}, translation={translation_enabled}")
@@ -312,6 +312,32 @@ class ParticipantSTTHandler:
             except Exception as log_error:
                 logging.error(f"[{pid}] 🚨 error while logging: {log_error}")
 
+    def _get_current_locales(self) -> Set[str]:
+        """(실시간) 현재 회의의 모든 참가자 locale (지원 언어만) 반환"""
+        locales = set()
+        
+        # 로컬 참가자 (에이전트 자신 - 보통 metadata가 없음)
+        if self.room.local_participant and self.room.local_participant.metadata:
+            try:
+                meta = json.loads(self.room.local_participant.metadata)
+                if "appLocale" in meta:
+                    locales.add(meta["appLocale"])
+            except:
+                pass
+        
+        # 원격 참가자들 (실제 사용자)
+        for participant in self.room.remote_participants.values():
+            if participant.metadata:
+                try:
+                    meta = json.loads(participant.metadata)
+                    if "appLocale" in meta:
+                        locales.add(meta["appLocale"])
+                except:
+                    pass
+        
+        # 지원하는 locale만 필터링
+        return locales.intersection(self.supported_locales)
+
     async def _handle_transcription(self, event):
         pid = getattr(self.participant, "identity", "unknown")
         try:
@@ -334,8 +360,11 @@ class ParticipantSTTHandler:
             translations = {}
             
             if is_final and self.translation_enabled:
+               # 🔥 (핵심 수정) 번역 시점의 최신 locale 목록을 가져옴
+                current_locales = self._get_current_locales()
+                
                 # 번역 대상: 자신을 제외한 모든 참가자의 locale
-                target_locales = [loc for loc in self.all_locales if loc != self.participant_locale]
+                target_locales = [loc for loc in current_locales if loc != self.participant_locale]
                 
                 if target_locales:
                     try:
@@ -605,7 +634,7 @@ async def entrypoint(ctx: agents.JobContext):
             manner_checker=mchecker,
             publish_manner_callback=_publish_manner,
             translation_enabled=translation_enabled,
-            all_locales=all_locales,  # 🔥 모든 locale
+            supported_locales=supported_locales,
         )
         handlers[handler_key] = handler
         asyncio.create_task(handler.start())
