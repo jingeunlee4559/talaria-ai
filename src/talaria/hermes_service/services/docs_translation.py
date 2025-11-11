@@ -43,6 +43,52 @@ def _get_original_doc_id(original_rel_path: str) -> Optional[int]:
         # DB 조회에 실패해도 일단 번역은 성공한 것으로 처리하기 위해 None 반환
         return None
 
+def _find_existing_translation(
+    original_doc_id: Optional[int], 
+    target_language: str,
+    upload_root: Path  # 파일 존재 여부 확인을 위한 루트 경로
+) -> Optional[Path]:
+    """
+    tl_trans_docs에서 기존 번역본을 찾아, 파일이 실제로 존재하면 그 절대 경로를 반환합니다.
+    """
+    if original_doc_id is None:
+        log.info("원본 문서 ID가 없어 기존 번역본 조회를 건너뜁니다.")
+        return None # 원본 ID가 없으면 조회 불가
+
+    try:
+        with get_db_cursor(dictionary=True) as cursor:
+            # 가장 최신의 번역본을 찾습니다.
+            sql = """
+                SELECT translated_rel_path 
+                FROM tl_trans_docs 
+                WHERE original_doc_id = %s AND target_language = %s
+                ORDER BY translated_at DESC
+                LIMIT 1
+            """
+            cursor.execute(sql, (original_doc_id, target_language))
+            result = cursor.fetchone()
+
+            if result and result.get('translated_rel_path'):
+                rel_path_str = result['translated_rel_path']
+                
+                # DB에 기록된 상대 경로로 절대 경로 생성
+                abs_path = (upload_root / rel_path_str).resolve()
+                
+                # (중요) DB에 기록은 있으나 파일이 삭제되었을 수 있으므로, 실제 존재 여부 확인
+                if abs_path.exists():
+                    log.info(f"✅ 기존 번역본 발견 (DB+File): {abs_path}")
+                    return abs_path # 파일이 존재하면 절대 경로 반환
+                else:
+                    log.warning(f"⚠️ DB 기록은 있으나 파일 없음: {abs_path}. 재번역을 진행합니다.")
+                    return None # 파일이 없으면 None 반환
+
+    except Exception as e:
+        log.error(f"❌ 기존 번역 조회 중 DB 오류: {e}", exc_info=True)
+        return None # DB 오류 시, 안전하게 None 반환 (재번역 유도)
+    
+    log.info(f"기존 번역본 없음 (DocID: {original_doc_id}, Lang: {target_language}). 새 번역을 시작합니다.")
+    return None # 일치하는 항목 없음
+
 # --- (신규 추가) DB 저장을 위한 헬퍼 함수 ---
 
 def _save_translation_record(
@@ -101,6 +147,36 @@ def process_document_translation(payload: TranslateDocIn) -> TranslateDocOut:
     parts = p.parts[-4:-1]
     if len(parts) != 3 or not all(x.isdigit() for x in parts):
         raise HTTPException(status_code=400, detail="날짜 폴더(YYYY/MM/DD) 규칙 위반")
+
+    # --- (신규) 기존 번역본 확인 로직 ---
+    try:
+        # 1. 원본 파일의 상대 경로 및 doc_id 조회
+        original_rel_path = str(p.relative_to(root)).replace("\\", "/")
+        original_doc_id = _get_original_doc_id(original_rel_path)
+
+        # 2. DB 및 파일 시스템에서 기존 번역본 탐색
+        existing_translation_path = _find_existing_translation(
+            original_doc_id=original_doc_id,
+            target_language=payload.target,
+            upload_root=root
+        )
+        
+        # 3. (핵심) 기존 번역본이 있으면, Papago 호출을 건너뛰고 즉시 반환
+        if existing_translation_path:
+            log.info(f"✅ [Sync] 기존 번역본을 재사용합니다: {existing_translation_path}")
+            return TranslateDocOut(
+                status=JobStatus.COMPLETED,
+                requestId=f"cached-doc-{original_doc_id}", # 캐시된 요청임을 명시
+                output_path=str(existing_translation_path),
+                source_lang=payload.source,
+                target_lang=payload.target,
+            )
+    except Exception as e:
+        # 이 검사 중 오류가 발생해도, 번역 실패가 아니라 로그만 남기고
+        # 원본 로직(새 번역)을 수행하도록 둡니다.
+        log.warning(f"⚠️ 기존 번역본 확인 중 오류 발생 (새 번역 진행): {e}")
+    # --- (신규) 로직 끝 ---
+
 
     client = PapagoDocClient()
     try:
@@ -292,6 +368,38 @@ async def stream_document_translation(
     except Exception as e:
         yield _sse_event({"type": "failed", "status": "FAILED", "error": f"validation_error: {str(e)}"})
         return
+
+    try:
+        # 1. 원본 파일의 상대 경로 및 doc_id 조회
+        original_rel_path = str(p.relative_to(root)).replace("\\", "/")
+        original_doc_id = _get_original_doc_id(original_rel_path)
+
+        # 2. DB 및 파일 시스템에서 기존 번역본 탐색
+        existing_translation_path = _find_existing_translation(
+            original_doc_id=original_doc_id,
+            target_language=target, # 함수 인자 'target' 사용
+            upload_root=root
+        )
+
+        # 3. (핵심) 기존 번역본이 있으면, 즉시 완료 이벤트를 전송하고 종료
+        if existing_translation_path:
+            log.info(f"✅ [SSE] 기존 번역본을 재사용합니다: {existing_translation_path}")
+            complete_event = {
+                "type": "complete", 
+                "status": "COMPLETED", 
+                "percent": 100,
+                "requestId": f"cached-doc-{original_doc_id}", # 캐시된 요청임을 명시
+                "output_path": str(existing_translation_path),
+                "source_lang": source,
+                "target_lang": target,
+            }
+            yield _sse_event(complete_event)
+            return # (중요) 백그라운드 작업을 시작하지 않고 함수 종료
+            
+    except Exception as e:
+        # 이 검사 중 오류가 발생해도, 번역 실패가 아니라 로그만 남기고
+        # 원본 로직(새 번역)을 수행하도록 둡니다.
+        log.warning(f"⚠️ [SSE] 기존 번역본 확인 중 오류 발생 (새 번역 진행): {e}")
 
     # --- 2. Queue 및 Background Task 생성 ---
     queue = asyncio.Queue()
