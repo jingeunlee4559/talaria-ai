@@ -1,4 +1,5 @@
-#문맥 기반 번역
+# src/talaria/hermes_service/nodes/node_context_translate.py
+# 문맥 기반 번역
 
 import logging
 from typing import List, Dict, Optional
@@ -43,10 +44,9 @@ def _format_context_for_prompt(
     else:
         terms_str = "No specific project terms found in this utterance."
     
-    # 3. RAG 문서 (우리의 "약한 신호" 전략 반영)
+    # 3. RAG 문서
     if docs:
         doc_str = "\n".join(
-            # "약한 신호"일 수 있으므로 LLM이 참고하도록 distance 값을 명시
             f"- (Distance: {doc.metadata.get('distance', 999):.4f}) \"{doc.page_content}\"" 
             for doc in docs
         )
@@ -75,14 +75,16 @@ Here is all the context you MUST use to make your decision:
 Here is the user's utterance you must process:
 [Original STT (May contain errors)]: {stt_text}
 [Simple Translation (From Papago)]: {translated_text}
+[Target Language]: {target_lang}
 
 Your instructions are:
-1.  Analyze the [Original STT]. It may contain errors (e.g., "헤매다" instead of "Hermes").
+1.  Analyze the [Original STT]. It may contain errors (e.g., "A 테스트" instead of "A/B 테스트").
 2.  Use all three contexts ([Chat History], [Project Terminology], [Relevant Documents]) to determine the *true intended meaning* of the [Original STT].
-3.  Pay close attention to [Relevant Documents]. Even excerpts with high distance (e.g., > 0.7) are included as "weak signals" because they might contain the correct spelling of a misheard word (e.g., "Hermes").
+3.  Pay close attention to [Relevant Documents]. Even excerpts with high distance (e.g., > 0.7) are included as "weak signals".
 4.  Based on this corrected understanding, refine and improve the [Simple Translation] to be as accurate as possible.
 5.  If the [Simple Translation] is already 100% accurate and contextually correct, return it exactly as is, without any changes.
-6.  **You MUST respond ONLY with the final, corrected translation text.** Do not add any conversational phrases, explanations, or labels like "Corrected Translation:".
+6.  **You MUST respond ONLY with the final, corrected translation text.**
+7.  **The response MUST be in the [Target Language] (e.g., {target_lang}).** Do not add any conversational phrases. Do not respond in Korean unless the [Target Language] is 'ko' or 'ko-KR'.
 """
 
 # ChatPromptTemplate 생성
@@ -91,51 +93,48 @@ prompt = ChatPromptTemplate.from_messages([
 ])
 
 # LangChain Expression Language (LCEL) 체인 정의
-# 이 체인은 'invoke'될 때 TranslateState 딕셔너리를 입력으로 받습니다.
 chain = (
     {
-        # 1. 헬퍼 함수를 호출하여 3가지 컨텍스트를 1개의 문자열로 포맷팅
         "formatted_context": lambda x: _format_context_for_prompt(
             x.get("chat_history"), 
             x.get("found_terms", []), 
             x.get("context", [])
         ),
-        # 2. 나머지 프롬프트 변수들을 state에서 그대로 가져옴
         "stt_text": lambda x: x["stt_text"],
-        "translated_text": lambda x: x["translated_text"]
+        "translated_text": lambda x: x["translated_text"],
+        "target_lang": lambda x: x["target_lang"]
     }
-    | prompt  # 포맷팅된 딕셔너리를 프롬프트에 삽입
-    | llm     # LLM 호출
-    | StrOutputParser() # LLM의 응답(AIMessage)을 문자열(str)로 파싱
+    | prompt
+    | llm
+    | StrOutputParser()
 )
 
 def context_translate_node(state: TranslateState) -> TranslateState:
     """
-    (IF) 'should_context_translate'가 True일 때 실행되는 노드.
+    (이름은 6단계에서 graph.py가 correction_agent로 alias함)
+    [Business Mode - A-3a] (IF)
     
     LLM을 사용하여 STT 오류를 보정하고 번역 품질을 향상시켜
-    그 결과를 'answer' 필드에 저장합니다.
+    그 결과를 'final_answer' 필드에 저장합니다.
     """
     if not llm:
         log.error("LLM이 로드되지 않았습니다. 문맥 기반 번역을 건너뛰고 기본 번역으로 폴백합니다.")
-        # LLM 실패 시, 안전하게 파파고 원본으로 폴백
-        state['answer'] = state['translated_text']
+        # ⭐️ [수정] state 변수명 변경
+        state['final_answer'] = state['translated_text']
         return state
 
-    log.info(f"문맥 기반 번역 노드 실행: (STT: '{state['stt_text']}')")
+    log.info(f"Biz 모드 (Slow Path): LLM 보정 노드 실행 (STT: '{state['stt_text']}')")
 
     try:
-        # LCEL 체인 실행. 'state' 객체는 딕셔너리처럼 동작하므로
-        # 체인에 필요한 키(stt_text, chat_history 등)를 자동으로 추출하여 사용합니다.
         corrected_translation = chain.invoke(state)
         
-        # LLM 응답 앞뒤의 불필요한 공백이나 따옴표 제거
-        state['answer'] = corrected_translation.strip().strip('"') 
-        log.info(f"LLM 보정 완료: '{state['answer']}'")
+        # ⭐️ [수정] state 변수명 변경
+        state['final_answer'] = corrected_translation.strip().strip('"') 
+        log.info(f"LLM 보정 완료: '{state['final_answer']}'")
 
     except Exception as e:
         log.error(f"LLM 문맥 번역 중 오류 발생: {e}", exc_info=True)
-        # LLM 호출 실패 시, 안전하게 파파고 원본 번역으로 폴백
-        state['answer'] = state['translated_text']
+        # ⭐️ [수정] state 변수명 변경 (LLM 호출 실패 시 폴백)
+        state['final_answer'] = state['translated_text']
 
     return state

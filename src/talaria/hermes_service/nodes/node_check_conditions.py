@@ -1,3 +1,4 @@
+# src/talaria/hermes_service/nodes/node_check_conditions.py
 # 문맥기반 번역 조건 노드
 
 import logging
@@ -8,7 +9,6 @@ from typing import List, Optional, Set, Dict, Any
 from langchain_core.documents import Document
 
 # 1. 상태 및 RAG/DB 리소스 임포트
-# (state.py의 위치에 따라 상대 경로 조정이 필요할 수 있습니다)
 from ..state import TranslateState, FoundTerm
 from ..rag_processor.embedder import get_embedder
 from ..rag_processor.vector_store import get_vector_store
@@ -21,8 +21,21 @@ RAG_SIMILARITY_THRESHOLD = 0.7  # L2 거리 기준 (0.7 미만일 때 관련성 
 SHORT_SENTENCE_WORD_COUNT = 7   # 이 단어 개수 이하일 때 "짧은 문장"으로 간주
 RAG_RESULT_COUNT = 3            # RAG 검색 시 가져올 청크 개수
 
+# --- 인사말 필터 (Stop List) ---
+GREETING_STOP_LIST = {
+    "안녕하세요", "안녕하세요.",
+    "네", "네.", "네네",
+    "맞습니다", "맞습니다.",
+    "감사합니다", "감사합니다.",
+    "아니요", "아니요.",
+    "좋습니다", "좋습니다.",
+    "여보세요", "여보세요?",
+    "잠시만요", "잠시만요."
+}
+# --- 필터 추가 완료 ---
+
+
 # --- 리소스 경로 정의 ---
-# 이 파일(node_check_conditions.py)의 위치를 기준으로 expert_dict.pkl 경로 설정
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 EXPERT_DICT_PATH = os.path.join(
     BASE_DIR, "..", "..", "assets", "expert_dict.pkl"
@@ -73,7 +86,6 @@ class _ConditionChecker:
         try:
             # `assist` DB에 연결합니다.
             with get_db_cursor(dictionary=True) as cursor:
-                # (사용자가 제공한 실제 쿼리 사용)
                 sql = """
                     SELECT doc_id
                     FROM tl_meeting_documents 
@@ -109,8 +121,6 @@ class _ConditionChecker:
             with get_db_cursor(dictionary=True) as cursor:
                 id_list_str = ", ".join(map(str, concept_ids))
                 
-                # tl_dict_term: 용어 텍스트 (e.g., "CR")
-                # tl_dict_concept: 용어 의미 (e.g., "변경 요청서")
                 sql = f"""
                     SELECT 
                         t.term_text, 
@@ -143,11 +153,12 @@ class _ConditionChecker:
     def run(self, state: TranslateState) -> TranslateState:
         """
         LangGraph 노드에서 호출할 메인 실행 함수.
-        3가지 조건을 검사하여 'should_context_translate' 플래그를 설정합니다.
+        3가지 조건을 검사하여 'should_correct_business' 플래그를 설정합니다.
         """
         if not self.automaton or not self.embedder or not self.vector_store:
             log.error("필수 리소스(오토마톤/임베더/DB)가 로드되지 않아 조건 검사를 중단합니다.")
-            state['should_context_translate'] = False
+            # ⭐️ [수정] state 변수명 변경
+            state['should_correct_business'] = False
             return state
 
         stt_text = state['stt_text']
@@ -158,10 +169,24 @@ class _ConditionChecker:
         found_terms_list: List[FoundTerm] = []
         context_docs: List[Document] = []
         
+        # --- 조건 0: 인사말 필터 (GREETING_STOP_LIST) ---
+        try:
+            text_to_check = stt_text.strip().rstrip(".?!")
+            
+            if text_to_check in GREETING_STOP_LIST:
+                log.info(f"조건 0(인사말 필터) 만족. LLM 보정을 건너뜁니다. (STT: '{stt_text}')")
+                # ⭐️ [수정] state 변수명 변경
+                state['should_correct_business'] = False
+                return state
+        except Exception as e:
+            log.warning(f"인사말 필터 검사 중 오류: {e}", exc_info=True)
+        # --- 로직 추가 완료 ---
+
+
         # --- (준비) Java DB에서 이 회의의 문서 ID 목록 가져오기 ---
         docs_id = self._get_docs_for_meeting(meeting_id)
 
-        # --- [조건 1: 전문 용어 검사] (가벼운 검사) ---
+        # --- [조건 1: 전문 용어 검사] (기존 로직) ---
         try:
             found_concept_ids: Set[int] = set()
             for end_index, concept_id in self.automaton.iter(stt_text):
@@ -170,13 +195,12 @@ class _ConditionChecker:
             if found_concept_ids:
                 log.info(f"조건 1(전문 용어) 만족: {found_concept_ids}")
                 should_translate = True # ⭐️ LLM 호출 트리거
-                # DB에서 용어와 뜻을 조회하여 state에 저장
                 found_terms_list = self._get_term_meanings(found_concept_ids)
                 
         except Exception as e:
             log.warning(f"아호-코라식 검사 중 오류: {e}", exc_info=True)
 
-        # --- [조건 3: 짧은 문장 검사] (가벼운 검사) ---
+        # --- [조건 3: 짧은 문장 검사] (기존 로직) ---
         try:
             word_count = len(stt_text.split())
             if word_count <= SHORT_SENTENCE_WORD_COUNT:
@@ -185,24 +209,20 @@ class _ConditionChecker:
         except Exception as e:
             log.warning(f"문장 길이 검사 중 오류: {e}", exc_info=True)
 
-        # --- [조건 2: RAG 유사도 검사] (무거운 검사 - 재료 수집 겸용) ---
-        rag_condition_met = False # RAG 조건이 만족되었는지 별도 플래그
+        # --- [조건 2: RAG 유사도 검사] (기존 로직) ---
+        rag_condition_met = False 
         
-        if docs_id: # 회의에 등록된 문서가 있을 경우에만 RAG 수행
+        if docs_id: 
             try:
-                # 1. 발화 STT를 벡터로 변환
                 query_vector = self.embedder.embed_chunks([stt_text])[0]
                 
-                # 2. VectorDB에서 이 회의 문서들(docs_id) 내에서만 검색
                 rag_results = self.vector_store.search_chunks(
                     query_vector=query_vector,
-                    document_ids=[str(doc_id) for doc_id in docs_id], # ChromaDB는 문자열 ID를 기대할 수 있음
+                    document_ids=[str(doc_id) for doc_id in docs_id], 
                     n_results=RAG_RESULT_COUNT
                 )
 
-                # 3. (⭐️ 하이브리드 "약한 신호" 로직)
                 if rag_results:
-                    # 3a. Top-1 청크는 '약한 신호'일 수 있으므로 (유사도와 상관없이) 일단 추가
                     top_1_result = rag_results[0]
                     top_1_distance = top_1_result.get('distance', 999)
                     context_docs.append(Document(
@@ -210,12 +230,10 @@ class _ConditionChecker:
                         metadata={'distance': top_1_distance, 'doc_id': top_1_result.get('document_id', 'unknown')}
                     ))
 
-                    # 3b. Top-1이 임계값을 통과했는지 검사
                     if top_1_distance < RAG_SIMILARITY_THRESHOLD:
                         rag_condition_met = True
                     
-                    # 3c. Top-2 부터는 '노이즈' 방지를 위해 임계값을 통과한 것만 추가
-                    for result in rag_results[1:]: # 1번 인덱스부터(Top-2) 순회
+                    for result in rag_results[1:]: 
                         distance = result.get('distance', 999)
                         if distance < RAG_SIMILARITY_THRESHOLD:
                             context_docs.append(Document(
@@ -223,14 +241,12 @@ class _ConditionChecker:
                                 metadata={'distance': distance, 'doc_id': result.get('document_id', 'unknown')}
                             ))
                 
-                # 4. RAG 조건이 만족되었는지 최종 확인
                 if rag_condition_met:
                     log.info(f"조건 2(RAG 유사도) 만족: (Top-1 거리: {top_1_distance:.4f})")
                     should_translate = True # ⭐️ LLM 호출 트리거
                     
             except Exception as e:
                 log.error(f"RAG 유사도 검사 중 오류: {e}", exc_info=True)
-                # context_docs는 비어있을 것임 (정상)
         else:
             log.info("회의에 등록된 RAG 문서가 없어 조건 2(RAG)를 건너뜁니다.")
 
@@ -238,7 +254,8 @@ class _ConditionChecker:
         state['docs_id'] = docs_id
         state['context'] = context_docs
         state['found_terms'] = found_terms_list
-        state['should_context_translate'] = should_translate # ⭐️ 3가지 조건 중 하나라도 만족하면 True
+        # ⭐️ [수정] state 변수명 변경
+        state['should_correct_business'] = should_translate
         
         log.info(f"조건 검사 완료: LLM 보정 필요 여부 = {should_translate}")
 
@@ -253,23 +270,26 @@ except Exception as e:
 
 def check_conditions_node(state: TranslateState) -> TranslateState:
     """
+    (이름은 6단계에서 graph.py가 analyze_business_context로 alias함)
     LangGraph의 'check_conditions' 노드입니다.
     
-    3가지 조건(전문용어, RAG유사도, 문장길이)을 검사하고
-    RAG 검색을 수행하여 state를 업데이트합니다.
+    (수정) 0. 인사말 필터 (Fast Path)
+    1. 전문용어
+    2. RAG유사도
+    3. 문장길이
+    조건을 검사하고 RAG 검색을 수행하여 state를 업데이트합니다.
     """
     if not _checker_instance:
         log.error("조건 검사기가 초기화되지 않았습니다. 기본 번역으로 폴백합니다.")
-        state['should_context_translate'] = False
+        # ⭐️ [수정] state 변수명 변경
+        state['should_correct_business'] = False
         return state
         
     try:
-        # (주의) LangGraph는 상태 객체를 '복사'해서 전달할 수 있습니다.
-        # 명시적으로 반환값을 받아 state를 업데이트해야 합니다.
         updated_state = _checker_instance.run(state)
         return updated_state
     except Exception as e:
         log.error(f"check_conditions_node 실행 중 심각한 오류 발생: {e}", exc_info=True)
-        # 노드 실행 중 오류가 발생하면, 안전하게 LLM 번역을 건너뛰도록 설정
-        state['should_context_translate'] = False
+        # ⭐️ [수정] state 변수명 변경
+        state['should_correct_business'] = False
         return state

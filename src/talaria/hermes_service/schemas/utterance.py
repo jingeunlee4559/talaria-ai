@@ -14,8 +14,13 @@ class UtteranceProcessIn(BaseModel):
     started_ms: Optional[int] = Field(None, description="발화 시작 시간 (ms)")
     ended_ms: Optional[int] = Field(None, description="발화 종료 시간 (ms)")
     
-    # agent.py가 생성한 1차 단순 번역본
+    # 1차 단순 번역본 (Business 모드의 Fast Path용)
     simple_translations: Dict[str, str] = Field(..., description="Papago 단순 번역 결과 (예: {'en-US': 'Hello'})")
+
+    target_lang: str = Field("en-US", description="LLM 보정/번역을 수행할 대상 언어 (e.g., en-US)")
+
+    # ⭐️ [신규] 모드 플래그
+    translation_mode: str = Field("business", description="번역 모드 ('business' or 'vibe')")
 
 class UtteranceProcessOut(BaseModel):
     """hermes_service -> livekit_agent (출력)"""
@@ -23,5 +28,10 @@ class UtteranceProcessOut(BaseModel):
     lang: str = Field(..., description="입력받은 원본 언어")
     
     # 그래프가 보정한 최종 번역본
-    contextual_translations: Dict[str, str] = Field(..., description="문맥 보정이 적용된 최종 번역본")
-    ai_tags: Dict = Field(..., description="DB에 저장된 ai_tags (manner 등 포함)")
+    contextual_translations: Dict[str, str] = Field(..., description="최종 번역본 (Vibe톤, 이모지 포함 가능)")
+    
+    # ⭐️ [신규] Vibe 모드 결과 (DB 저장 및 Agent 후처리용)
+    final_explanation: Optional[str] = Field(None, description="Vibe 모드 문화/밈 설명 (DB 저장용)")
+    final_emoji: Optional[str] = Field(None, description="Vibe 모드 감정 이모지 (Agent가 사용)")
+    
+    ai_tags: Dict = Field(..., description="DB에 저장될 모든 AI 분석 데이터")
