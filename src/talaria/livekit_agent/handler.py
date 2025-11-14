@@ -41,8 +41,11 @@ class ParticipantSTTHandler:
         self.stt = stt_model
         self.room = room
         self.publish_callback = publish_callback
-        self.mchecker = manner_checker
+        
+        # ⭐️ [수정] 비즈니스용 매너 체커로 이름 명시
+        self.mchecker_business = manner_checker
         self.publish_manner_callback = publish_manner_callback
+        
         self.translation_enabled = translation_enabled
         self.supported_locales = supported_locales or set()
         clova_lang = locale_to_clova_lang(participant_locale)
@@ -52,6 +55,7 @@ class ParticipantSTTHandler:
         self._is_running = True
 
     async def start(self):
+        # ( ... 기존 코드와 동일 ... )
         audio_stream = rtc.AudioStream(self.track)
         pid = getattr(self.participant, "identity", "unknown")
         try:
@@ -88,6 +92,7 @@ class ParticipantSTTHandler:
             await audio_stream.aclose()
 
     async def _process_stream(self):
+        # ( ... 기존 코드와 동일 ... )
         pid = getattr(self.participant, "identity", "unknown")
         try:
             async for event in self.stream:
@@ -109,6 +114,7 @@ class ParticipantSTTHandler:
                 log.error(f"[{pid}] 🚨 error while logging: {log_error}")
 
     def _get_current_locales(self) -> Set[str]:
+        # ( ... 기존 코드와 동일 ... )
         locales = set()
         if self.room.local_participant and self.room.local_participant.metadata:
             try:
@@ -128,6 +134,7 @@ class ParticipantSTTHandler:
         return locales.intersection(self.supported_locales)
 
     def _get_metadata_field(self, field_name: str, default: Any = None) -> Any:
+        # ( ... 기존 코드와 동일 ... )
         try:
             if self.participant.metadata:
                 meta = json.loads(self.participant.metadata)
@@ -137,10 +144,11 @@ class ParticipantSTTHandler:
         return default
 
 
-    # ⭐️ [수정] Task 1: 번역 파이프라인 (Autumn님 요청 - "첫 번째 언어만 보정")
+    # ⭐️ [수정] Task 1: 번역 + "Vibe 모드 설명 발행"
     async def _run_translation_pipeline(self, text: str, username: str, confidence: float, start_time_ms: int, end_time_ms: int, **kwargs):
         """
         Task 1: STT -> (Papago) -> Hermes(LangGraph) -> Publish (STT/Translation)
+        ⭐️ (신규) Vibe 모드일 경우, 'final_explanation'을 'topic=manner'로 발행합니다.
         """
         pid = getattr(self.participant, "identity", "unknown")
         
@@ -150,19 +158,12 @@ class ParticipantSTTHandler:
             translation_mode = "vibe" if mode_flag == "C" else "business"
             log.info(f"[{pid}] 🎤 Meeting Mode Detected: {mode_flag} -> {translation_mode}")
 
-            # [핵심 수정] 
-            # 1. Papago는 모든 대상 언어로 번역
-            # 2. LLM 보정은 "목록의 첫 번째" 언어로 지정
-            
             current_locales = self._get_current_locales()
             target_locales_list = [loc for loc in current_locales if loc != self.participant_locale]
             
-            # (규칙) 1. 목록이 있으면, 첫 번째 언어를 LLM 보정 대상으로
-            #       2. 목록이 없으면, "en-US"를 기본값으로
-            
-            primary_target_lang = "en-US" # (기본값)
+            primary_target_lang = "en-US" 
             if target_locales_list:
-                primary_target_lang = target_locales_list[0] # ⭐️ 목록의 첫 번째 언어
+                primary_target_lang = target_locales_list[0] 
             
             log.debug(f"[{pid}] Primary Target(LLM): {primary_target_lang} | Papago Targets: {target_locales_list}")
 
@@ -172,7 +173,6 @@ class ParticipantSTTHandler:
                 log.debug(f"[{pid}] Running Papago (Business Mode 'Fast Path')...")
                 if target_locales_list:
                     try:
-                        # ⭐️ Papago는 목록의 '모든' 언어로 번역
                         simple_translations = await translate_to_multiple_languages(
                             text, 
                             self.participant_locale,
@@ -202,8 +202,6 @@ class ParticipantSTTHandler:
                         "started_ms": start_time_ms,
                         "ended_ms": end_time_ms,
                         "simple_translations": simple_translations, 
-                        
-                        # ⭐️ [핵심 수정] 목록의 첫 번째 언어를 보정 대상으로 전달
                         "target_lang": primary_target_lang,
                         "translation_mode": translation_mode
                     }
@@ -213,25 +211,43 @@ class ParticipantSTTHandler:
                         json=payload
                     )
                     response.raise_for_status()
-                    
                     result_data = response.json()
                     
-                    # ⭐️ [수정] hermes는 'primary_target_lang'만 보정했으므로, 
-                    # 1차 번역본(simple_translations)을 기반으로 덮어써야 함
                     final_translations = simple_translations.copy()
-                    
-                    # LLM이 보정한 'final_answer' (e.g., 'zh-CN')를 가져옴
                     corrected_answer = result_data.get("contextual_translations", {}).get(primary_target_lang)
                     final_emoji = result_data.get("final_emoji")
+                    
+                    # ⭐️ [신규] Vibe 모드 "문화 설명" 추출
+                    final_explanation = result_data.get("final_explanation")
 
                     if corrected_answer:
                         if final_emoji:
                              corrected_answer = f"{corrected_answer} {final_emoji}"
-                        
-                        # ⭐️ 'primary_target_lang' 키의 값만 LLM 보정본으로 덮어쓰기
                         final_translations[primary_target_lang] = corrected_answer
                     
-                    # (결과) final_translations = {'zh-CN': 'LLM_Result', 'ja-JP': 'Papago...'}
+                    # ⭐️ [신규] Vibe 모드이고, 설명이 있고, 콜백이 존재하면
+                    # "가짜 매너 알림"을 'topic=manner'로 발행
+                    if translation_mode == "vibe" and final_explanation and self.publish_manner_callback:
+                        log.info(f"[{pid}] ⭐️ Vibe '문화 설명'을 topic=manner로 발행합니다.")
+                        # (MannerChecker 페이로드와 유사하게 생성)
+                        fake_payload = {
+                            "type": "manner_alert",
+                            "label": "K-Culture Tip", # (프론트가 표시할 라벨)
+                            "explanation": final_explanation, # (LangGraph가 DB에서 생성한 설명)
+                            
+                            # (나머지 필드는 MannerChecker와 동일하게 채움)
+                            "agent_code": "K-meme",
+                            "severity": 1,
+                            "match": "", # (LangGraph에서 용어를 다시 받기 전까지는 비워둠)
+                            "suggestion": "",
+                            "identity": self.participant.identity,
+                            "username": username,
+                            "language": self.participant_locale,
+                            "room_name": self.room.name,
+                            "ts": time.time(),
+                            "version": "v1-culture",
+                        }
+                        await self.publish_manner_callback(fake_payload)
 
                 except httpx.HTTPStatusError as e:
                     log.error(f"❌ hermes_service API 오류: {e.response.status_code} - {e.response.text}")
@@ -240,7 +256,7 @@ class ParticipantSTTHandler:
                     log.error(f"❌ hermes_service 호출 실패: {e}")
                     final_translations = simple_translations
 
-            # 4. (중요) 최종 결과를 UI (DataChannel)로 전송
+            # 4. (중요) 최종 결과를 UI (DataChannel)로 전송 (topic=stt)
             await self.publish_callback(
                 text=text,
                 final=True,
@@ -248,20 +264,37 @@ class ParticipantSTTHandler:
                 psid=self.participant.sid,
                 username=username,
                 locale=self.participant_locale,
-                translations=final_translations, # (1개 언어만 보정된 맵)
+                translations=final_translations, # (영어만 보정된 맵)
             )
         except Exception as e:
             log.error(f"❌ [Translation Pipeline] Failed: {e}", exc_info=True)
 
 
-    # [Task 2: 매너 체크 파이프라인] (수정 없음)
+    # ⭐️ [수정] Task 2: "비즈니스 모드" 매너 체크 파이프라인
     async def _run_manner_check_pipeline(self, text: str, username: str, **kwargs):
+        """
+        Task 2: STT -> MannerCheck -> Publish (Manner)
+        ⭐️ (신규) 'business' 모드일 때만 실행됩니다.
+        """
         pid = getattr(self.participant, "identity", "unknown")
-        if not (self.mchecker and self.publish_manner_callback):
+
+        # --- 1. 모드 감지 (Task 1과 동일) ---
+        mode_flag = self._get_metadata_field("meeting_mode", "B") # 'B' or 'C'
+        translation_mode = "vibe" if mode_flag == "C" else "business"
+        
+        # ⭐️ [핵심 수정] Vibe 모드이면, 비즈니스 매너 체커를 실행하지 않음
+        if translation_mode == "vibe":
+            log.debug(f"[{pid}] Vibe 모드이므로 Business 매너 체크를 건너뜁니다.")
+            return
+
+        # --- (이하는 기존과 동일) Business 모드일 때만 실행 ---
+        if not (self.mchecker_business and self.publish_manner_callback):
             return 
+            
+        log.debug(f"[{pid}] Business 매너 체크 실행...")
         try:
             clova_lang = locale_to_clova_lang(self.participant_locale) 
-            alerts = await self.mchecker.process_text(
+            alerts = await self.mchecker_business.process_text(
                 text=text,
                 room_name=self.room.name,
                 speaker_identity=self.participant.identity,
@@ -276,6 +309,7 @@ class ParticipantSTTHandler:
 
     # [메인 핸들러 (병렬 실행)] (수정 없음)
     async def _handle_transcription(self, event: agents.stt.SpeechEvent):
+        # ( ... 기존 코드와 동일 ... )
         pid = getattr(self.participant, "identity", "unknown")
         try:
             if not event.alternatives:

@@ -133,7 +133,7 @@ if __name__ == "__main__":
     # LLM 2가 "reliable" 힌트를 받아 "trash"가 아닌지 확인
     # ---
     run_vibe_test(
-        stt_text="이거 찐 국밥이네", 
+        stt_text="이 캐릭터 찐 국밥이네", 
         chat_history=[]
     )
     
@@ -144,7 +144,7 @@ if __name__ == "__main__":
     # kculture_rulebook.json: "배그", "폼 미쳤다"
     # ---
     run_vibe_test(
-        stt_text="와 오늘 베그 폼 미쳣다",
+        stt_text="야 걔는 완전 베그 고인물이야.",
         chat_history=[]
     )
     
