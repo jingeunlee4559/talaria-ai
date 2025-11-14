@@ -31,7 +31,6 @@ http://localhost:8000/docs#/translation/translate_doc_jobs_translate_doc_post
 ## livekit agent 실행
 개발모드로 실행
 ```
-python src/talaria/livekit_agent/agent.py dev
 python -m src.talaria.livekit_agent.agent dev
 ```
 
