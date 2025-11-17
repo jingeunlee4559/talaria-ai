@@ -14,17 +14,20 @@ except Exception as e:
     llm = None
     log.critical(f"❌ Vibe용 LLM(Extract) 로드 실패: {e}", exc_info=True)
 
-# ⭐️ [수정] 프롬프트: "용어 추출" 제거. "STT 보정" 및 "감정 태깅"에 집중.
-VIBE_EXTRACT_PROMPT = """You are an expert in correcting Korean STT (Speech-to-Text) errors based on context.
-Your task is to correct a potentially erroneous Korean STT sentence and classify its emotion.
+VIBE_EXTRACT_PROMPT = """You are an expert in correcting STT (Speech-to-Text) errors based on context for multiple languages.
+Your task is to correct a potentially erroneous STT sentence and classify its emotion, based on the provided language code.
 
+Input Language: "{stt_lang}"
 STT Input: "{stt_text}"
 Context (Chat History):
 {chat_history}
 
 You MUST perform 2 tasks and respond ONLY with a JSON object:
-1.  **Correct STT:** Correct STT typos based on K-Culture/meme context (e.g., "베그 폼 미쳣다" -> "배그 폼 미쳤다", "킹밧네" -> "킹받네").
-2.  **Tag Emotion:** Classify the speaker's core emotion from this list: [joy, surprise, sadness, anger, neutral].
+1.  **Correct STT:** Correct STT typos based on the cultural context, internet slang, or common speech patterns for the given **Input Language**.
+    * (Example for "ko-KR"): "베그 폼 미쳣다" -> "배그 폼 미쳤다", "킹밧네" -> "킹받네"
+    * (Example for "en-US"): "That's bussin" -> "That's bussin'", "I'm finna go" -> "I'm gonna go", "He left me on read" -> "He left me on read"
+2.  **Tag Emotion:** Classify the speaker's core emotion from this list: [joy, surprise, sadness, anger].
+    If no strong emotion is detected, or the emotion is neutral, respond with "neutral".
 
 Respond ONLY with the following JSON format:
 {{
@@ -52,6 +55,7 @@ def vibe_extract_agent(state: TranslateState) -> TranslateState:
         history_str = "\n".join(f"- {h}" for h in state.get("chat_history", []))
         
         response = chain.invoke({
+            "stt_lang": state.get("stt_lang", "ko-KR"),
             "stt_text": state['stt_text'],
             "chat_history": history_str
         })

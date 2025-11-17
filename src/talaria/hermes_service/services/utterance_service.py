@@ -99,7 +99,7 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
         stt_text=payload.stt_text,
         translated_text=simple_translation, 
         
-        # ⭐️ [핵심 수정] Agent가 명시적으로 전달한 값 사용
+        stt_lang=payload.lang,
         target_lang=target_lang,
 
         context=[], 
@@ -151,9 +151,8 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
         stt_text=payload.stt_text,
         lang=payload.lang,
         contextual_translations=final_translations,
-        
         final_explanation=final_state.get("final_explanation"),
         final_emoji=final_state.get("final_emoji"),
-        
+        corrected_stt=final_state.get("corrected_stt"),
         ai_tags=ai_tags
     )

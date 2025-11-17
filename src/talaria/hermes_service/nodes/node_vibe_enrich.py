@@ -188,9 +188,21 @@ def emoji_agent(state: TranslateState) -> TranslateState:
     LLM 1이 분석한 'vibe_emotion_tag'를 'emotion_emoji_map.json'과 매핑합니다.
     """
     emotion = state.get("vibe_emotion_tag", "default")
+
+    if emotion == "neutral" or emotion == "default":
+        state['final_emoji'] = None
+        log.info(f"Vibe 이모지 매핑: {emotion} -> (이모지 없음)")
+        return state
+
+    # 그 외의 감정(joy, anger 등)일 때만 이모지 매핑
     emoji = EMOJI_MAP.get(emotion, EMOJI_MAP.get("default", "💬"))
     
-    state['final_emoji'] = emoji
-    log.info(f"Vibe 이모지 매핑: {emotion} -> {emoji}")
+    # 'neutral'이 아닌데도 'default'(💬)가 매핑되는 경우 방지 (선택적)
+    if emoji == EMOJI_MAP.get("default"):
+         state['final_emoji'] = None
+         log.warning(f"Vibe 이모지 매핑: {emotion}에 해당하는 이모지가 없어 건너뜁니다.")
+    else:
+        state['final_emoji'] = emoji
+        log.info(f"Vibe 이모지 매핑: {emotion} -> {emoji}")
     
     return state

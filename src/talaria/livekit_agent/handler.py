@@ -216,14 +216,10 @@ class ParticipantSTTHandler:
                     final_translations = simple_translations.copy()
                     corrected_answer = result_data.get("contextual_translations", {}).get(primary_target_lang)
                     final_emoji = result_data.get("final_emoji")
+                    corrected_stt_from_hermes = result_data.get("corrected_stt")
                     
                     # ⭐️ [신규] Vibe 모드 "문화 설명" 추출
                     final_explanation = result_data.get("final_explanation")
-
-                    if corrected_answer:
-                        if final_emoji:
-                             corrected_answer = f"{corrected_answer} {final_emoji}"
-                        final_translations[primary_target_lang] = corrected_answer
                     
                     # ⭐️ [신규] Vibe 모드이고, 설명이 있고, 콜백이 존재하면
                     # "가짜 매너 알림"을 'topic=manner'로 발행
@@ -256,9 +252,27 @@ class ParticipantSTTHandler:
                     log.error(f"❌ hermes_service 호출 실패: {e}")
                     final_translations = simple_translations
 
+            # 4. ⭐️ [이미지 문제 해결] '셀프 번역' 말풍선 제거
+            # Vibe 번역본(LLM 2)이 translations 객체에 남아있지 않도록 제거합니다.
+            # (이 값은 사용하지 않고 버립니다.)
+            final_translations.pop(self.participant_locale, None)
+
+            # 5. ⭐️ [Q3 해결] 최종적으로 발행할 '원본 텍스트' 결정
+            # (Vibe 모드에서 STT 교정본이 왔다면 그것을 사용하고, 아니면 원본 STT 사용)
+            final_text_to_publish = corrected_stt_from_hermes if corrected_stt_from_hermes is not None else text
+            
+            # 6. ⭐️ [Q4 해결] 이모지를 '원본 텍스트'와 '모든 번역본'에 부착
+            if final_emoji:
+                # 6a. (발화자 본인용) 원본 텍스트에 이모지 추가
+                final_text_to_publish = f"{final_text_to_publish} {final_emoji}"
+                
+                # 6b. (상대방용) 모든 번역본 텍스트에 이모지 추가
+                for lang_code in final_translations:
+                    final_translations[lang_code] = f"{final_translations[lang_code]} {final_emoji}"
+
             # 4. (중요) 최종 결과를 UI (DataChannel)로 전송 (topic=stt)
             await self.publish_callback(
-                text=text,
+                text= final_text_to_publish,
                 final=True,
                 identity=self.participant.identity,
                 psid=self.participant.sid,

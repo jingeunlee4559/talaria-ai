@@ -13,6 +13,7 @@ import json
 import asyncio
 import logging
 import time
+import datetime
 from typing import Optional, Any, List, Dict, Set
 # import httpx # (integrations.py로 이동)
 
@@ -130,6 +131,8 @@ async def entrypoint(ctx: agents.JobContext):
         locale: str,  # 🔥 원본 locale
         translations: Dict[str, str] = None
     ):
+        # ts = datetime.datetime.now().timestamp()
+        ts = datetime.datetime.now(datetime.timezone.utc).timestamp()
         payload = {
             "type": "stt",
             "final": final,
@@ -137,13 +140,13 @@ async def entrypoint(ctx: agents.JobContext):
             "identity": identity,
             "username": username,
             "participant_sid": psid,
-            "ts": time.time(),
+            "ts": ts,
             "locale": locale,  # 🔥 원본 locale
             "translations": translations or {},
         }
         
         log_type = "FINAL" if final else "PARTIAL"
-        logging.info(f"📤 STT [{log_type}] {username} ({locale}): {text[:50]}...")
+        logging.info(f"📤 STT [{log_type}], TIME[{ts}] {username} ({locale}): {text[:50]}...")
         if translations:
             logging.info(f"🌍 TRANSLATIONS: {translations}")
         

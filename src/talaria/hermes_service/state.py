@@ -11,6 +11,7 @@ class FoundTerm(TypedDict):
 
 class TranslateState(TypedDict):
     stt_text : str # 사용자 발화 STT 내용
+    stt_lang: str #  STT 원본 언어
     translated_text : str # 사용자 발화 파파고 단순 번역 내용
     target_lang: str # 번역 되어야 하는 언어
     context : List[Document] # RAG 검색 결과 청크
