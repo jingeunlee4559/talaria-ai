@@ -213,10 +213,11 @@ class ParticipantSTTHandler:
                     response.raise_for_status()
                     result_data = response.json()
                     
-                    final_translations = simple_translations.copy()
+                    final_translations = result_data.get("contextual_translations", simple_translations)
                     corrected_answer = result_data.get("contextual_translations", {}).get(primary_target_lang)
                     final_emoji = result_data.get("final_emoji")
                     corrected_stt_from_hermes = result_data.get("corrected_stt")
+                    vibe_triggers = result_data.get("vibe_triggers")
                     
                     # ⭐️ [신규] Vibe 모드 "문화 설명" 추출
                     final_explanation = result_data.get("final_explanation")
@@ -225,6 +226,7 @@ class ParticipantSTTHandler:
                     # "가짜 매너 알림"을 'topic=manner'로 발행
                     if translation_mode == "vibe" and final_explanation and self.publish_manner_callback:
                         log.info(f"[{pid}] ⭐️ Vibe '문화 설명'을 topic=manner로 발행합니다.")
+                        match_text = vibe_triggers[0] if vibe_triggers else ""
                         # (MannerChecker 페이로드와 유사하게 생성)
                         fake_payload = {
                             "type": "manner_alert",
@@ -234,7 +236,7 @@ class ParticipantSTTHandler:
                             # (나머지 필드는 MannerChecker와 동일하게 채움)
                             "agent_code": "K-meme",
                             "severity": 1,
-                            "match": "", # (LangGraph에서 용어를 다시 받기 전까지는 비워둠)
+                            "match": match_text,
                             "suggestion": "",
                             "identity": self.participant.identity,
                             "username": username,

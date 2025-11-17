@@ -26,9 +26,9 @@ You MUST perform 2 tasks and respond ONLY with a JSON object:
 1.  **Correct STT:** Correct STT typos based on the cultural context, internet slang, or common speech patterns for the given **Input Language**.
     * (Example for "ko-KR"): "베그 폼 미쳣다" -> "배그 폼 미쳤다", "킹밧네" -> "킹받네"
     * (Example for "en-US"): "That's bussin" -> "That's bussin'", "I'm finna go" -> "I'm gonna go", "He left me on read" -> "He left me on read"
-2.  **Tag Emotion:** Classify the speaker's core emotion from this list: [joy, surprise, sadness, anger].
+2.  **Tag Emotion:** Classify the speaker's core emotion from this list:
+    [joy_celebrate, joy_excitement, love_appreciation, surprise_amaze, cool_success]
     If no strong emotion is detected, or the emotion is neutral, respond with "neutral".
-
 Respond ONLY with the following JSON format:
 {{
   "corrected_stt": "...",

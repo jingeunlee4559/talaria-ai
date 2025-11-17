@@ -154,5 +154,6 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
         final_explanation=final_state.get("final_explanation"),
         final_emoji=final_state.get("final_emoji"),
         corrected_stt=final_state.get("corrected_stt"),
+        vibe_triggers=final_state.get("vibe_triggers"),
         ai_tags=ai_tags
     )

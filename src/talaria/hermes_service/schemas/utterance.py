@@ -29,7 +29,7 @@ class UtteranceProcessOut(BaseModel):
     
     # 그래프가 보정한 최종 번역본
     contextual_translations: Dict[str, str] = Field(..., description="최종 번역본 (Vibe톤, 이모지 포함 가능)")
-    
+    vibe_triggers: Optional[List[str]] = Field(None, description="Vibe 모드에서 감지된 키워드/밈 목록")
     final_explanation: Optional[str] = Field(None, description="Vibe 모드 문화/밈 설명 (DB 저장용)")
     final_emoji: Optional[str] = Field(None, description="Vibe 모드 감정 이모지 (Agent가 사용)")
     corrected_stt: Optional[str] = Field(None, description="[신규] Vibe 모드에서 보정된 STT")

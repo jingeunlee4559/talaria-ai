@@ -144,6 +144,7 @@ def load_json_asset(filename: str) -> Dict:
         return {}
         
 EMOJI_MAP = load_json_asset("emotion_emoji_map.json")
+KEYWORD_MAP = load_json_asset("keyword_emoji_map.json")
 
 # --- 4. LangGraph 노드 함수 정의 ---
 
@@ -185,24 +186,34 @@ def context_enrich_agent(state: TranslateState) -> TranslateState:
 def emoji_agent(state: TranslateState) -> TranslateState:
     """
     [Vibe Mode - B-3] (규칙 기반)
-    LLM 1이 분석한 'vibe_emotion_tag'를 'emotion_emoji_map.json'과 매핑합니다.
+    1순위: 키워드 맵 검사
+    2순위: LLM 감정 맵핑
     """
+    # ⭐️ 1순위: 키워드 맵 검사
+    corrected_stt_lower = (state.get("corrected_stt") or "").lower()
+    if corrected_stt_lower and KEYWORD_MAP:
+        for keyword, emoji in KEYWORD_MAP.items():
+            if keyword in corrected_stt_lower:
+                state['final_emoji'] = emoji
+                log.info(f"Vibe 이모지 (Keyword): '{keyword}' -> {emoji}")
+                return state # ⭐️ 키워드 매칭 시 즉시 종료
+
+    # ⭐️ 2순위: LLM 감정 맵핑 (키워드가 매칭되지 않았을 때만 실행)
     emotion = state.get("vibe_emotion_tag", "default")
 
+    # (이전 대화에서 수정한 'neutral' 처리 로직)
     if emotion == "neutral" or emotion == "default":
         state['final_emoji'] = None
-        log.info(f"Vibe 이모지 매핑: {emotion} -> (이모지 없음)")
+        log.info(f"Vibe 이모지 (Emotion): {emotion} -> (이모지 없음)")
         return state
 
-    # 그 외의 감정(joy, anger 등)일 때만 이모지 매핑
-    emoji = EMOJI_MAP.get(emotion, EMOJI_MAP.get("default", "💬"))
-    
-    # 'neutral'이 아닌데도 'default'(💬)가 매핑되는 경우 방지 (선택적)
-    if emoji == EMOJI_MAP.get("default"):
+    emoji = EMOJI_MAP.get(emotion, EMOJI_MAP.get("default"))
+
+    if emoji is None:
          state['final_emoji'] = None
-         log.warning(f"Vibe 이모지 매핑: {emotion}에 해당하는 이모지가 없어 건너뜁니다.")
+         log.warning(f"Vibe 이모지 (Emotion): {emotion}에 해당하는 이모지가 없어 건너뜁니다.")
     else:
         state['final_emoji'] = emoji
-        log.info(f"Vibe 이모지 매핑: {emotion} -> {emoji}")
-    
+        log.info(f"Vibe 이모지 (Emotion): {emotion} -> {emoji}")
+
     return state
