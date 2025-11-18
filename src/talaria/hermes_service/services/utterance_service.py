@@ -74,57 +74,41 @@ def _save_utterance(payload: UtteranceProcessIn, final_answer: str, ai_tags: Dic
 
 def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessOut:
     """
-    (Service) 발화 처리의 메인 로직 (⭐️ 듀얼 모드 지원)
+    (Service) 발화 처리의 메인 로직
     """
     log.info(f"발화 처리 시작 (Mode: {payload.translation_mode}, STT: {payload.stt_text})")
 
-    # --- 1. DB에서 Chat History 조회 ---
     chat_history = _get_chat_history(payload.meeting_id)
-
-    # --- 2. Graph State 준비 ---
-    
-    # ⭐️ [핵심 수정] 
-    # 1차 번역본과 대상 언어를 Agent가 보낸 payload에서 직접 가져옵니다.
-    # 더 이상 "en-US"를 하드코딩하거나 추측하지 않습니다.
-    
     target_lang = payload.target_lang
-    simple_translation = payload.simple_translations.get(target_lang, "") # Vibe 모드이거나 B-모드 FastPath가 아니면 비어있음
+    simple_translation = payload.simple_translations.get(target_lang, "")
 
-    if payload.translation_mode == "business" and not simple_translation:
-        log.warning(f"Business 모드이지만 1차 번역본(target_lang: {target_lang})이 비어있습니다.")
-
-
-    # LangGraph에 넣을 State 객체 준비
     graph_input_state = TranslateState(
         stt_text=payload.stt_text,
         translated_text=simple_translation, 
-        
         stt_lang=payload.lang,
         target_lang=target_lang,
-
         context=[], 
         meeting_id=payload.meeting_id,
         docs_id=None, 
         chat_history=chat_history,
         found_terms=[], 
-        
         translation_mode=payload.translation_mode, 
         should_correct_business=False, 
         vibe_emotion_tag=None,         
         vibe_triggers=None,            
         final_answer="",               
         final_explanation=None,        
-        final_emoji=None,              
+        final_emoji=None,
+        agent_code=None,  # ⭐️ [신규]
     )
 
-    # --- 3. 그래프 실행 ---
     final_state = _run_contextual_translation(graph_input_state)
     
     corrected_answer = final_state.get("final_answer")
     if not corrected_answer:
-        corrected_answer = simple_translation # LLM 실패 시 1차 번역본으로 폴백
+        corrected_answer = simple_translation
 
-    # --- 4. DB 저장 ---
+    # ⭐️ [수정] agent_code 추가
     ai_tags = {
         "mode": payload.translation_mode,
         "target_lang": target_lang, 
@@ -135,16 +119,14 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
         "vibe_triggers": final_state.get("vibe_triggers"),
         "vibe_explanation": final_state.get("final_explanation"),
         "vibe_emoji": final_state.get("final_emoji"),
+        "agent_code": final_state.get("agent_code"),  # ⭐️ [신규]
         "biz_found_terms": final_state.get("found_terms"),
         "biz_rag_context_count": len(final_state.get("context", [])),
     }
     
     _save_utterance(payload, corrected_answer, ai_tags)
 
-    # --- 5. livekit_agent로 결과 반환 ---
     final_translations = payload.simple_translations.copy()
-    
-    # [수정] LLM이 보정한 'target_lang'의 값만 덮어씁니다.
     final_translations[target_lang] = corrected_answer 
 
     return UtteranceProcessOut(
@@ -155,5 +137,6 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
         final_emoji=final_state.get("final_emoji"),
         corrected_stt=final_state.get("corrected_stt"),
         vibe_triggers=final_state.get("vibe_triggers"),
+        agent_code=final_state.get("agent_code"),  # ⭐️ [신규]
         ai_tags=ai_tags
     )

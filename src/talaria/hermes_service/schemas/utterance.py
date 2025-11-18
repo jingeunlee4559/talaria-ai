@@ -33,4 +33,5 @@ class UtteranceProcessOut(BaseModel):
     final_explanation: Optional[str] = Field(None, description="Vibe 모드 문화/밈 설명 (DB 저장용)")
     final_emoji: Optional[str] = Field(None, description="Vibe 모드 감정 이모지 (Agent가 사용)")
     corrected_stt: Optional[str] = Field(None, description="[신규] Vibe 모드에서 보정된 STT")
+    agent_code: Optional[str] = None  # ⭐️ [신규] 
     ai_tags: Dict = Field(..., description="DB에 저장될 모든 AI 분석 데이터")
