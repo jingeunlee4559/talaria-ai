@@ -128,8 +128,9 @@ async def entrypoint(ctx: agents.JobContext):
         identity: str, 
         psid: str, 
         username: str,
-        locale: str,  # 🔥 원본 locale
-        translations: Dict[str, str] = None
+        locale: str,  # 원본 locale
+        translations: Dict[str, str] = None,
+        utterance_id: Optional[str] = None
     ):
         # ts = datetime.datetime.now().timestamp()
         ts = datetime.datetime.now(datetime.timezone.utc).timestamp()
@@ -143,10 +144,11 @@ async def entrypoint(ctx: agents.JobContext):
             "ts": ts,
             "locale": locale,  # 🔥 원본 locale
             "translations": translations or {},
+            "utterance_id": utterance_id  # ⭐️ [핵심 수정] 이 줄을 추가해야 합니다.
         }
         
         log_type = "FINAL" if final else "PARTIAL"
-        logging.info(f"📤 STT [{log_type}], TIME[{ts}] {username} ({locale}): {text[:50]}...")
+        logging.info(f"📤 STT [{log_type}] (utt_id: {utterance_id}), TIME[{ts}] {username} ({locale}): {text[:50]}...")
         if translations:
             logging.info(f"🌍 TRANSLATIONS: {translations}")
         

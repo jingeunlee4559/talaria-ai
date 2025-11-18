@@ -3,6 +3,7 @@ import json
 import asyncio
 import logging
 import time
+import uuid
 from typing import Optional, Any, List, Dict, Set
 
 import httpx
@@ -147,12 +148,14 @@ class ParticipantSTTHandler:
     # ⭐️ [수정] Task 1: 번역 + "Vibe 모드 설명 발행"
     async def _run_translation_pipeline(self, text: str, username: str, confidence: float, start_time_ms: int, end_time_ms: int, **kwargs):
         """
-        Task 1: STT -> (Papago) -> Hermes(LangGraph) -> Publish (STT/Translation)
-        ⭐️ (신규) Vibe 모드일 경우, 'final_explanation'을 'topic=manner'로 발행합니다.
+        Task 1: (Papago) -> (1차 Publish) -> (Hermes) -> (2차 Publish)
         """
         pid = getattr(self.participant, "identity", "unknown")
         
         try:
+            # --- 0. 고유 발화 ID 생성 ---
+            utterance_id = f"utt_{self.participant.sid}_{start_time_ms}_{str(uuid.uuid4())[:4]}"
+
             # --- 1. 모드 및 대상 언어 결정 ---
             mode_flag = self._get_metadata_field("meeting_mode", "B") # 'B' or 'C'
             translation_mode = "vibe" if mode_flag == "C" else "business"
@@ -167,29 +170,45 @@ class ParticipantSTTHandler:
             
             log.debug(f"[{pid}] Primary Target(LLM): {primary_target_lang} | Papago Targets: {target_locales_list}")
 
-            # --- 2. Papago 1차 번역 (Business 모드일 때만 호출) ---
+            # --- 2. Papago 1차 번역 (⭐️ [수정] 모드와 관계없이 실행) ---
             simple_translations = {}
-            if self.translation_enabled and translation_mode == "business":
-                log.debug(f"[{pid}] Running Papago (Business Mode 'Fast Path')...")
-                if target_locales_list:
-                    try:
-                        simple_translations = await translate_to_multiple_languages(
-                            text, 
-                            self.participant_locale,
-                            target_locales_list 
-                        )
-                    except Exception as trans_err:
-                        log.error(f"❌ Papago 번역 중 예외: {trans_err}", exc_info=True)
             
-            elif self.translation_enabled and translation_mode == "vibe":
-                log.debug(f"[{pid}] Skipping Papago (Vibe Mode). LLM will translate.")
+            # ⭐️ [수정] Vibe 모드(elif) 분기 제거, if 조건 단순화
+            if self.translation_enabled and target_locales_list:
+                log.debug(f"[{pid}] Running Papago (1st translation) for mode: {translation_mode}...")
+                try:
+                    simple_translations = await translate_to_multiple_languages(
+                        text, 
+                        self.participant_locale,
+                        target_locales_list 
+                    )
+                except Exception as trans_err:
+                    log.error(f"❌ Papago (1st translation) error: {trans_err}", exc_info=True)
+            else:
+                 log.debug(f"[{pid}] Papago (1st translation) skipped (enabled={self.translation_enabled}, targets={len(target_locales_list)})")
             
+            # --- 3. 1차 게시 (즉시) ---
+            log.info(f"[{pid}] 1st Publish (Papago): {utterance_id}")
+            await self.publish_callback(
+                text=text,  # 원본 STT
+                final=True,
+                identity=self.participant.identity,
+                psid=self.participant.sid,
+                username=username,
+                locale=self.participant_locale,
+                translations=simple_translations,  # ⭐️ 1차 Papago 번역본
+                utterance_id=utterance_id         # ⭐️ 고유 ID
+            )
+
             # --- 3. hermes_service로 [문맥 보정 + DB 저장] 요청 ---
             meeting_id = self._get_metadata_field("meetings_id")
+            final_translations = simple_translations 
+            final_emoji = None
+            corrected_stt_from_hermes = None
             
             if not meeting_id:
                 log.error(f"❌ hermes_service 호출 중단: meeting_id를 metadata에서 찾을 수 없습니다.")
-                final_translations = simple_translations
+                return
             else:
                 try:
                     payload = {
@@ -213,17 +232,15 @@ class ParticipantSTTHandler:
                     response.raise_for_status()
                     result_data = response.json()
                     
+                    # hermes 결과를 변수에 저장
                     final_translations = result_data.get("contextual_translations", simple_translations)
-                    corrected_answer = result_data.get("contextual_translations", {}).get(primary_target_lang)
                     final_emoji = result_data.get("final_emoji")
                     corrected_stt_from_hermes = result_data.get("corrected_stt")
                     vibe_triggers = result_data.get("vibe_triggers")
-                    
-                    # ⭐️ [신규] Vibe 모드 "문화 설명" 추출
                     final_explanation = result_data.get("final_explanation")
                     
-                    # ⭐️ [신규] Vibe 모드이고, 설명이 있고, 콜백이 존재하면
-                    # "가짜 매너 알림"을 'topic=manner'로 발행
+                    #  Vibe 모드이고, 설명이 있고, 콜백이 존재하면
+                    # "밈 관련 정보"을 'topic=manner'로 발행
                     if translation_mode == "vibe" and final_explanation and self.publish_manner_callback:
                         log.info(f"[{pid}] ⭐️ Vibe '문화 설명'을 topic=manner로 발행합니다.")
                         match_text = vibe_triggers[0] if vibe_triggers else ""
@@ -254,33 +271,26 @@ class ParticipantSTTHandler:
                     log.error(f"❌ hermes_service 호출 실패: {e}")
                     final_translations = simple_translations
 
-            # 4. ⭐️ [이미지 문제 해결] '셀프 번역' 말풍선 제거
-            # Vibe 번역본(LLM 2)이 translations 객체에 남아있지 않도록 제거합니다.
-            # (이 값은 사용하지 않고 버립니다.)
-            final_translations.pop(self.participant_locale, None)
-
-            # 5. ⭐️ [Q3 해결] 최종적으로 발행할 '원본 텍스트' 결정
-            # (Vibe 모드에서 STT 교정본이 왔다면 그것을 사용하고, 아니면 원본 STT 사용)
+            # --- 5.  2차 게시 (보정본 업데이트) ---
             final_text_to_publish = corrected_stt_from_hermes if corrected_stt_from_hermes is not None else text
             
-            # 6. ⭐️ [Q4 해결] 이모지를 '원본 텍스트'와 '모든 번역본'에 부착
             if final_emoji:
-                # 6a. (발화자 본인용) 원본 텍스트에 이모지 추가
                 final_text_to_publish = f"{final_text_to_publish} {final_emoji}"
-                
-                # 6b. (상대방용) 모든 번역본 텍스트에 이모지 추가
                 for lang_code in final_translations:
                     final_translations[lang_code] = f"{final_translations[lang_code]} {final_emoji}"
 
-            # 4. (중요) 최종 결과를 UI (DataChannel)로 전송 (topic=stt)
+            final_translations.pop(self.participant_locale, None)
+
+            log.info(f"[{pid}] 2nd Publish (LLM Corrected): {utterance_id}")
             await self.publish_callback(
-                text= final_text_to_publish,
+                text=final_text_to_publish,        # 보정된 STT + 이모지
                 final=True,
                 identity=self.participant.identity,
                 psid=self.participant.sid,
                 username=username,
                 locale=self.participant_locale,
-                translations=final_translations, # (영어만 보정된 맵)
+                translations=final_translations, # LLM 보정본 + 이모지
+                utterance_id=utterance_id         # 1차와 동일한 ID
             )
         except Exception as e:
             log.error(f"❌ [Translation Pipeline] Failed: {e}", exc_info=True)
