@@ -22,12 +22,17 @@ load_dotenv()
 
 from livekit import agents, rtc
 from livekit.agents import Agent, WorkerOptions, cli
+
+from livekit.plugins import silero 
+
 from talaria.livekit_agent.manner_checker import MannerChecker
 
 # (신규) 분리된 모듈에서 import
 from .handler import ParticipantSTTHandler
 from .utils import create_stt_for_locale, locale_to_clova_lang
 from .integrations import http_client, PAPAGO_CLIENT_ID, PAPAGO_CLIENT_SECRET
+
+
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
