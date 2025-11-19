@@ -34,6 +34,3 @@ class TranslateState(TypedDict):
     final_answer: str                 # ⭐️ 최종 번역문 (기존 answer 대체)
     final_explanation: Optional[str]  # B-2. 규칙 DB가 추가한 설명
     final_emoji: Optional[str]        # B-3. 규칙 DB가 매핑한 이모지
-    
-     # ⭐️ [신규] Vibe 모드에서 결정된 agent_code
-    agent_code: Optional[str]  # 'k-meme', 'global-meme', 'music', 'game', 등
