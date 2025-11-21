@@ -39,7 +39,7 @@ def _run_contextual_translation(state_input: TranslateState) -> TranslateState:
         state_input['final_answer'] = state_input['translated_text']
         return state_input
 
-def _save_utterance(payload: UtteranceProcessIn, final_answer: str, ai_tags: Dict[str, Any]):
+def _save_utterance(payload: UtteranceProcessIn, final_text_content: str, ai_tags: Dict[str, Any]):
     """발화 내용을 tl_utterances 테이블에 저장합니다."""
     try:
         with get_db_cursor(commit=True) as cursor:
@@ -63,7 +63,7 @@ def _save_utterance(payload: UtteranceProcessIn, final_answer: str, ai_tags: Dic
                 payload.started_ms,
                 payload.ended_ms,
                 payload.lang,
-                payload.stt_text,
+                final_text_content,
                 payload.confidence,
                 json.dumps(ai_tags) 
             )
@@ -120,17 +120,31 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
     # --- 3. 그래프 실행 ---
     final_state = _run_contextual_translation(graph_input_state)
     
+    # 번역 결과 (Target Lang)
     corrected_answer = final_state.get("final_answer")
     if not corrected_answer:
-        corrected_answer = simple_translation # LLM 실패 시 1차 번역본으로 폴백
+        corrected_answer = simple_translation 
+
+    # ⭐️ [핵심 수정] DB에 저장할 '본문 텍스트' 결정 로직
+    # 1순위: LangGraph가 보정한 원문 (corrected_stt) - 주로 Vibe 모드
+    # 2순위: 원본 STT (stt_text) - Business 모드(현재 보정 로직 없음) 또는 보정 실패 시
+    corrected_source_text = final_state.get("corrected_stt")
+    
+    if corrected_source_text and corrected_source_text.strip():
+        text_to_save = corrected_source_text
+        log.info(f"📝 DB 저장: 보정된 STT를 사용합니다. ('{payload.stt_text}' -> '{text_to_save}')")
+    else:
+        text_to_save = payload.stt_text
+        log.info(f"📝 DB 저장: 원본 STT를 그대로 사용합니다. ('{text_to_save}')")
 
     # --- 4. DB 저장 ---
     ai_tags = {
         "mode": payload.translation_mode,
         "target_lang": target_lang, 
         "simple_translations": payload.simple_translations,
-        "final_answer": corrected_answer,
-        "manner_alerts": [],
+        "final_answer": corrected_answer, # 번역 결과는 태그에 저장
+        "original_stt": payload.stt_text, # 🟢 [추가] 원본 STT는 ai_tags에 백업해둠 (디버깅용)
+        # ... (기존 태그들)
         "vibe_emotion": final_state.get("vibe_emotion_tag"),
         "vibe_triggers": final_state.get("vibe_triggers"),
         "vibe_explanation": final_state.get("final_explanation"),
@@ -139,7 +153,8 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
         "biz_rag_context_count": len(final_state.get("context", [])),
     }
     
-    _save_utterance(payload, corrected_answer, ai_tags)
+    # 수정된 _save_utterance 호출 (text_to_save 전달)
+    _save_utterance(payload, text_to_save, ai_tags)
 
     # --- 5. livekit_agent로 결과 반환 ---
     final_translations = payload.simple_translations.copy()

@@ -213,7 +213,7 @@ class ParticipantSTTHandler:
                 try:
                     payload = {
                         "meeting_id": int(meeting_id),
-                        "speaker_id": self.participant.identity,
+                        "speaker_id": username,
                         "track_sid": self.track.sid,
                         "stt_text": text,
                         "lang": self.participant_locale,

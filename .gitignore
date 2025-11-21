@@ -75,6 +75,7 @@ Thumbs.db
 gartner_glossary_raw.html
 test_files/
 data/
+*.jsonl
 
 # VectorDB
 persistent_data/
