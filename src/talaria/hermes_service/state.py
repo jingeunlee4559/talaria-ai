@@ -3,6 +3,7 @@
 from typing_extensions import List, TypedDict
 from langchain_core.documents import Document
 from typing import Dict, Any, Optional, List, Literal
+from .schemas.summary import ActionItem
 
 class FoundTerm(TypedDict):
     term: str       # 찾은 단어 (예: "CR")
@@ -37,21 +38,35 @@ class TranslateState(TypedDict):
 
 # --- 회의 요약용 State 정의 ---
 class SummaryState(TypedDict):
-    """
-    회의록 요약 및 액션 아이템 추출을 위한 상태 객체
-    """
-    # --- 입력 데이터 ---
-    input_transcript: str   # 포맷팅된 회의록 텍스트
-    metadata: Dict          # 회의 메타데이터 (날짜, ID 등)
+    # --- Input ---
+    transcript: str
+    current_date: str
+    participants: List[str] # 발언 점유율 계산용
 
-    # --- 생성된 결과물 ---
-    summary_text: str       # [Track A] 생성된 요약문
-    json_output: Any        # [Track B] 추출된 JSON 데이터 (Dict or str)
-    final_response: Dict    # 최종 병합된 결과
+    # --- Track A: Summary & Keyword ---
+    summary_intro: str      # 한 줄 소개
+    keywords: List[str]     # 토픽
+    decisions: List[str]    # 결정 사항
+    track_a_feedback: str   # 평가 피드백
+    track_a_retry: int
 
-    # --- 평가 및 제어 ---
-    summary_feedback: str   # 요약 피드백
-    summary_retry_count: int # 요약 재시도 횟수
+    # --- Track B: Action Items ---
+    action_items: List[Dict] # Pydantic Model -> Dict
+    track_b_feedback: str
+    track_b_retry: int
 
-    extraction_feedback: str # 추출 피드백
-    extraction_retry_count: int # 추출 재시도 횟수
+    # --- Track C: Risk Analysis (2+2 Hybrid) ---
+    # C-1: Content (LLM)
+    content_score: float
+    content_risks: List[str]
+    content_improvements: List[str]
+    
+    # C-2: Process (Python Rule)
+    process_score: float
+    process_risks: List[str]
+    
+    # C-Merged
+    coach_next_steps: List[str] # 전략적 제안
+
+    # --- Final ---
+    final_output: Dict[str, Any]

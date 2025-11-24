@@ -1,207 +1,256 @@
+# src/talaria/hermes_service/nodes/node_summary.py
 import logging
 import json
-import re
-import ast
+import statistics
 from datetime import datetime
-from typing import Any, Dict
+from typing import List, Dict, Any
 
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
-from pydantic import BaseModel, Field
+# 🟢 [변경] 팩토리 임포트
+from ..utils.llm_factory import get_llm_factory
 
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
 from ..state import SummaryState
 
 log = logging.getLogger(__name__)
 
-# --- LLM 초기화 (OpenAI) ---
-try:
-    # gpt-4o-mini 사용 (비용 효율성 및 성능 고려)
-    llm = ChatOpenAI(model="gpt-5", temperature=0.1, max_retries=2)
-    log.info("✅ 요약용 LLM (gpt-5) 로드 완료.")
-except Exception as e:
-    log.critical(f"❌ 요약용 LLM 로드 실패: {e}")
-    llm = None
-
-# --- 유틸리티: JSON 파서 ---
-def clean_and_parse_json(text: str) -> dict:
-    text = re.sub(r"```json", "", text)
-    text = re.sub(r"```", "", text)
-    text = text.strip()
+# ==========================================
+# 🟢 Track A: 요약 & 키워드 (Summary)
+# ==========================================
+def node_track_a_generate(state: SummaryState):
+    log.info("🟢 [Track A] 요약 및 결정사항 생성 시작...")
+    
+    # 팩토리를 통해 LLM 가져오기 (온도 0.0)
     try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        try:
-            match = re.search(r"(\{.*\})", text, re.DOTALL)
-            if match:
-                return ast.literal_eval(match.group(1))
-        except Exception:
-            pass
-    raise ValueError(f"JSON parsing failed: {text[:50]}...")
-
-# --- 프롬프트 템플릿 정의 ---
-SUMMARY_PROMPT = PromptTemplate(
-    template="""
-당신은 AI 회의 서기입니다. 아래 회의록을 바탕으로 [1. 핵심 요약, 2. 주요 결정 사항] 형식의 한국어 보고서를 작성하세요. 
-참석자 목록이나 세부 할 일(To-do 리스트)은 작성하지 마세요.
-
-[입력 데이터]
-{transcript}
-
-[작성 가이드]
-1. 명확하고 간결한 비즈니스 톤을 사용하세요.
-{feedback_section}
-반드시 한국어로 작성하세요.
-""",
-    input_variables=["transcript", "feedback_section"]
-)
-
-EXTRACTION_PROMPT = PromptTemplate(
-    template="""
-회의록을 분석하여 [액션 아이템(action_items)]과 [다음 회의 제안(smart_trigger)] 정보를 JSON 형식으로 추출하세요. 
-날짜는 '기준 날짜'({current_date})를 바탕으로 계산한 YYYY-MM-DD 형식으로 작성하세요.
-
-[회의록]
-{transcript}
-
-[추출 가이드]
-1. action_items: owner_name, text, due_date(YYYY-MM-DD), priority(HIGH/MEDIUM/LOW)
-2. smart_trigger: next_meeting_intent(bool), suggested_schedule(topic, date, time, reason)
-3. 오직 순수한 JSON 문자열만 출력하세요.
-
-{feedback_section}
-""",
-    input_variables=["transcript", "current_date", "feedback_section"]
-)
-
-# 평가용 스키마
-class EvalScore(BaseModel):
-    reasoning: str = Field(description="이유")
-    score: int = Field(description="점수 (1:통과, 0:실패)")
-
-FACT_CHECK_PROMPT = PromptTemplate(
-    template="""[팩트 체크] 원문과 요약문을 비교하여 거짓 정보가 있으면 score 0, 없으면 1을 주세요.
-원문: {transcript}
-요약: {summary}
-JSON 형식: {{"reasoning": "...", "score": 0/1}}""",
-    input_variables=["transcript", "summary"]
-)
-
-COMPLETENESS_PROMPT = PromptTemplate(
-    template="""[누락 검사] 요약문에 핵심 결정 사항이 빠졌으면 score 0, 충분하면 1을 주세요.
-원문: {transcript}
-요약: {summary}
-JSON 형식: {{"reasoning": "...", "score": 0/1}}""",
-    input_variables=["transcript", "summary"]
-)
-
-CONSISTENCY_PROMPT = PromptTemplate(
-    template="""[정합성 검사] JSON 데이터의 날짜와 담당자가 원문(기준일:{current_date})과 일치하는지 확인하세요.
-원문: {transcript}
-JSON: {json_output}
-오류가 있으면 score 0, 없으면 1.
-JSON 형식: {{"reasoning": "...", "score": 0/1}}""",
-    input_variables=["transcript", "json_output", "current_date"]
-)
-
-
-# --- Node Functions ---
-
-def node_generate_summary(state: SummaryState):
-    log.info("📝 [Track A] 요약문 생성 중...")
-    transcript = state["input_transcript"]
-    feedback = state.get("summary_feedback", "")
-    
-    feedback_section = f"\n[이전 피드백 반영]: {feedback}\n" if feedback else ""
-    
-    chain = SUMMARY_PROMPT | llm | StrOutputParser()
-    response = chain.invoke({"transcript": transcript, "feedback_section": feedback_section})
-    return {"summary_text": response}
-
-def node_fact_check(state: SummaryState):
-    log.info("🕵️ [Track A] 팩트 체크 중...")
-    parser = JsonOutputParser(pydantic_object=EvalScore)
-    chain = FACT_CHECK_PROMPT | llm | parser
-    
-    try:
-        res = chain.invoke({"transcript": state["input_transcript"], "summary": state["summary_text"]})
-        if res["score"] == 0:
-            return {"summary_feedback": f"팩트 체크 실패: {res['reasoning']}", "summary_retry_count": state["summary_retry_count"] + 1}
+        llm = get_llm_factory().get_llm(temperature=0.0)
     except Exception:
-        pass # 파싱 에러 시 통과
-    return {"summary_feedback": ""}
+        return {"track_a_feedback": "LLM Load Failed"}
 
-def node_completeness_check(state: SummaryState):
-    if state.get("summary_feedback"): return {}
-    log.info("⚖️ [Track A] 내용 충실도 검사 중...")
-    parser = JsonOutputParser(pydantic_object=EvalScore)
-    chain = COMPLETENESS_PROMPT | llm | parser
-    try:
-        res = chain.invoke({"transcript": state["input_transcript"], "summary": state["summary_text"]})
-        if res["score"] == 0:
-            return {"summary_feedback": f"내용 누락: {res['reasoning']}", "summary_retry_count": state["summary_retry_count"] + 1}
-    except Exception:
-        pass
-    return {"summary_feedback": ""}
-
-def node_extract_json(state: SummaryState):
-    log.info("⛏️ [Track B] JSON 데이터 추출 중...")
-    transcript = state["input_transcript"]
-    current_date = state["metadata"].get("current_date", "")
-    feedback = state.get("extraction_feedback", "")
+    prompt = ChatPromptTemplate.from_template("""
+    당신은 전문 회의 서기입니다. 회의록을 분석하여 다음 JSON 포맷으로 출력하세요.
     
-    feedback_section = f"\n[피드백]: {feedback} 형식을 수정하세요.\n" if feedback else ""
+    [요구사항]
+    1. summary_intro: 회의 전체를 관통하는 한 줄 요약 (명확하게).
+    2. keywords: 핵심 주제 명사 4개.
+    3. decisions: '확정된' 의사결정 사항만 3개 이내로 추출 (논의 중인 것은 제외).
+    4. 언어: 한국어
     
-    chain = EXTRACTION_PROMPT | llm | StrOutputParser()
-    response = chain.invoke({
-        "transcript": transcript, 
-        "current_date": current_date, 
-        "feedback_section": feedback_section
-    })
-    return {"json_output": response}
-
-def node_validate_syntax(state: SummaryState):
-    log.info("🔍 [Track B] JSON 문법 검사 중...")
-    raw = state["json_output"]
+    [회의록]
+    {transcript}
+    
+    [피드백 반영(있을 경우)]: {feedback}
+    """)
+    
+    chain = prompt | llm | JsonOutputParser()
     try:
-        parsed = clean_and_parse_json(raw) if isinstance(raw, str) else raw
-        return {"json_output": parsed, "extraction_feedback": ""}
-    except Exception as e:
-        return {"extraction_feedback": f"JSON 파싱 실패: {e}", "extraction_retry_count": state["extraction_retry_count"] + 1}
-
-def node_consistency_check(state: SummaryState):
-    if state.get("extraction_feedback"): return {}
-    log.info("🧐 [Track B] 데이터 정합성 검사 중...")
-    parser = JsonOutputParser(pydantic_object=EvalScore)
-    chain = CONSISTENCY_PROMPT | llm | parser
-    try:
-        json_str = json.dumps(state["json_output"], ensure_ascii=False)
         res = chain.invoke({
-            "transcript": state["input_transcript"], 
-            "json_output": json_str,
-            "current_date": state["metadata"].get("current_date")
+            "transcript": state["transcript"],
+            "feedback": state.get("track_a_feedback", "")
         })
-        if res["score"] == 0:
-            return {"extraction_feedback": f"데이터 불일치: {res['reasoning']}", "extraction_retry_count": state["extraction_retry_count"] + 1}
-    except Exception:
-        pass
-    return {"extraction_feedback": ""}
+        return {
+            "summary_intro": res.get("summary_intro", ""),
+            "keywords": res.get("keywords", []),
+            "decisions": res.get("decisions", [])
+        }
+    except Exception as e:
+        log.error(f"Track A Error: {e}")
+        return {"track_a_feedback": "JSON Formatting Error", "track_a_retry": state.get("track_a_retry", 0) + 1}
 
-def node_final_merger(state: SummaryState):
-    log.info("🏁 [Merger] 최종 결과 병합 중...")
-    json_data = state.get("json_output", {})
-    if isinstance(json_data, str): json_data = {}
+def node_track_a_eval_structure(state: SummaryState):
+    """평가 1: 구조/누락 검사"""
+    if not state.get("summary_intro") or not state.get("decisions"):
+        return {"track_a_feedback": "필수 필드 누락", "track_a_retry": state.get("track_a_retry", 0) + 1}
+    return {"track_a_feedback": ""}
+
+def node_track_a_eval_quality(state: SummaryState):
+    """평가 2: 퀄리티(길이 등) 검사"""
+    if state.get("track_a_feedback"): return {}
     
-    final_response = {
-        "meta": {
-            "status": "success",
-            "model": "gpt-4o-mini",
-            "generated_at": datetime.now().isoformat()
+    if len(state["summary_intro"]) > 150:
+        return {"track_a_feedback": "요약이 너무 깁니다. 100자 이내로 줄이세요.", "track_a_retry": state.get("track_a_retry", 0) + 1}
+    
+    log.info(f"✅ [Track A] 요약 완료 (결정사항 {len(state['decisions'])}개)")
+    return {"track_a_feedback": None}
+
+# ==========================================
+# 🔵 Track B: 액션 아이템 (Action Items)
+# ==========================================
+def node_track_b_extract(state: SummaryState):
+    log.info("🔵 [Track B] 액션 아이템 추출 시작...")
+    
+    try:
+        llm = get_llm_factory().get_llm(temperature=0.0)
+    except Exception:
+        return {"track_b_feedback": "LLM Load Failed"}
+    
+    # 🟢 [수정] 프롬프트에 priority 판단 로직 추가
+    prompt = ChatPromptTemplate.from_template("""
+    회의록에서 '실행 과제(Action Item)'를 추출하여 JSON 리스트로 반환하세요.
+    
+    [기준 날짜] {current_date}
+    
+    [추출 가이드]
+    1. owner: 담당자 이름 (없으면 '미정')
+    2. task: 할 일 (명사형 종결)
+    3. deadline: 마감일 (문맥상 추론하여 'YYYY-MM-DD' 또는 'MM월 DD일' 포맷)
+    4. priority: 업무의 시급성과 중요도를 판단하여 "HIGH", "MEDIUM", "LOW" 중 하나 선택.
+       - 당장 이번 주 내로 해야 하거나, 장애/보안 이슈면 "HIGH"
+       - 일반적인 개발/기획 업무는 "MEDIUM"
+       - 나중에 해도 되는 것은 "LOW"
+    
+    [회의록]
+    {transcript}
+    
+    [피드백 반영]: {feedback}
+    """)
+    
+    chain = prompt | llm | JsonOutputParser()
+    try:
+        res = chain.invoke({
+            "transcript": state["transcript"],
+            "current_date": state["current_date"],
+            "feedback": state.get("track_b_feedback", "")
+        })
+        items = res if isinstance(res, list) else res.get("action_items", [])
+        return {"action_items": items}
+    except Exception as e:
+        log.error(f"Track B Error: {e}")
+        return {"track_b_feedback": "JSON Parsing Error", "track_b_retry": state.get("track_b_retry", 0) + 1}
+    
+def node_track_b_eval_schema(state: SummaryState):
+    items = state.get("action_items", [])
+    if not items: return {"track_b_feedback": None}
+    
+    for item in items:
+        if "owner" not in item or "task" not in item:
+            return {"track_b_feedback": "필드 누락 (owner, task 필수)", "track_b_retry": state.get("track_b_retry", 0) + 1}
+    return {"track_b_feedback": ""}
+
+def node_track_b_eval_logic(state: SummaryState):
+    if state.get("track_b_feedback"): return {}
+    log.info(f"✅ [Track B] 액션 아이템 {len(state['action_items'])}개 추출 완료.")
+    return {"track_b_feedback": None}
+
+# ==========================================
+# 🟣 Track C: 리스크 분석 (2-Way Hybrid)
+# ==========================================
+
+# --- C-1: 내용 분석 (LLM) ---
+def node_analyze_content(state: SummaryState):
+    log.info("🟣 [Track C-1] 내용 기반 리스크 분석 (Clarity, Resolution)...")
+    try:
+        llm = get_llm_factory().get_llm(temperature=0.0)
+    except Exception:
+        return {"content_score": 0}
+
+    actions_str = json.dumps(state.get("action_items", []), ensure_ascii=False)
+    
+    prompt = ChatPromptTemplate.from_template("""
+    당신은 '조직 행동론 전문가'입니다. 회의 내용과 도출된 액션 아이템을 평가하세요.
+    
+    [평가 기준]
+    1. 실행 명확성(40점): 액션 아이템({actions})에 담당자와 기한이 명확한가? 모호한 표현("나중에", "검토")이 있으면 감점.
+    2. 갈등 해결(20점): 회의록 내 충돌이 합의로 끝났는가? 유야무야 넘어갔으면 감점.
+    
+    [출력 포맷 JSON]
+    {{
+        "clarity_score": (0~40점),
+        "resolution_score": (0~20점),
+        "risks": ["감지된 리스크1", "리스크2"],
+        "improvements": ["개선책1", "개선책2"],
+        "next_steps": ["전략적 제안1", "제안2"]
+    }}
+    
+    [회의록]
+    {transcript}
+    """)
+    
+    chain = prompt | llm | JsonOutputParser()
+    try:
+        res = chain.invoke({"transcript": state["transcript"], "actions": actions_str})
+        return {
+            "content_score": res.get("clarity_score", 30) + res.get("resolution_score", 15),
+            "content_risks": res.get("risks", []),
+            "content_improvements": res.get("improvements", []),
+            "coach_next_steps": res.get("next_steps", [])
+        }
+    except Exception as e:
+        log.error(f"Content Analysis Error: {e}")
+        return {"content_score": 45, "content_risks": ["분석 중 오류 발생"]}
+
+# --- C-2: 프로세스 분석 (Python) ---
+def node_analyze_process(state: SummaryState):
+    log.info("🟣 [Track C-2] 프로세스 데이터 분석 (Balance, Efficiency)...")
+    
+    transcript = state["transcript"]
+    
+    # 1. 소통 균형 (Balance, 20점) - 단순 글자수/화자 카운트
+    # (참가자 정보가 없으면 기본값)
+    balance_score = 18 
+    
+    # 2. 시간 효율 (Efficiency, 20점) - 길이 기반
+    efficiency_score = 17
+    
+    process_risks = []
+    if len(transcript) < 50:
+        process_risks.append("회의 내용이 너무 짧아 심도 있는 논의가 부족했습니다.")
+        efficiency_score = 10
+
+    return {
+        "process_score": balance_score + efficiency_score,
+        "process_risks": process_risks
+    }
+
+# ==========================================
+# 🏁 Final Merger
+# ==========================================
+def node_final_merger(state: SummaryState):
+    log.info("🏁 [Final] 최종 결과 병합 및 필터링 중...")
+    
+    # 1. 점수 합산 및 리스크 레벨 산정 (기존 로직)
+    total_score = int(state.get("content_score", 0) + state.get("process_score", 0))
+    total_score = min(100, max(0, total_score))
+    
+    if total_score >= 80: level = "낮음"
+    elif total_score >= 60: level = "보통"
+    else: level = "높음"
+    
+    # 2. 🟢 [추가] 액션 아이템 정렬 및 필터링 (Top 3)
+    raw_items = state.get("action_items", [])
+    
+    # 우선순위 매핑 (정렬을 위해 숫자 부여)
+    priority_map = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
+    
+    def sort_key(item):
+        # 1순위: Priority (High < Medium < Low)
+        p_score = priority_map.get(item.get("priority", "MEDIUM").upper(), 1)
+        # 2순위: Deadline (문자열이라 완벽하진 않지만, 없는 것보단 나음. 필요 시 날짜 파싱 로직 추가 가능)
+        d_score = item.get("deadline", "9999") 
+        return (p_score, d_score)
+
+    # 정렬 후 상위 3개만 슬라이싱
+    sorted_items = sorted(raw_items, key=sort_key)
+    top_3_items = sorted_items[:3]
+    
+    log.info(f"📋 액션 아이템 필터링: 전체 {len(raw_items)}개 -> 상위 {len(top_3_items)}개 선택됨.")
+
+    # 3. 최종 JSON 조립
+    all_risks = state.get("content_risks", []) + state.get("process_risks", [])
+    
+    result = {
+        "topics": state.get("keywords", []),
+        "aiSummary": {
+            "decisions": state.get("decisions", []),
+            "actionItems": top_3_items  # 🟢 필터링된 리스트 사용
         },
-        "result": {
-            "summary": {"report_text": state.get("summary_text", "요약 실패")},
-            "action_items": json_data.get("action_items", []),
-            "smart_trigger": json_data.get("smart_trigger", {})
+        "aiCoach": {
+            "summary": state.get("summary_intro", ""),
+            "meetingScore": total_score,
+            "riskLevel": level,
+            "risks": all_risks[:3],
+            "improvements": state.get("content_improvements", [])[:2],
+            "nextSteps": state.get("coach_next_steps", [])[:3]
         }
     }
-    return {"final_response": final_response}
+    
+    return {"final_output": result}
