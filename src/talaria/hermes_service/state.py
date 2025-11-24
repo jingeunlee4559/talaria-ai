@@ -2,8 +2,7 @@
 
 from typing_extensions import List, TypedDict
 from langchain_core.documents import Document
-from typing import Optional, List
-from typing import Literal
+from typing import Dict, Any, Optional, List, Literal
 
 class FoundTerm(TypedDict):
     term: str       # 찾은 단어 (예: "CR")
@@ -34,3 +33,25 @@ class TranslateState(TypedDict):
     final_answer: str                 # ⭐️ 최종 번역문 (기존 answer 대체)
     final_explanation: Optional[str]  # B-2. 규칙 DB가 추가한 설명
     final_emoji: Optional[str]        # B-3. 규칙 DB가 매핑한 이모지
+
+
+# --- 회의 요약용 State 정의 ---
+class SummaryState(TypedDict):
+    """
+    회의록 요약 및 액션 아이템 추출을 위한 상태 객체
+    """
+    # --- 입력 데이터 ---
+    input_transcript: str   # 포맷팅된 회의록 텍스트
+    metadata: Dict          # 회의 메타데이터 (날짜, ID 등)
+
+    # --- 생성된 결과물 ---
+    summary_text: str       # [Track A] 생성된 요약문
+    json_output: Any        # [Track B] 추출된 JSON 데이터 (Dict or str)
+    final_response: Dict    # 최종 병합된 결과
+
+    # --- 평가 및 제어 ---
+    summary_feedback: str   # 요약 피드백
+    summary_retry_count: int # 요약 재시도 횟수
+
+    extraction_feedback: str # 추출 피드백
+    extraction_retry_count: int # 추출 재시도 횟수

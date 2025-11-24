@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from talaria.hermes_service.routers import meeting_raw_script
+from talaria.hermes_service.routers import summary as summary_router
 import logging
 
 logging.basicConfig(
@@ -51,6 +52,11 @@ try:
     app.include_router(utterance_router, tags=["utterances"])
 except Exception as e:
     logging.getLogger(__name__).warning("utterance router not loaded: %s", e)
+
+try:
+    app.include_router(summary_router.router)
+except Exception as e:
+    logging.getLogger(__name__).warning("summary router not loaded: %s", e)
 
 # Meeting Raw Script 라우터
 app.include_router(meeting_raw_script.router)
