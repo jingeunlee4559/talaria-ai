@@ -19,6 +19,10 @@ def locale_to_clova_lang(locale: str) -> str:
     - zh-cn (소문자!)
     - zh-tw (소문자!)
     """
+    # 수정 사항
+    if locale in ["ko-KR", "en-US", "ko", "en"]:
+        return "enko"
+
     mapping = {
         "ko-KR": "ko-KR",      # ✅ 하이픈 포함
         "en-US": "en-US",      # ✅ 하이픈 포함

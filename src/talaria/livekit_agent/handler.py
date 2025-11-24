@@ -9,6 +9,7 @@ from typing import Optional, Any, List, Dict, Set
 import httpx
 from livekit import agents, rtc
 from talaria.livekit_agent.manner_checker import MannerChecker
+from .utils import locale_to_clova_lang, locale_to_papago_lang
 
 from .utils import locale_to_clova_lang
 from .integrations import (
@@ -18,6 +19,35 @@ from .integrations import (
 )
 
 log = logging.getLogger(__name__)
+
+# [신규 함수] 텍스트 기반 언어 감지 (간이 LID)
+def detect_dominant_language(text: str, default_locale: str) -> str:
+    """
+    텍스트 기반 언어 감지 (Papago용 코드 반환)
+    - 한글 포함 시 'ko'
+    - 아니면 default_locale의 언어 코드 사용
+    - ⭐️ 절대 'enko'를 반환하지 않도록 방어
+    """
+    # 1. 텍스트가 없으면 기본값
+    if not text or not text.strip():
+        lang = locale_to_papago_lang(default_locale)
+        return "ko" if lang == "enko" else lang
+
+    # 2. 한글 감지 (AC00-D7A3)
+    korean_char_count = sum(1 for c in text if '\uac00' <= c <= '\ud7a3')
+    
+    if korean_char_count > 0:
+        return "ko"
+        
+    # 3. 한글이 없으면 기본 Locale 따라감
+    detected_lang = locale_to_papago_lang(default_locale)
+    
+    # 🚨 [핵심 안전장치] 만약 유틸 함수가 'enko'를 뱉으면 강제로 보정
+    if detected_lang == "enko":
+        # enko가 떴다는 건, 한글이 없는데 enko라는 뜻 -> 영어로 간주
+        return "en"
+        
+    return detected_lang
 
 
 class ParticipantSTTHandler:
@@ -156,6 +186,11 @@ class ParticipantSTTHandler:
             # --- 0. 고유 발화 ID 생성 ---
             utterance_id = f"utt_{self.participant.sid}_{start_time_ms}_{str(uuid.uuid4())[:4]}"
 
+            # text(STT 결과)를 보고, 한글이 섞여 있으면 'ko', 아니면 원래 locale 언어로 설정
+            real_source_lang_code = detect_dominant_language(text, self.participant_locale)
+            
+            log.debug(f"[{pid}] 🔍 Lang Detect: User({self.participant_locale}) -> Detected({real_source_lang_code}) | Text: {text[:20]}...")
+
             # --- 1. 모드 및 대상 언어 결정 ---
             mode_flag = self._get_metadata_field("meeting_mode", "B") # 'B' or 'C'
             translation_mode = "vibe" if mode_flag == "C" else "business"
@@ -163,6 +198,8 @@ class ParticipantSTTHandler:
 
             current_locales = self._get_current_locales()
             target_locales_list = [loc for loc in current_locales if loc != self.participant_locale]
+
+            log.info(f"[{pid}] 🔍 Lang Check: Text='{text}' | UserLocale={self.participant_locale} | DetectedSource={real_source_lang_code} | Targets={target_locales_list}")
             
             primary_target_lang = "en-US" 
             if target_locales_list:
@@ -170,7 +207,7 @@ class ParticipantSTTHandler:
             
             log.debug(f"[{pid}] Primary Target(LLM): {primary_target_lang} | Papago Targets: {target_locales_list}")
 
-            # --- 2. Papago 1차 번역 (⭐️ [수정] 모드와 관계없이 실행) ---
+            # --- 2. Papago 1차 번역 ---
             simple_translations = {}
             
             # ⭐️ [수정] Vibe 모드(elif) 분기 제거, if 조건 단순화
@@ -179,7 +216,7 @@ class ParticipantSTTHandler:
                 try:
                     simple_translations = await translate_to_multiple_languages(
                         text, 
-                        self.participant_locale,
+                        real_source_lang_code,
                         target_locales_list 
                     )
                 except Exception as trans_err:
@@ -216,7 +253,7 @@ class ParticipantSTTHandler:
                         "speaker_id": username,
                         "track_sid": self.track.sid,
                         "stt_text": text,
-                        "lang": self.participant_locale,
+                        "lang": real_source_lang_code,
                         "confidence": confidence,
                         "started_ms": start_time_ms,
                         "ended_ms": end_time_ms,
