@@ -1,6 +1,121 @@
-# Talaria-AI
+# Talaria-AI (Hermes Project)
 
-## 환경 세팅
+**Talaria-AI**는 LiveKit 기반의 실시간 다국어 화상 회의를 위한 **Dual-Mode AI 에이전트 & 지능형 회의 분석 시스템**입니다.
+
+단순한 통번역을 넘어, 회의의 성격(Business vs. Culture)에 따라 AI가 맥락을 파악하여 실시간으로 개입하고, 회의 종료 후에는 \*\*인사이트가 담긴 구조화된 리포트(요약, 액션 아이템, 리스크 진단)\*\*를 제공합니다.
+
+-----
+
+## 🚀 핵심 기능 (Key Features)
+
+### 1\. 실시간 듀얼 모드 번역 (Dual-Mode Translation)
+
+  * **👔 비즈니스 모드 (Business Mode):**
+      * IT 전문 용어 사전(`expert_dict.pkl`)과 RAG를 활용하여 STT 오인식을 보정합니다.
+      * 불필요한 개입을 최소화하는 Fast-Path 로직이 적용되어 있습니다.
+  * **😎 컬처 모드 (Vibe Mode):**
+      * K-Culture/밈(Meme) 용어를 감지하여 뉘앙스를 살린 'Vibe 번역'을 제공합니다.
+      * 문화적 배경 지식이 필요한 경우, '문화 설명(Explanation)' 카드를 다국어로 번역하여 실시간 전송합니다.
+
+### 2\. 스마트 회의 요약 & AI 코치 (Smart Summary & AI Coach) ✨ *New*
+
+회의 녹취록을 분석하여 단순 요약이 아닌, **실행 가능한(Actionable) 데이터**를 생성합니다. (3-Track Hybrid Architecture)
+
+  * **회의 요약 (Track A):** 회의 전체를 관통하는 한 줄 소개 및 확정된 의사결정 사항 추출.
+  * **액션 아이템 (Track B):** 담당자, 마감일, 중요도(Priority)를 분석하여 **상위 3개 핵심 과제**를 선별.
+  * **AI 리스크 진단 (Track C):** 조직행동론 기반 4대 지표(**실행 명확성, 소통 균형, 갈등 해결, 시간 효율**)로 회의 건전성을 점수화하고 개선책을 코칭.
+
+### 3\. 문서 번역 및 RAG (Doc Translation & RAG)
+
+  * **문서 번역:** Papago API를 활용한 문서 번역 (DB 캐싱 및 중복 방지 로직 적용).
+  * **RAG 파이프라인:** 업로드된 문서를 파싱, 청킹, 임베딩하여 VectorDB(ChromaDB)에 저장하고, 실시간 회의 시 문맥 정보로 활용.
+
+-----
+
+## 🛠️ 시스템 아키텍처 (Architecture)
+
+### 1\. `livekit_agent` (Real-time Processor)
+
+LiveKit 룸에 참여하여 오디오 스트림 처리 및 통번역 중계를 담당합니다.
+
+  * **Language Detection:** `enko` (한영 혼용) 모델을 기반으로 하되, 텍스트 분석을 통해 실제 발화 언어를 동적으로 감지하여 번역기 오류를 방지합니다.
+  * **Parallel Processing:** `asyncio.gather`를 통해 '번역(Translation)'과 '매너 체크(Manner Check)' 파이프라인을 병렬로 처리합니다.
+  * **Broadcast Strategy:** 문화 설명 등 부가 정보는 모든 언어 버전을 포함하여 브로드캐스트하고, 클라이언트가 로케일에 맞춰 표시합니다.
+
+### 2\. `hermes_service` (AI Brain - FastAPI + LangGraph)
+
+복잡한 AI 추론과 데이터 처리를 담당하는 백엔드 서비스입니다.
+
+#### 🧠 LangGraph Workflows
+
+  * **Translation Graph (9-Node):** 실시간 문맥 보정 및 Vibe 번역 처리.
+  * **Summary Graph (3-Track Hybrid) :**
+      * **Track A (Summary):** 요약 및 키워드 생성 (Evaluator: 누락/길이 검사).
+      * **Track B (Action Item):** 액션 아이템 추출 및 중요도 필터링 (Evaluator: 필수값 검사).
+      * **Track C (Risk Analysis):** 2+2 하이브리드 구조 (Content 분석 LLM + Process 분석 Python)로 비용 효율적인 리스크 진단 수행.
+
+#### ⚙️ Optimization & Utils
+
+  * **LLM Factory:** `ChatOpenAI` 인스턴스를 싱글톤으로 관리하여 연결 효율성을 높이고 설정을 중앙화했습니다.
+  * **Vector Store (Singleton):** ChromaDB 연결 및 임베딩 모델 로드 최적화.
+
+-----
+
+## 📁 폴더 및 파일 구조 (File Structure)
+
+주요 변경 사항 및 신규 파일이 포함된 구조입니다.
+
+```
+talaria-ai/
+├── scripts/                         # 데이터 파이프라인 스크립트
+├── src/talaria/
+│   ├── assets/                      # AI 모델/규칙 에셋 (expert_dict.pkl, emoji maps)
+│   ├── common/                      # 공통 모듈 (Papago Client 등)
+│   ├── core/                        # DB 연결 (database.py)
+│   ├── hermes_service/              # [AI Brain] FastAPI + LangGraph
+│   │   ├── nodes/                   # 🧩 LangGraph 노드
+│   │   │   ├── node_check_conditions.py   # [Biz] 번역 개입 조건 검사
+│   │   │   ├── node_context_translate.py  # [Biz] 문맥 보정 번역
+│   │   │   ├── node_vibe_extract.py       # [Vibe] STT 보정 및 감정 추출
+│   │   │   ├── node_vibe_enrich.py        # [Vibe] K-Culture DB 검색
+│   │   │   ├── node_vibe_translate.py     # [Vibe] 뉘앙스 번역
+│   │   │   └── node_summary.py            # 회의 요약 및 리스크 분석 노드 (Track A/B/C)
+│   │   ├── rag_processor/           # RAG 파이프라인 (Manager, Parser, Embedder, VectorStore)
+│   │   ├── routers/                 # FastAPI 라우터
+│   │   │   ├── utterance.py         # 실시간 발화 처리
+│   │   │   ├── docs_translation.py  # 문서 번역 (Streaming/Polling)
+│   │   │   └── summary.py           # 회의 요약 요청 처리 (/summary/process)
+│   │   ├── schemas/                 # Pydantic 스키마
+│   │   │   ├── utterance.py
+│   │   │   ├── docs_translation.py
+│   │   │   └── summary.py           # 요약/액션아이템/리스크리포트 구조 정의
+│   │   ├── services/                # 비즈니스 로직
+│   │   │   ├── utterance_service.py
+│   │   │   ├── docs_translation.py  # 번역 캐싱 및 DB 저장 로직 추가
+│   │   │   └── summary_service.py   # 요약 그래프 실행 및 결과 포맷팅
+│   │   ├── utils/
+│   │   │   ├── file_utils.py
+│   │   │   └── llm_factory.py       # LLM 싱글톤 팩토리
+│   │   ├── graph.py                 # 실시간 번역 그래프 정의
+│   │   ├── summary_graph.py         # 회의 요약 3-Track 그래프 정의
+│   │   ├── main.py                  # FastAPI 진입점
+│   │   └── state.py                 # LangGraph State 정의 (SummaryState 추가됨)
+│   └── livekit_agent/               # [Agent] LiveKit Worker
+│       ├── agent.py                 # 에이전트 진입점
+│       ├── handler.py               # 언어 감지(LID) 및 브로드캐스트 로직 강화
+│       ├── integrations.py          # Papago API 연동
+│       ├── manner_checker.py        # 매너 체크 로직
+│       └── utils.py                 # 언어 코드 변환 유틸
+├── .env                             # 환경 변수 설정
+├── requirements.txt                 # 의존성 목록
+└── README.md                        # 프로젝트 문서
+```
+
+-----
+
+## 💻 실행 방법 (How to Run)
+
+### 환경 세팅
 1. python -m venv .venv ( 가상환경 생성  1회만 )
 2. .venv\Scripts\activate ( 가상환경 활성화 )
 3. pip install -r requirements.txt ( 필수 라이브러리 설치 1회만 )
@@ -17,18 +132,18 @@ conda 사용시
 conda env export > environment.yml
 ```
 
-## 파이썬 서버 실행
+### 파이썬 서버 실행
 ```
 python -m uvicorn talaria.hermes_service.main:app --reload --port 8000 --app-dir src --env-file .env
 
 # 디버그 로그 레벨 실행
 python -m uvicorn talaria.hermes_service.main:app --reload --port 8000 --app-dir src --env-file .env --log-level debug
 ```
-### swagger
+#### swagger
 http://localhost:8000/docs#/translation/translate_doc_jobs_translate_doc_post
 
 
-## livekit agent 실행
+### livekit agent 실행
 개발모드로 실행
 ```
 python -m src.talaria.livekit_agent.agent dev
@@ -49,135 +164,9 @@ python src/talaria/livekit_agent/agent.py start
 python src/talaria/livekit_agent/agent.py download-files
 ```
 
------
+### ⚠️ 주요 환경 변수 (.env)
 
-# Talaria-AI (Hermes Project)
-
-본 프로젝트는 LiveKit 기반의 실시간 다국어 회의를 위한 **듀얼 모드(Dual-Mode) AI 번역 에이전트** 시스템입니다.
-
-단순한 번역기를 넘어, 회의의 성격(Business vs. Culture)에 따라 AI가 맥락을 추론하고(RAG, STT 오류 보정), 전문 용어를 보정하며, K-Culture/밈(Meme) 뉘앙스에 맞는 'Vibe 번역'과 '문화 설명'을 실시간으로 제공하는 것을 목표로 합니다.
-
-## 🚀 핵심 기능
-
-  * **실시간 다국어 STT 및 번역:** LiveKit의 오디오 스트림을 받아 실시간 STT(Clova) 및 Papago 1차 번역을 수행합니다.
-  * **듀얼 모드(Dual-Mode) 컨텍스트 번역:** JWT 토큰의 `meeting_mode`('B'/'C') 플래그에 따라 두 가지 다른 LangGraph 파이프라인을 실행합니다.
-      * **👔 비즈니스 모드 (Business Mode):** RAG, 전문 용어 사전(`expert_dict.pkl`), 이전 대화 내역을 기반으로 Papago 1차 번역의 **정확도를 보정**합니다.
-      * **😎 컬처 모드 (Vibe Mode):** 2-LLM 아키텍처를 사용하여 STT 오류(예: "베그" -\> "배그")를 보정하고, K-Culture 밈/슬랭(예: "국밥", "킹받네")을 Vibe 톤으로 **스타일 번역**합니다.
-  * **병렬 부가 정보 (Parallel Information):**
-      * **번역 (`topic="stt"`):** 보정된 번역문과 Vibe 모드용 이모지(예: 🔥)를 결합하여 발행합니다.
-      * **설명 (`topic="manner"`):** 비즈니스 모드에서는 '매너 체커'의 경고를, 컬처 모드에서는 'K-Culture 밈'의 해설(예: "'고인물': A pro gamer...")을 별도 토픽으로 발행합니다.
-  * **문서 RAG 파이프라인:** 업로드된 문서를 파싱, 청킹, 임베딩하여 ChromaDB에 벡터로 저장합니다. (비즈니스 모드에서 사용)
-
------
-
-## 🛠️ 시스템 아키텍처 및 핵심 흐름
-
-본 시스템은 2개의 독립적인 서비스가 실시간으로 통신하는 구조로 이루어져 있습니다.
-
-### 1\. `livekit_agent` (실시간 오디오/데이터 처리기)
-
-LiveKit 회의실에 '에이전트'로 참여하여 STT 및 데이터 I/O를 담당합니다.
-
-  * **`src/talaria/livekit_agent/agent.py`**: LiveKit 에이전트의 메인 진입점. `_publish_stt` (번역 발행) 및 `_publish_manner` (설명/매너 발행) 콜백을 정의합니다.
-  * **`src/talaria/livekit_agent/handler.py`**: **[핵심 파일]** STT `Final` 이벤트가 발생할 때, `asyncio.gather`를 사용해 2개의 작업을 병렬로 실행하여 속도를 극대화합니다.
-      * **Task 1 (`_run_translation_pipeline`)**:
-        1.  JWT 토큰에서 `meeting_mode`('B'/'C')를 읽어옵니다.
-        2.  **모든 모드**에서 Papago 1차 번역을 호출합니다. (Vibe 모드의 'Fast Path'를 위해)
-        3.  `hermes_service` API (`/utterances/process`)를 호출하며 `translation_mode`와 1차 번역본을 전달합니다.
-        4.  응답으로 `final_translations` (보정본), `final_emoji` (Vibe), `final_explanation` (Vibe)을 받습니다.
-        5.  Vibe 모드이고 `final_explanation`이 있으면, `topic="manner"`로 '문화 설명' 페이로드를 `publish_manner_callback`을 통해 발행합니다.
-        6.  번역문과 이모지를 결합하여 `topic="stt"`로 `publish_callback`을 통해 발행합니다.
-      * **Task 2 (`_run_checker_pipeline`)**:
-        1.  `meeting_mode`를 확인합니다.
-        2.  `mode == "business"`일 때만, `mchecker_business` (기존 매너 체커)를 실행하여 `topic="manner"`로 '매너 경고'를 발행합니다.
-        3.  `mode == "vibe"`일 때는 즉시 `return`하여 Task 1이 '문화 설명'을 발행하도록 둡니다.
-  * **`src/talaria/livekit_agent/manner_checker.py`**: 비즈니스 모드용 매너 체커. 시작 시 백엔드 DB(매너 DB)에서 규칙을 캐시하고, STT 원문에 대해 `contains` 검사를 수행합니다.
-  * **`src/talaria/livekit_agent/integrations.py`**: `translate_to_multiple_languages` (Papago API 병렬 호출) 로직이 구현되어 있습니다.
-
-### 2\. `hermes_service` (FastAPI + LangGraph AI 브레인)
-
-`livekit_agent`의 요청을 받아 실제 AI 추론을 수행하는 FastAPI 서버입니다.
-
-  * **`src/talaria/hermes_service/main.py`**: FastAPI 서버 실행 파일. `/utterances`, `/rag` 등 라우터를 포함합니다.
-  * **`src/talaria/hermes_service/services/utterance_service.py`**: Agent로부터 `UtteranceProcessIn` 스키마를 받아 `TranslateState` 객체를 생성하고 LangGraph 앱을 호출(`invoke`)합니다.
-  * **`src/talaria/hermes_service/state.py`**: LangGraph의 "메모리" 역할을 하는 `TranslateState` TypedDict가 정의되어 있습니다. (Business/Vibe 모드 플래그 및 결과 필드 포함)
-
-#### 🧠 `src/talaria/hermes_service/graph.py` (핵심 로직)
-
-현재 "Vibe 모드 하이브리드" (9-Node) 아키텍처로 구성되어 있습니다.
-
-1.  **[진입점] `mode_router` (라우터 1)**
-
-      * `translation_mode`("business" or "vibe")에 따라 2개 파이프라인으로 분기합니다.
-
-2.  **[Flow A] 👔 비즈니스 모드**
-
-      * **`analyze_business_context`** (노드): `node_check_conditions.py`. "인사말 필터", Aho-Corasick(`expert_dict.pkl`), RAG 벡터 검색을 수행하여 `should_correct_business` 플래그를 설정합니다.
-      * **`business_correction_router`** (라우터 2): 위 플래그 값에 따라 분기합니다.
-      * **`correction_agent_business`** (Slow Path, LLM): `node_context_translate.py`. 컨텍스트(RAG, 용어, 대화)를 힌트로 Papago 1차 번역을 '보정'합니다.
-      * **`fallback_agent`** (Fast Path, 규칙): Papago 1차 번역을 `final_answer`로 복사합니다.
-
-3.  **[Flow B] 😎 컬처(Vibe) 모드**
-
-      * **`vibe_extract_agent`** (Slow Path, LLM 1): `node_vibe_extract.py`. STT 원문("킹밧네")을 받아 STT 오류 보정("킹받네") 및 감정 태그("anger")를 추출합니다.
-      * **`context_enrich_agent`** (Slow Path, 규칙): `node_vibe_enrich.py`. `MannerChecker`의 `contains` 로직을 재활용하여 **K-Culture DB** (예: `tl_manner_rules`)를 **`contains` 검색**합니다. LLM 2(번역)를 위한 `vibe_context`(힌트)와 UI용 `final_explanation`을 생성합니다.
-      * **`vibe_translation_router`** (라우터 3): `vibe_context`에 힌트가 있는지 여부에 따라 분기합니다.
-      * **`correction_agent_vibe`** (Slow Path, LLM 2): `node_vibe_translate.py`. **K-Meme 힌트**를 받아 "국밥"을 "reliable"로 정확하게 Vibe 톤 번역합니다.
-      * **`fallback_agent`** (Fast Path, 규칙): K-Meme이 없는 단순 문장(예: "오늘 날씨 좋네요")의 Papago 1차 번역을 `final_answer`로 복사합니다.
-      * **`emoji_agent`** (종료 전): `LLM 1`이 분석한 감정 태그를 `emotion_emoji_map.json`과 매핑하여 `final_emoji`를 생성합니다.
-
------
-
-## 📁 폴더 및 파일 구조
-
-```
-talaria-ai/
-├── persistent_data/                 # (Git 무시) ChromaDB 벡터 저장소
-│   └── chroma_db_store/
-├── scripts/                         # 🗂️ 데이터 파이프라인 및 테스트 스크립트
-│   ├── assets/                      # (Git 무시됨) 원본 데이터 소스 (예: gartner_glossary_raw.html)
-│   ├── input/                       # 
-│   │   └── term_data.csv            # [Data] IT 전문 용어 원본 CSV
-│   ├── output/                      #
-│   │   ├── definitions.csv          # [Data] 전처리된 '개념' (tl_dict_concept용)
-│   │   └── terms.csv                # [Data] 전처리된 '용어' (tl_dict_term용)
-│   ├── steps/                       # (참고용) 데이터 파이프라인 단계별 스크립트
-│   ├── build_automaton.py           # [▶️ 실행] MySQL(tl_dict_term)에서 'expert_dict.pkl' 생성 스크립트
-│   ├── load_to_db.ipynb             # [▶️ 실행] output/ CSV 파일을 MySQL DB로 적재
-│   ├── term_preprocessing.ipynb     # [▶️ 실행] input/term_data.csv를 output/ 2개 파일로 전처리
-│   ├── test_business_graph.py       # [▶️ 실행] Business 모드 LangGraph 테스트
-│   └── test_vibe_graph.py           # [▶️ 실행] Vibe 모드 LangGraph 테스트
-└── src/talaria/
-    ├── assets/                      # 📦 AI 모델/규칙 에셋
-    │   ├── expert_dict.pkl          # [Aho-Corasick] Business 모드 전문 용어 사전
-    │   └── emotion_emoji_map.json   # [Rule] Vibe 모드 감정-이모지 매핑
-    ├── common/                      # 🔄 공통 모듈
-    │   └── integrations/papago_doc.py # Papago 문서 번역 API 클라이언트
-    ├── core/                        # 
-    │   └── database.py              # [핵심] MySQL DB 연결 커서(get_db_cursor) 제공
-    ├── hermes_service/              # 🧠 "브레인" (FastAPI + LangGraph)
-    │   ├── nodes/                   # 🧩 LangGraph의 개별 실행 노드
-    │   │   ├── node_check_conditions.py   # [Biz] Aho-Corasick, RAG, 인사말 필터 (analyze_business_context)
-    │   │   ├── node_context_translate.py  # [Biz] LLM 보정 (correction_agent_business)
-    │   │   ├── node_vibe_extract.py       # [Vibe] LLM 1: STT 보정 + 감정 추출
-    │   │   ├── node_vibe_enrich.py        # [Vibe] Rule: K-Culture DB 'Contains' 검색
-    │   │   └── node_vibe_translate.py   # [Vibe] LLM 2: 힌트 기반 번역
-    │   ├── rag_processor/           # 📚 RAG 파이프라인 (파싱, 청킹, 임베딩, DB 저장)
-    │   ├── routers/                 # 🌐 FastAPI 라우터
-    │   │   ├── utterance.py         # [핵심] /utterances/process (LangGraph 호출 API)
-    │   │   ├── docs_translation.py  # Papago 문서 번역 API
-    │   │   └── rag.py               # RAG 파이프라인 실행 API
-    │   ├── schemas/                 # 📝 Pydantic API 스키마
-    │   │   └── utterance.py         # UtteranceProcessIn (입력), UtteranceProcessOut (출력)
-    │   ├── services/                # 🛠️ FastAPI 비즈니스 로직
-    │   │   └── utterance_service.py # [핵심] Agent 입력을 받아 TranslateState 생성, LangGraph 실행, 결과 반환
-    │   ├── graph.py                 # [⭐️ 핵심] 9-Node 듀얼 모드 LangGraph 아키텍처 정의
-    │   ├── main.py                  # [▶️ 실행] FastAPI 서버 (Uvicorn)
-    │   └── state.py                 # [⭐️ 핵심] LangGraph의 메모리(TranslateState) 정의
-    └── livekit_agent/               # 🎙️ "에이전트" (LiveKit 워커)
-        ├── handler.py               # [⭐️ 핵심] STT 스트림 처리, Task 1/2 병렬 실행
-        ├── agent.py                 # [▶️ 실행] LiveKit 에이전트 진입점
-        ├── integrations.py          # [핵심] Papago 실시간 번역 (asyncio.gather)
-        ├── manner_checker.py        # [Biz] 비즈니스 모드 매너 체커 (DB 캐시 + Contains)
-        └── utils.py                 # 언어 코드 변환 등 유틸리티
-```
+  * `OPENAI_API_KEY`: LLM 사용을 위해 필수.
+  * `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`: MySQL 연결 정보.
+  * `PAPAGO_CLIENT_ID`, `PAPAGO_CLIENT_SECRET`: Papago 번역 API 키.
+  * `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`: LiveKit 접속 정보.

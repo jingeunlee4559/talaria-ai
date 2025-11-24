@@ -276,18 +276,33 @@ class ParticipantSTTHandler:
                     vibe_triggers = result_data.get("vibe_triggers")
                     final_explanation = result_data.get("final_explanation")
                     
-                    #  Vibe 모드이고, 설명이 있고, 콜백이 존재하면
-                    # "밈 관련 정보"을 'topic=manner'로 발행
+                    # [Vibe 모드] 문화 설명 발행 로직
                     if translation_mode == "vibe" and final_explanation and self.publish_manner_callback:
-                        log.info(f"[{pid}] ⭐️ Vibe '문화 설명'을 topic=manner로 발행합니다.")
+                        log.info(f"[{pid}] ⭐️ Vibe '문화 설명' 발견! 번역 데이터를 포함하여 발행합니다.")
+                        
+                        # 1. 설명 번역 (한국어 DB -> 현재 방에 있는 모든 언어)
+                        explanation_translations = {}
+                        if self.translation_enabled:
+                            # 현재 방에 있는 모든 참가자의 언어를 타겟으로 설정
+                            all_locales = list(self._get_current_locales())
+                            try:
+                                explanation_translations = await translate_to_multiple_languages(
+                                    final_explanation, 
+                                    "ko-KR",  # DB 원본은 항상 한국어
+                                    all_locales
+                                )
+                            except Exception as e:
+                                log.error(f"[{pid}] ❌ 설명 번역 실패: {e}")
+
                         match_text = vibe_triggers[0] if vibe_triggers else ""
-                        # (MannerChecker 페이로드와 유사하게 생성)
+                        
+                        # 2. 모든 번역을 포함한 Payload 생성
                         fake_payload = {
                             "type": "manner_alert",
-                            "label": "K-Culture Tip", # (프론트가 표시할 라벨)
-                            "explanation": final_explanation, # (LangGraph가 DB에서 생성한 설명)
+                            "label": "K-Culture Tip", 
+                            "explanation": final_explanation, # (기본: 한국어)
+                            "translations": explanation_translations, # 🟢 [추가됨] 예: {'en-US': 'Soup is...', 'zh-CN': '...'}
                             
-                            # (나머지 필드는 MannerChecker와 동일하게 채움)
                             "agent_code": "K-meme",
                             "severity": 1,
                             "match": match_text,
@@ -299,6 +314,8 @@ class ParticipantSTTHandler:
                             "ts": time.time(),
                             "version": "v1-culture",
                         }
+                        
+                        # 3. 브로드캐스트 (모두에게 전송)
                         await self.publish_manner_callback(fake_payload)
 
                 except httpx.HTTPStatusError as e:
