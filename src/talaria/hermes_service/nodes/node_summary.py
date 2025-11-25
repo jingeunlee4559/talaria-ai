@@ -87,7 +87,9 @@ def node_track_b_extract(state: SummaryState):
     prompt = ChatPromptTemplate.from_template("""
     회의록에서 '실행 과제(Action Item)'를 추출하여 JSON 리스트로 반환하세요.
     
+    [매우 중요: 날짜 계산]                                         
     [기준 날짜] {current_date}
+    - 본문에서 "내일", "다음 주 수요일" 같은 표현이 나오면 위 기준 날짜를 바탕으로 정확한 날짜(YYYY-MM-DD)로 계산해 적으세요.
     
     [추출 가이드]
     1. owner: 담당자 이름 (없으면 '미정')

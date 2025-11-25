@@ -26,12 +26,14 @@ class AiCoachObj(BaseModel):
 # --- 4. 최종 API 입출력 ---
 class MeetingSummaryIn(BaseModel):
     meeting_id: int
-    current_date: str
+    current_date: Optional[str] = Field(None, alias="scheduled_at")
     meeting_title: str
     participants: str
     transcript: str
 
+    class Config:
+        populate_by_name = True
+
 class MeetingSummaryOut(BaseModel):
     meta: Dict[str, Any]
-    # 프론트엔드가 'mockMinutes'의 요소로 바로 쓸 수 있는 구조
-    result: Dict[str, Any]  # { aiSummary: ..., aiCoach: ..., topics: ... }
+    result: Dict[str, Any]
