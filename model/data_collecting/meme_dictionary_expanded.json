@@ -1,0 +1,2925 @@
+[
+  {
+    "primary_keyword": "롱디",
+    "related_keywords": [
+      "장거리",
+      "장거리 연애"
+    ],
+    "definition": "장거리 연애를 뜻하는 신조어로, Zalpha 세대 사이에서 주로 사용된다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "롱디 커플은 주말마다 열심히 만나려고 노력해."
+    ],
+    "embedding_text": "롱디: 장거리 연애를 뜻하는 신조어로, Zalpha 세대 사이에서 주로 사용된다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0000"
+  },
+  {
+    "primary_keyword": "플렉스캉스",
+    "related_keywords": [
+      "휴가",
+      "호캉스"
+    ],
+    "definition": "휴가를 보내면서 동시에 자신의 부를 과시하는 것을 의미하는 Zalpha 세대 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 여름에는 플렉스캉스를 즐길 계획이야."
+    ],
+    "embedding_text": "플렉스캉스: 휴가를 보내면서 동시에 자신의 부를 과시하는 것을 의미하는 Zalpha 세대 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0001"
+  },
+  {
+    "primary_keyword": "인싸워너비",
+    "related_keywords": [
+      "인싸",
+      "워너비"
+    ],
+    "definition": "인싸가 되고 싶은 사람을 가리키는 신조어로, Zalpha 세대가 주로 사용함.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "나는 인싸워너비라서 인싸 친구들이랑 자주 어울려."
+    ],
+    "embedding_text": "인싸워너비: 인싸가 되고 싶은 사람을 가리키는 신조어로, Zalpha 세대가 주로 사용함.",
+    "source": "gpt4o_generated",
+    "id": "meme_0002"
+  },
+  {
+    "primary_keyword": "값비싼소통",
+    "related_keywords": [
+      "소통",
+      "비싼"
+    ],
+    "definition": "비싼 물건을 통해 소통하는 방식을 뜻하는 Zalpha 세대의 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "값비싼소통은 나에게는 좀 부담이야."
+    ],
+    "embedding_text": "값비싼소통: 비싼 물건을 통해 소통하는 방식을 뜻하는 Zalpha 세대의 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0003"
+  },
+  {
+    "primary_keyword": "메타다이어트",
+    "related_keywords": [
+      "메타버스",
+      "다이어트"
+    ],
+    "definition": "메타버스 환경에서의 다이어트를 뜻하는 신조어로, Zalpha 세대가 주로 사용함.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "메타다이어트로 친구들과 함께 운동해."
+    ],
+    "embedding_text": "메타다이어트: 메타버스 환경에서의 다이어트를 뜻하는 신조어로, Zalpha 세대가 주로 사용함.",
+    "source": "gpt4o_generated",
+    "id": "meme_0004"
+  },
+  {
+    "primary_keyword": "팔로워장사",
+    "related_keywords": [
+      "팔로워",
+      "장사"
+    ],
+    "definition": "SNS에서 팔로워를 통해 수익을 창출하는 것을 의미하는 Zalpha 세대의 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "팔로워장사로 용돈 벌이를 하고 있어."
+    ],
+    "embedding_text": "팔로워장사: SNS에서 팔로워를 통해 수익을 창출하는 것을 의미하는 Zalpha 세대의 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0005"
+  },
+  {
+    "primary_keyword": "일상콘텐츠",
+    "related_keywords": [
+      "일상",
+      "콘텐츠"
+    ],
+    "definition": "일상을 콘텐츠로 만들어 공유하는 것을 뜻하는 Zalpha 세대의 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "일상콘텐츠로 인스타그램을 채우고 있어."
+    ],
+    "embedding_text": "일상콘텐츠: 일상을 콘텐츠로 만들어 공유하는 것을 뜻하는 Zalpha 세대의 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0006"
+  },
+  {
+    "primary_keyword": "비건슈즈",
+    "related_keywords": [
+      "비건",
+      "슈즈"
+    ],
+    "definition": "비건 소재로 만든 신발을 의미하는 신조어로, Zalpha 세대가 주로 사용함.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "비건슈즈를 신고 환경 보호에 동참하고 있어."
+    ],
+    "embedding_text": "비건슈즈: 비건 소재로 만든 신발을 의미하는 신조어로, Zalpha 세대가 주로 사용함.",
+    "source": "gpt4o_generated",
+    "id": "meme_0007"
+  },
+  {
+    "primary_keyword": "포모증후군",
+    "related_keywords": [
+      "포모",
+      "증후군"
+    ],
+    "definition": "무언가 놓치고 있다는 불안감을 뜻하는 FOMO(Fear Of Missing Out)의 한국어식 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "포모증후군 때문에 SNS 확인을 자주 해."
+    ],
+    "embedding_text": "포모증후군: 무언가 놓치고 있다는 불안감을 뜻하는 FOMO(Fear Of Missing Out)의 한국어식 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0008"
+  },
+  {
+    "primary_keyword": "젤리메일",
+    "related_keywords": [
+      "젤리",
+      "메일"
+    ],
+    "definition": "메신저에서 주고받는 재미있는 메시지를 뜻하는 Zalpha 세대의 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "친구한테 젤리메일을 보내서 웃겼어."
+    ],
+    "embedding_text": "젤리메일: 메신저에서 주고받는 재미있는 메시지를 뜻하는 Zalpha 세대의 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0009"
+  },
+  {
+    "primary_keyword": "스냅저널",
+    "related_keywords": [
+      "스냅",
+      "저널"
+    ],
+    "definition": "일상을 기록하는 스냅 사진 일기를 뜻하는 Zalpha 세대의 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "스냅저널로 매일 하루를 기록하고 있어."
+    ],
+    "embedding_text": "스냅저널: 일상을 기록하는 스냅 사진 일기를 뜻하는 Zalpha 세대의 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0010"
+  },
+  {
+    "primary_keyword": "친환경남",
+    "related_keywords": [
+      "친환경",
+      "남자"
+    ],
+    "definition": "환경 보호를 위해 노력하는 남성을 뜻하는 Zalpha 세대의 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그는 친환경남이라서 분리수거에 신경을 많이 써."
+    ],
+    "embedding_text": "친환경남: 환경 보호를 위해 노력하는 남성을 뜻하는 Zalpha 세대의 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0011"
+  },
+  {
+    "primary_keyword": "출퇴근전사",
+    "related_keywords": [
+      "출퇴근",
+      "전사"
+    ],
+    "definition": "출퇴근 길에 다양한 일을 처리하는 사람을 의미하는 Zalpha 세대의 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "출퇴근전사라서 이동 중에 공부도 해."
+    ],
+    "embedding_text": "출퇴근전사: 출퇴근 길에 다양한 일을 처리하는 사람을 의미하는 Zalpha 세대의 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0012"
+  },
+  {
+    "primary_keyword": "취미부자",
+    "related_keywords": [
+      "취미",
+      "부자"
+    ],
+    "definition": "다양한 취미를 가지고 있는 사람을 뜻하는 Zalpha 세대의 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "나는 취미부자라서 시간표가 꽉 차있어."
+    ],
+    "embedding_text": "취미부자: 다양한 취미를 가지고 있는 사람을 뜻하는 Zalpha 세대의 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0013"
+  },
+  {
+    "primary_keyword": "멘탈헬스케어",
+    "related_keywords": [
+      "멘탈",
+      "헬스케어"
+    ],
+    "definition": "정신 건강을 관리하는 것을 뜻하는 Zalpha 세대의 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "멘탈헬스케어를 위해 명상을 시작했어."
+    ],
+    "embedding_text": "멘탈헬스케어: 정신 건강을 관리하는 것을 뜻하는 Zalpha 세대의 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0014"
+  },
+  {
+    "primary_keyword": "디지털미니멀리즘",
+    "related_keywords": [
+      "디지털",
+      "미니멀리즘"
+    ],
+    "definition": "디지털 환경에서 최소한의 것으로 생활하는 것을 의미하는 Zalpha 세대의 신조어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "디지털미니멀리즘을 실천하며 꼭 필요한 앱만 써."
+    ],
+    "embedding_text": "디지털미니멀리즘: 디지털 환경에서 최소한의 것으로 생활하는 것을 의미하는 Zalpha 세대의 신조어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0015"
+  },
+  {
+    "primary_keyword": "스웩",
+    "related_keywords": [
+      "swag",
+      "스웨그"
+    ],
+    "definition": "자신감 넘치는 모습을 표현하는 단어",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "나는 스웩 넘치는 스타일을 좋아해."
+    ],
+    "embedding_text": "스웩: 자신감 넘치는 모습을 표현하는 단어",
+    "source": "gpt4o_generated",
+    "id": "meme_0016"
+  },
+  {
+    "primary_keyword": "힙합은 내 삶",
+    "related_keywords": [
+      "힙합",
+      "라이프스타일"
+    ],
+    "definition": "힙합 음악에 대한 깊은 애정을 표현하는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "힙합은 내 삶이야."
+    ],
+    "embedding_text": "힙합은 내 삶: 힙합 음악에 대한 깊은 애정을 표현하는 말",
+    "source": "gpt4o_generated",
+    "id": "meme_0017"
+  },
+  {
+    "primary_keyword": "플렉스",
+    "related_keywords": [
+      "flex",
+      "자랑"
+    ],
+    "definition": "자신의 부나 능력을 자랑하는 행동",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘 플렉스 좀 해볼까?"
+    ],
+    "embedding_text": "플렉스: 자신의 부나 능력을 자랑하는 행동",
+    "source": "gpt4o_generated",
+    "id": "meme_0018"
+  },
+  {
+    "primary_keyword": "비트에 몸을 맡겨",
+    "related_keywords": [
+      "느낌",
+      "그루브"
+    ],
+    "definition": "음악이 주는 감정에 몸을 맡기고 즐기라는 의미",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그냥 비트에 몸을 맡겨."
+    ],
+    "embedding_text": "비트에 몸을 맡겨: 음악이 주는 감정에 몸을 맡기고 즐기라는 의미",
+    "source": "gpt4o_generated",
+    "id": "meme_0019"
+  },
+  {
+    "primary_keyword": "랩 괴물",
+    "related_keywords": [
+      "래퍼",
+      "괴물"
+    ],
+    "definition": "뛰어난 랩 실력을 가진 사람을 칭찬하는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "저 사람 진짜 랩 괴물이야."
+    ],
+    "embedding_text": "랩 괴물: 뛰어난 랩 실력을 가진 사람을 칭찬하는 말",
+    "source": "gpt4o_generated",
+    "id": "meme_0020"
+  },
+  {
+    "primary_keyword": "바이브",
+    "related_keywords": [
+      "Vibe",
+      "느낌"
+    ],
+    "definition": "특정 분위기나 느낌을 뜻하는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이 곡의 바이브가 좋아."
+    ],
+    "embedding_text": "바이브: 특정 분위기나 느낌을 뜻하는 말",
+    "source": "gpt4o_generated",
+    "id": "meme_0021"
+  },
+  {
+    "primary_keyword": "언더그라운드",
+    "related_keywords": [
+      "Underground",
+      "비주류"
+    ],
+    "definition": "주류가 아닌 독립적인 힙합 씬을 뜻하는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "언더그라운드에서 내 이름을 알리고 싶다."
+    ],
+    "embedding_text": "언더그라운드: 주류가 아닌 독립적인 힙합 씬을 뜻하는 말",
+    "source": "gpt4o_generated",
+    "id": "meme_0022"
+  },
+  {
+    "primary_keyword": "쇼미",
+    "related_keywords": [
+      "쇼미더머니",
+      "래퍼 경연"
+    ],
+    "definition": "래퍼 경연 프로그램 '쇼미더머니'의 줄임말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 시즌 쇼미 나갈 거야?"
+    ],
+    "embedding_text": "쇼미: 래퍼 경연 프로그램 '쇼미더머니'의 줄임말",
+    "source": "gpt4o_generated",
+    "id": "meme_0023"
+  },
+  {
+    "primary_keyword": "크루",
+    "related_keywords": [
+      "Crew",
+      "팀"
+    ],
+    "definition": "같이 음악을 하는 팀이나 집단",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "우리 크루는 항상 함께 움직인다."
+    ],
+    "embedding_text": "크루: 같이 음악을 하는 팀이나 집단",
+    "source": "gpt4o_generated",
+    "id": "meme_0024"
+  },
+  {
+    "primary_keyword": "레전드",
+    "related_keywords": [
+      "전설",
+      "전설적인"
+    ],
+    "definition": "오랫동안 존경받는 뛰어난 인물이나 일을 뜻하는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "저 곡은 진짜 레전드야."
+    ],
+    "embedding_text": "레전드: 오랫동안 존경받는 뛰어난 인물이나 일을 뜻하는 말",
+    "source": "gpt4o_generated",
+    "id": "meme_0025"
+  },
+  {
+    "primary_keyword": "힙합 갱스터",
+    "related_keywords": [
+      "갱스터",
+      "gangster"
+    ],
+    "definition": "강한 이미지의 힙합 스타일을 지칭하는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그의 힙합 갱스터 스타일은 독보적이다."
+    ],
+    "embedding_text": "힙합 갱스터: 강한 이미지의 힙합 스타일을 지칭하는 말",
+    "source": "gpt4o_generated",
+    "id": "meme_0026"
+  },
+  {
+    "primary_keyword": "파이어",
+    "related_keywords": [
+      "fire",
+      "불타오르다"
+    ],
+    "definition": "강렬하고 에너제틱한 상태나 음악을 표현하는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 비트 진짜 파이어야."
+    ],
+    "embedding_text": "파이어: 강렬하고 에너제틱한 상태나 음악을 표현하는 말",
+    "source": "gpt4o_generated",
+    "id": "meme_0027"
+  },
+  {
+    "primary_keyword": "킥 앤 스네어",
+    "related_keywords": [
+      "drum",
+      "드럼 비트"
+    ],
+    "definition": "힙합 음악의 기초적인 드럼 리듬 패턴",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "킥 앤 스네어로 비트를 만들어봐."
+    ],
+    "embedding_text": "킥 앤 스네어: 힙합 음악의 기초적인 드럼 리듬 패턴",
+    "source": "gpt4o_generated",
+    "id": "meme_0028"
+  },
+  {
+    "primary_keyword": "플로우",
+    "related_keywords": [
+      "flow",
+      "리듬"
+    ],
+    "definition": "래퍼의 랩 스타일이나 리듬을 뜻하는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 래퍼의 플로우는 정말 독창적이다."
+    ],
+    "embedding_text": "플로우: 래퍼의 랩 스타일이나 리듬을 뜻하는 말",
+    "source": "gpt4o_generated",
+    "id": "meme_0029"
+  },
+  {
+    "primary_keyword": "리릭",
+    "related_keywords": [
+      "lyrics",
+      "가사"
+    ],
+    "definition": "노래의 가사를 뜻하는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 곡의 리릭이 정말 좋다."
+    ],
+    "embedding_text": "리릭: 노래의 가사를 뜻하는 말",
+    "source": "gpt4o_generated",
+    "id": "meme_0030"
+  },
+  {
+    "primary_keyword": "랩 배틀",
+    "related_keywords": [
+      "battle",
+      "대결"
+    ],
+    "definition": "두 명 이상의 래퍼가 서로의 실력을 겨루는 대결",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 랩 배틀에서 우승했다."
+    ],
+    "embedding_text": "랩 배틀: 두 명 이상의 래퍼가 서로의 실력을 겨루는 대결",
+    "source": "gpt4o_generated",
+    "id": "meme_0031"
+  },
+  {
+    "primary_keyword": "피드에 담긴 행복",
+    "related_keywords": [
+      "행복",
+      "피드"
+    ],
+    "definition": "인스타그램 피드에 인생의 행복한 순간들을 담아 공유하는 것.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘 하루도 피드에 담긴 행복으로 가득해!"
+    ],
+    "embedding_text": "피드에 담긴 행복: 인스타그램 피드에 인생의 행복한 순간들을 담아 공유하는 것.",
+    "source": "gpt4o_generated",
+    "id": "meme_0032"
+  },
+  {
+    "primary_keyword": "갬성",
+    "related_keywords": [
+      "감성",
+      "느낌"
+    ],
+    "definition": "감성적이고 분위기 있는 사진이나 글을 공유하는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘 갬성 좀 터진다..."
+    ],
+    "embedding_text": "갬성: 감성적이고 분위기 있는 사진이나 글을 공유하는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0033"
+  },
+  {
+    "primary_keyword": "주접스타그램",
+    "related_keywords": [
+      "주접",
+      "스타그램"
+    ],
+    "definition": "인스타그램에서 과도하게 애정 표현을 하거나 감성 글을 올리는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘도 주접스타그램 해야지~"
+    ],
+    "embedding_text": "주접스타그램: 인스타그램에서 과도하게 애정 표현을 하거나 감성 글을 올리는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0034"
+  },
+  {
+    "primary_keyword": "릴스",
+    "related_keywords": [
+      "릴스",
+      "비디오"
+    ],
+    "definition": "인스타그램에서 짧고 재미있는 비디오를 만들어 공유하는 기능",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "새로운 릴스 찍어봤어, 어때?"
+    ],
+    "embedding_text": "릴스: 인스타그램에서 짧고 재미있는 비디오를 만들어 공유하는 기능",
+    "source": "gpt4o_generated",
+    "id": "meme_0035"
+  },
+  {
+    "primary_keyword": "인생샷",
+    "related_keywords": [
+      "사진",
+      "찰칵"
+    ],
+    "definition": "인생에서 가장 잘 나온 사진을 뜻함",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이건 진짜 인생샷이다..."
+    ],
+    "embedding_text": "인생샷: 인생에서 가장 잘 나온 사진을 뜻함",
+    "source": "gpt4o_generated",
+    "id": "meme_0036"
+  },
+  {
+    "primary_keyword": "셀스타그램",
+    "related_keywords": [
+      "셀카",
+      "스타그램"
+    ],
+    "definition": "자신의 셀카를 인스타그램에 게시하는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘 셀스타그램 각이다!"
+    ],
+    "embedding_text": "셀스타그램: 자신의 셀카를 인스타그램에 게시하는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0037"
+  },
+  {
+    "primary_keyword": "멍청이 같은 사랑",
+    "related_keywords": [
+      "사랑",
+      "주접"
+    ],
+    "definition": "멍청할 정도로 열렬하고 순수한 사랑을 표현하는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "너랑 하는 사랑은 멍청이 같은 사랑이야."
+    ],
+    "embedding_text": "멍청이 같은 사랑: 멍청할 정도로 열렬하고 순수한 사랑을 표현하는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0038"
+  },
+  {
+    "primary_keyword": "맛스타그램",
+    "related_keywords": [
+      "음식",
+      "스타그램"
+    ],
+    "definition": "음식이나 요리를 사진으로 찍어 인스타그램에 올리는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘 맛스타그램으로 피자 올렸어!"
+    ],
+    "embedding_text": "맛스타그램: 음식이나 요리를 사진으로 찍어 인스타그램에 올리는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0039"
+  },
+  {
+    "primary_keyword": "감성 터지는 밤",
+    "related_keywords": [
+      "밤",
+      "감성"
+    ],
+    "definition": "밤에 감성적인 생각이나 분위기에 빠지는 상태",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘도 감성 터지는 밤을 보내고 있어."
+    ],
+    "embedding_text": "감성 터지는 밤: 밤에 감성적인 생각이나 분위기에 빠지는 상태",
+    "source": "gpt4o_generated",
+    "id": "meme_0040"
+  },
+  {
+    "primary_keyword": "비주얼 폭발",
+    "related_keywords": [
+      "비주얼",
+      "폭발"
+    ],
+    "definition": "압도적인 아름다움이나 멋진 외모를 표현하는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘 내 비주얼 폭발이다!"
+    ],
+    "embedding_text": "비주얼 폭발: 압도적인 아름다움이나 멋진 외모를 표현하는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0041"
+  },
+  {
+    "primary_keyword": "내 마음속 저장",
+    "related_keywords": [
+      "마음",
+      "저장"
+    ],
+    "definition": "사랑하는 사람을 마음 속 깊이 간직하는 것을 표현",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "너는 내 마음속 저장!"
+    ],
+    "embedding_text": "내 마음속 저장: 사랑하는 사람을 마음 속 깊이 간직하는 것을 표현",
+    "source": "gpt4o_generated",
+    "id": "meme_0042"
+  },
+  {
+    "primary_keyword": "인싸그램",
+    "related_keywords": [
+      "인싸",
+      "스타그램"
+    ],
+    "definition": "인싸들이 주로 사용하는 인스타그램 활동 방식",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "요즘 인싸그램 핫하더라!"
+    ],
+    "embedding_text": "인싸그램: 인싸들이 주로 사용하는 인스타그램 활동 방식",
+    "source": "gpt4o_generated",
+    "id": "meme_0043"
+  },
+  {
+    "primary_keyword": "주접 멘트 제조기",
+    "related_keywords": [
+      "주접",
+      "멘트"
+    ],
+    "definition": "주접스러운 멘트를 계속해서 만들어내는 사람",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "내 친구는 주접 멘트 제조기야."
+    ],
+    "embedding_text": "주접 멘트 제조기: 주접스러운 멘트를 계속해서 만들어내는 사람",
+    "source": "gpt4o_generated",
+    "id": "meme_0044"
+  },
+  {
+    "primary_keyword": "감성 필터 사용법",
+    "related_keywords": [
+      "필터",
+      "감성"
+    ],
+    "definition": "사진에 감성적인 느낌을 더해주는 필터 사용 방법",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이 필터 진짜 감성 필터 사용법 그 자체야!"
+    ],
+    "embedding_text": "감성 필터 사용법: 사진에 감성적인 느낌을 더해주는 필터 사용 방법",
+    "source": "gpt4o_generated",
+    "id": "meme_0045"
+  },
+  {
+    "primary_keyword": "오늘도 행복한 척",
+    "related_keywords": [
+      "행복",
+      "척"
+    ],
+    "definition": "행복하지 않을 때도 인스타그램에 행복한 척 하는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘도 행복한 척 해야겠지..."
+    ],
+    "embedding_text": "오늘도 행복한 척: 행복하지 않을 때도 인스타그램에 행복한 척 하는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0046"
+  },
+  {
+    "primary_keyword": "심쿵 모먼트",
+    "related_keywords": [
+      "심쿵",
+      "모먼트"
+    ],
+    "definition": "마음을 강하게 흔드는 순간이나 상황을 뜻함",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그의 미소는 진짜 심쿵 모먼트였어."
+    ],
+    "embedding_text": "심쿵 모먼트: 마음을 강하게 흔드는 순간이나 상황을 뜻함",
+    "source": "gpt4o_generated",
+    "id": "meme_0047"
+  },
+  {
+    "primary_keyword": "식물갤러리",
+    "related_keywords": [
+      "식갤",
+      "식물갤"
+    ],
+    "definition": "디시인사이드의 식물 관련 사진 및 정보를 공유하는 갤러리",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "식물갤러리에서 화초 기르는 법을 배웠어."
+    ],
+    "embedding_text": "식물갤러리: 디시인사이드의 식물 관련 갤러리",
+    "source": "gpt4o_generated",
+    "id": "meme_0048"
+  },
+  {
+    "primary_keyword": "반려동물갤러리",
+    "related_keywords": [
+      "반갤",
+      "펫갤"
+    ],
+    "definition": "반려동물에 관한 이야기와 사진을 공유하는 디시인사이드의 갤러리",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "반려동물갤러리에서 우리 고양이 사진 올렸어."
+    ],
+    "embedding_text": "반려동물갤러리: 반려동물 관련 디시인사이드 갤러리",
+    "source": "gpt4o_generated",
+    "id": "meme_0049"
+  },
+  {
+    "primary_keyword": "취미갤러리",
+    "related_keywords": [
+      "취갤",
+      "취미갤"
+    ],
+    "definition": "다양한 취미를 공유하고 정보를 나누는 디시인사이드의 갤러리",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "취미갤러리에서 새 사진 찍는 법을 배웠어."
+    ],
+    "embedding_text": "취미갤러리: 취미 관련 디시인사이드 갤러리",
+    "source": "gpt4o_generated",
+    "id": "meme_0050"
+  },
+  {
+    "primary_keyword": "갤주",
+    "related_keywords": [
+      "갤러리주인",
+      "갤주님"
+    ],
+    "definition": "한 갤러리에서 가장 인기 있거나 주목받는 사용자를 일컫는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 주 갤주는 식갤에서 가장 많은 추천을 받은 사람이야."
+    ],
+    "embedding_text": "갤주: 갤러리에서 주목받는 사용자",
+    "source": "gpt4o_generated",
+    "id": "meme_0051"
+  },
+  {
+    "primary_keyword": "식물탐방",
+    "related_keywords": [
+      "식물여행",
+      "식물탐사"
+    ],
+    "definition": "식물을 직접 찾아보고 관찰하는 활동",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "주말에 식물탐방을 다녀왔어."
+    ],
+    "embedding_text": "식물탐방: 식물 관찰 활동",
+    "source": "gpt4o_generated",
+    "id": "meme_0052"
+  },
+  {
+    "primary_keyword": "펫타입",
+    "related_keywords": [
+      "반려동물타입",
+      "펫종류"
+    ],
+    "definition": "각 사용자가 선호하는 반려동물의 유형을 나타내는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "나는 개가 제일 좋아, 내 펫타입이야."
+    ],
+    "embedding_text": "펫타입: 선호하는 반려동물 유형",
+    "source": "gpt4o_generated",
+    "id": "meme_0053"
+  },
+  {
+    "primary_keyword": "갤러리폐쇄",
+    "related_keywords": [
+      "갤폐쇄",
+      "갤문닫기"
+    ],
+    "definition": "갤러리 활동이 중단되거나 사라지는 상황",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "악성 댓글 때문에 갤러리폐쇄됐어."
+    ],
+    "embedding_text": "갤러리폐쇄: 갤러리가 사라지는 상황",
+    "source": "gpt4o_generated",
+    "id": "meme_0054"
+  },
+  {
+    "primary_keyword": "반려동물탐구",
+    "related_keywords": [
+      "펫탐구",
+      "애완동물탐구"
+    ],
+    "definition": "반려동물에 대한 깊은 이해와 연구를 의미하는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "반려동물탐구를 통해 좀 더 양질의 정보를 얻었어."
+    ],
+    "embedding_text": "반려동물탐구: 반려동물에 대한 연구",
+    "source": "gpt4o_generated",
+    "id": "meme_0055"
+  },
+  {
+    "primary_keyword": "취미생활",
+    "related_keywords": [
+      "취미활동",
+      "취미시간"
+    ],
+    "definition": "자신이 좋아하는 취미를 즐기는 생활을 의미",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "취미생활로 사진 찍는 걸 시작했어."
+    ],
+    "embedding_text": "취미생활: 취미를 즐기는 생활",
+    "source": "gpt4o_generated",
+    "id": "meme_0056"
+  },
+  {
+    "primary_keyword": "갤러리정모",
+    "related_keywords": [
+      "갤정모",
+      "갤러리모임"
+    ],
+    "definition": "갤러리 사용자들이 오프라인에서 만나서 교류하는 모임",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 주말에 갤러리정모가 있어."
+    ],
+    "embedding_text": "갤러리정모: 오프라인 사용자 모임",
+    "source": "gpt4o_generated",
+    "id": "meme_0057"
+  },
+  {
+    "primary_keyword": "식물사랑",
+    "related_keywords": [
+      "식물애호",
+      "식물러브"
+    ],
+    "definition": "식물을 사랑하고 아끼는 마음",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "식물사랑이 넘치는 식갤러들."
+    ],
+    "embedding_text": "식물사랑: 식물을 사랑하는 마음",
+    "source": "gpt4o_generated",
+    "id": "meme_0058"
+  },
+  {
+    "primary_keyword": "강아지파",
+    "related_keywords": [
+      "개파",
+      "댕댕이파"
+    ],
+    "definition": "강아지를 선호하는 사람들을 일컫는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "나는 강아지파라서 고양이는 잘 모르겠어."
+    ],
+    "embedding_text": "강아지파: 강아지를 선호하는 사람들",
+    "source": "gpt4o_generated",
+    "id": "meme_0059"
+  },
+  {
+    "primary_keyword": "고양이파",
+    "related_keywords": [
+      "냥이파",
+      "묘파"
+    ],
+    "definition": "고양이를 선호하는 사람들을 일컫는 말",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "고양이파는 주로 조용한 걸 좋아해."
+    ],
+    "embedding_text": "고양이파: 고양이를 선호하는 사람들",
+    "source": "gpt4o_generated",
+    "id": "meme_0060"
+  },
+  {
+    "primary_keyword": "취미장인",
+    "related_keywords": [
+      "취미고수",
+      "취미달인"
+    ],
+    "definition": "취미를 깊이 탐구하고 잘하는 사람",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그는 진정한 취미장인이야."
+    ],
+    "embedding_text": "취미장인: 취미를 잘하는 사람",
+    "source": "gpt4o_generated",
+    "id": "meme_0061"
+  },
+  {
+    "primary_keyword": "나만알고싶은식물",
+    "related_keywords": [
+      "비밀식물",
+      "히든식물"
+    ],
+    "definition": "다른 사람에게 알려주기 싫을 만큼 아끼는 식물",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이건 나만알고싶은식물이라 안 알려줘."
+    ],
+    "embedding_text": "나만알고싶은식물: 아끼는 비밀 식물",
+    "source": "gpt4o_generated",
+    "id": "meme_0062"
+  },
+  {
+    "primary_keyword": "갓동님",
+    "related_keywords": [
+      "갓동",
+      "갓동님 갤러리"
+    ],
+    "definition": "야구선수 이동현을 찬양하는 단어로, 그의 뛰어난 실력을 칭송할 때 사용한다.",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "오늘도 갓동님 덕분에 승리했네."
+    ],
+    "embedding_text": "갓동님: 야구선수 이동현을 찬양하는 단어로, 그의 뛰어난 실력을 칭송할 때 사용한다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0063"
+  },
+  {
+    "primary_keyword": "공격축구",
+    "related_keywords": [
+      "공축",
+      "공격"
+    ],
+    "definition": "공격적인 전술로 축구 경기를 운영하는 스타일을 의미하며, 디씨인사이드 해외축구 갤러리에서 자주 언급된다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 시즌은 공격축구로 가자!"
+    ],
+    "embedding_text": "공격축구: 공격적인 전술로 축구 경기를 운영하는 스타일을 의미하며, 디씨인사이드 해외축구 갤러리에서 자주 언급된다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0064"
+  },
+  {
+    "primary_keyword": "수비축구",
+    "related_keywords": [
+      "수축",
+      "수비"
+    ],
+    "definition": "수비적인 전술로 축구 경기를 운영하는 스타일을 의미하며, 경기에서 방어에 집중할 때 사용한다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "수비축구 덕분에 무승부로 막았다."
+    ],
+    "embedding_text": "수비축구: 수비적인 전술로 축구 경기를 운영하는 스타일을 의미하며, 경기에서 방어에 집중할 때 사용한다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0065"
+  },
+  {
+    "primary_keyword": "유벤투스",
+    "related_keywords": [
+      "유베",
+      "유벤"
+    ],
+    "definition": "이탈리아의 명문 축구 클럽으로, 디씨인사이드 해외축구 갤러리에서 자주 언급된다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "유벤투스 이번 시즌도 우승할까?"
+    ],
+    "embedding_text": "유벤투스: 이탈리아의 명문 축구 클럽으로, 디씨인사이드 해외축구 갤러리에서 자주 언급된다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0066"
+  },
+  {
+    "primary_keyword": "디씨콘",
+    "related_keywords": [
+      "콘",
+      "디시콘"
+    ],
+    "definition": "디씨인사이드에서 사용하는 이모티콘 형태의 이미지 또는 짤방을 말한다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "디씨콘으로 대화하면 재밌다."
+    ],
+    "embedding_text": "디씨콘: 디씨인사이드에서 사용하는 이모티콘 형태의 이미지 또는 짤방을 말한다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0067"
+  },
+  {
+    "primary_keyword": "갤럽",
+    "related_keywords": [
+      "갤업",
+      "갤러리 업"
+    ],
+    "definition": "디씨인사이드 갤러리를 활성화시키거나 게시글을 많이 올리는 행위를 의미한다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "갤럽을 위해 오늘도 글을 씁니다."
+    ],
+    "embedding_text": "갤럽: 디씨인사이드 갤러리를 활성화시키거나 게시글을 많이 올리는 행위를 의미한다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0068"
+  },
+  {
+    "primary_keyword": "헬갤",
+    "related_keywords": [
+      "헬갤러리",
+      "헬"
+    ],
+    "definition": "디씨인사이드에서 혼란스럽거나 혼잡한 상태의 갤러리를 의미한다.",
+    "tags": [
+      "NEGATIVE"
+    ],
+    "examples": [
+      "오늘 헬갤이라 도저히 볼 수가 없네."
+    ],
+    "embedding_text": "헬갤: 디씨인사이드에서 혼란스럽거나 혼잡한 상태의 갤러리를 의미한다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0069"
+  },
+  {
+    "primary_keyword": "와갤",
+    "related_keywords": [
+      "와우갤",
+      "와우"
+    ],
+    "definition": "디씨인사이드의 월드 오브 워크래프트 관련 갤러리를 의미하며, 관련 내용이 많다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "와갤에서 새로운 정보를 얻었다."
+    ],
+    "embedding_text": "와갤: 디씨인사이드의 월드 오브 워크래프트 관련 갤러리를 의미하며, 관련 내용이 많다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0070"
+  },
+  {
+    "primary_keyword": "우갤",
+    "related_keywords": [
+      "유머갤",
+      "우갤러리"
+    ],
+    "definition": "디씨인사이드 유머 관련 갤러리로, 웃긴 내용과 짤방이 다수 게시된다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "우갤에서 웃다가 배꼽 빠질 뻔."
+    ],
+    "embedding_text": "우갤: 디씨인사이드 유머 관련 갤러리로, 웃긴 내용과 짤방이 다수 게시된다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0071"
+  },
+  {
+    "primary_keyword": "갓겜",
+    "related_keywords": [
+      "갓게임",
+      "명작"
+    ],
+    "definition": "게임 중에서 특히 훌륭한 작품을 칭찬할 때 사용하는 말이다.",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "새로 나온 것도 갓겜이네!"
+    ],
+    "embedding_text": "갓겜: 게임 중에서 특히 훌륭한 작품을 칭찬할 때 사용하는 말이다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0072"
+  },
+  {
+    "primary_keyword": "갤질",
+    "related_keywords": [
+      "갤러리질",
+      "갤질중"
+    ],
+    "definition": "디씨인사이드 갤러리에서 시간을 보내는 행위를 의미한다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘도 갤질로 하루가 간다."
+    ],
+    "embedding_text": "갤질: 디씨인사이드 갤러리에서 시간을 보내는 행위를 의미한다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0073"
+  },
+  {
+    "primary_keyword": "눈갤",
+    "related_keywords": [
+      "눈물갤러리",
+      "감성갤러리"
+    ],
+    "definition": "감성적이거나 감동적인 게시물이 올라오는 갤러리를 의미한다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "눈갤에서 눈물나게 감동받았다."
+    ],
+    "embedding_text": "눈갤: 감성적이거나 감동적인 게시물이 올라오는 갤러리를 의미한다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0074"
+  },
+  {
+    "primary_keyword": "고갤",
+    "related_keywords": [
+      "고양이갤",
+      "고양이"
+    ],
+    "definition": "디씨인사이드 고양이 관련 갤러리로, 고양이 사진과 이야기가 주로 올라온다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "고갤에서 귀여운 고양이 봤다."
+    ],
+    "embedding_text": "고갤: 디씨인사이드 고양이 관련 갤러리로, 고양이 사진과 이야기가 주로 올라온다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0075"
+  },
+  {
+    "primary_keyword": "축갤",
+    "related_keywords": [
+      "축구갤러리",
+      "축구"
+    ],
+    "definition": "디씨인사이드 해외축구 갤러리로, 축구 관련 정보와 토론이 활발하게 이루어진다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘 축갤에서 새로운 전략을 배웠다."
+    ],
+    "embedding_text": "축갤: 디씨인사이드 해외축구 갤러리로, 축구 관련 정보와 토론이 활발하게 이루어진다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0076"
+  },
+  {
+    "primary_keyword": "짝짝이",
+    "related_keywords": [
+      "짝짝이 축구화",
+      "짝짝이 신발"
+    ],
+    "definition": "유명한 축구선수들이 양 발에 다른 브랜드의 축구화를 신고 경기에 출전할 때 생긴 유행어이다.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 선수, 또 짝짝이 신고 나왔네."
+    ],
+    "embedding_text": "짝짝이: 유명한 축구선수들이 양 발에 다른 브랜드의 축구화를 신고 경기에 출전할 때 생긴 유행어이다.",
+    "source": "gpt4o_generated",
+    "id": "meme_0077"
+  },
+  {
+    "primary_keyword": "근첩",
+    "related_keywords": [
+      "근로계약첩보",
+      "근로계약첩보원"
+    ],
+    "definition": "극렬한 친일파를 비꼬는 말로 쓰이는 용어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 사람은 진짜 근첩이야."
+    ],
+    "embedding_text": "근첩: 극렬한 친일파를 비꼬는 말로 쓰이는 용어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0078"
+  },
+  {
+    "primary_keyword": "보이루",
+    "related_keywords": [
+      "보이루방송",
+      "보이루석"
+    ],
+    "definition": "유명한 게임 스트리머의 인사말에서 유래된 인사말.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "보이루! 오늘 방송 시작합니다."
+    ],
+    "embedding_text": "보이루: 유명한 게임 스트리머의 인사말에서 유래된 인사말.",
+    "source": "gpt4o_generated",
+    "id": "meme_0079"
+  },
+  {
+    "primary_keyword": "야레야레",
+    "related_keywords": [
+      "야레야레다제",
+      "야레야레세제"
+    ],
+    "definition": "일본 애니메이션에서 유래한 피곤하거나 귀찮아하는 감정을 표현하는 말.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "또 시작이네, 야레야레."
+    ],
+    "embedding_text": "야레야레: 일본 애니메이션에서 유래한 피곤하거나 귀찮아하는 감정을 표현하는 말.",
+    "source": "gpt4o_generated",
+    "id": "meme_0080"
+  },
+  {
+    "primary_keyword": "돈값충",
+    "related_keywords": [
+      "돈값충전",
+      "돈값충전기"
+    ],
+    "definition": "돈을 내고 게임 내 콘텐츠를 구매하는 사람을 비하하는 말.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "돈값충들 때문에 게임 밸런스가 망했어."
+    ],
+    "embedding_text": "돈값충: 돈을 내고 게임 내 콘텐츠를 구매하는 사람을 비하하는 말.",
+    "source": "gpt4o_generated",
+    "id": "meme_0081"
+  },
+  {
+    "primary_keyword": "관짝",
+    "related_keywords": [
+      "관짝충",
+      "관짝댄스"
+    ],
+    "definition": "게임이나 캐릭터의 최후를 암시하는 용어로, 무덤을 의미.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 패치로 그 캐릭터는 관짝에 들어갔어."
+    ],
+    "embedding_text": "관짝: 게임이나 캐릭터의 최후를 암시하는 용어로, 무덤을 의미.",
+    "source": "gpt4o_generated",
+    "id": "meme_0082"
+  },
+  {
+    "primary_keyword": "노가다",
+    "related_keywords": [
+      "노가다작업",
+      "노가다재료"
+    ],
+    "definition": "반복적이고 단순한 작업을 의미하는 일본어에서 유래한 말.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘도 노가다하러 가야지."
+    ],
+    "embedding_text": "노가다: 반복적이고 단순한 작업을 의미하는 일본어에서 유래한 말.",
+    "source": "gpt4o_generated",
+    "id": "meme_0083"
+  },
+  {
+    "primary_keyword": "버스",
+    "related_keywords": [
+      "버스기사",
+      "버스타기"
+    ],
+    "definition": "다른 사람이 게임을 대신 진행해주는 것을 의미하는 게임 용어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 게임은 버스로 끝냈어."
+    ],
+    "embedding_text": "버스: 다른 사람이 게임을 대신 진행해주는 것을 의미하는 게임 용어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0084"
+  },
+  {
+    "primary_keyword": "손컨",
+    "related_keywords": [
+      "손컨트롤",
+      "손컨실력"
+    ],
+    "definition": "손으로 조작하는 게임의 컨트롤 실력을 의미.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 판은 손컨이 너무 중요해."
+    ],
+    "embedding_text": "손컨: 손으로 조작하는 게임의 컨트롤 실력을 의미.",
+    "source": "gpt4o_generated",
+    "id": "meme_0085"
+  },
+  {
+    "primary_keyword": "자낳괴",
+    "related_keywords": [
+      "자낳괴충",
+      "자낳괴기"
+    ],
+    "definition": "자본주의가 낳은 괴물이라는 뜻으로, 돈을 중요시하는 행태를 비꼬는 말.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 사람은 진짜 자낳괴야."
+    ],
+    "embedding_text": "자낳괴: 자본주의가 낳은 괴물이라는 뜻으로, 돈을 중요시하는 행태를 비꼬는 말.",
+    "source": "gpt4o_generated",
+    "id": "meme_0086"
+  },
+  {
+    "primary_keyword": "폐인",
+    "related_keywords": [
+      "폐인생활",
+      "폐인모드"
+    ],
+    "definition": "게임이나 특정 활동에 지나치게 몰두하는 사람을 의미.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 사람은 게임 폐인이야."
+    ],
+    "embedding_text": "폐인: 게임이나 특정 활동에 지나치게 몰두하는 사람을 의미.",
+    "source": "gpt4o_generated",
+    "id": "meme_0087"
+  },
+  {
+    "primary_keyword": "듀리",
+    "related_keywords": [
+      "듀리완료",
+      "듀리중"
+    ],
+    "definition": "게임 내 일일 퀘스트를 모두 완료한다는 뜻으로, '데일리'의 변형.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘 듀리는 다 끝냈어."
+    ],
+    "embedding_text": "듀리: 게임 내 일일 퀘스트를 모두 완료한다는 뜻으로, '데일리'의 변형.",
+    "source": "gpt4o_generated",
+    "id": "meme_0088"
+  },
+  {
+    "primary_keyword": "뉴비",
+    "related_keywords": [
+      "뉴비레벨",
+      "뉴비상태"
+    ],
+    "definition": "게임 등을 처음 시작하는 사람을 가리키는 말.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "나는 아직 뉴비라 잘 몰라."
+    ],
+    "embedding_text": "뉴비: 게임 등을 처음 시작하는 사람을 가리키는 말.",
+    "source": "gpt4o_generated",
+    "id": "meme_0089"
+  },
+  {
+    "primary_keyword": "고인물",
+    "related_keywords": [
+      "고인물상태",
+      "고인물레벨"
+    ],
+    "definition": "오래된 유저로 경험이 풍부한 사람을 의미.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "저 사람은 진짜 고인물이야."
+    ],
+    "embedding_text": "고인물: 오래된 유저로 경험이 풍부한 사람을 의미.",
+    "source": "gpt4o_generated",
+    "id": "meme_0090"
+  },
+  {
+    "primary_keyword": "와우충",
+    "related_keywords": [
+      "와우충전",
+      "와우충전기"
+    ],
+    "definition": "월드 오브 워크래프트에 지나치게 몰두하는 사람을 비하하는 말.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "저 친구는 완전 와우충이야."
+    ],
+    "embedding_text": "와우충: 월드 오브 워크래프트에 지나치게 몰두하는 사람을 비하하는 말.",
+    "source": "gpt4o_generated",
+    "id": "meme_0091"
+  },
+  {
+    "primary_keyword": "개고수",
+    "related_keywords": [
+      "개고수플레이",
+      "개고수실력"
+    ],
+    "definition": "게임에서 매우 뛰어난 실력을 가진 사람을 의미.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 사람은 정말 개고수야."
+    ],
+    "embedding_text": "개고수: 게임에서 매우 뛰어난 실력을 가진 사람을 의미.",
+    "source": "gpt4o_generated",
+    "id": "meme_0092"
+  },
+  {
+    "primary_keyword": "컨트롤",
+    "related_keywords": [
+      "컨트롤실력",
+      "컨트롤작"
+    ],
+    "definition": "게임에서 조작 능력을 의미하는 용어.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 게임은 컨트롤이 중요해."
+    ],
+    "embedding_text": "컨트롤: 게임에서 조작 능력을 의미하는 용어.",
+    "source": "gpt4o_generated",
+    "id": "meme_0093"
+  },
+  {
+    "primary_keyword": "패치노트",
+    "related_keywords": [
+      "패치노트갱신",
+      "패치노트확인"
+    ],
+    "definition": "게임 업데이트 내용이 적힌 문서.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "새로운 패치노트가 나왔어, 확인해봐."
+    ],
+    "embedding_text": "패치노트: 게임 업데이트 내용이 적힌 문서.",
+    "source": "gpt4o_generated",
+    "id": "meme_0094"
+  },
+  {
+    "primary_keyword": "타겟콜",
+    "related_keywords": [
+      "집중공격",
+      "타겟집중"
+    ],
+    "definition": "팀원들에게 특정 적을 먼저 공격하도록 지시하는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "타겟콜 제대로 했으면 이겼다"
+    ],
+    "embedding_text": "타겟콜: 팀원들에게 특정 적을 먼저 공격하도록 지시하는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0095"
+  },
+  {
+    "primary_keyword": "백업",
+    "related_keywords": [
+      "지원",
+      "도움"
+    ],
+    "definition": "팀원이 위기에 처했을 때 지원을 보내는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "빨리 백업 와줘!"
+    ],
+    "embedding_text": "백업: 팀원이 위기에 처했을 때 지원을 보내는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0096"
+  },
+  {
+    "primary_keyword": "피드백",
+    "related_keywords": [
+      "조언",
+      "피드"
+    ],
+    "definition": "게임 플레이 후 잘못된 점을 지적하고 개선점을 제시하는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "피드백 좀 해줄래?"
+    ],
+    "embedding_text": "피드백: 게임 플레이 후 잘못된 점을 지적하고 개선점을 제시하는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0097"
+  },
+  {
+    "primary_keyword": "술통",
+    "related_keywords": [
+      "플레이메이커",
+      "메인콜"
+    ],
+    "definition": "팀의 전략을 주도적으로 콜하는 사람",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘 술통 누구야?"
+    ],
+    "embedding_text": "술통: 팀의 전략을 주도적으로 콜하는 사람",
+    "source": "gpt4o_generated",
+    "id": "meme_0098"
+  },
+  {
+    "primary_keyword": "정치질",
+    "related_keywords": [
+      "부모고발",
+      "분열"
+    ],
+    "definition": "팀 내에서 다른 사람을 험담하거나 분열을 조장하는 행동",
+    "tags": [
+      "NEGATIVE"
+    ],
+    "examples": [
+      "정치질 좀 그만해라"
+    ],
+    "embedding_text": "정치질: 팀 내에서 다른 사람을 험담하거나 분열을 조장하는 행동",
+    "source": "gpt4o_generated",
+    "id": "meme_0099"
+  },
+  {
+    "primary_keyword": "오더",
+    "related_keywords": [
+      "명령",
+      "지시"
+    ],
+    "definition": "게임 내에서 팀원의 행동을 지시하는 것",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오더 잘 들어"
+    ],
+    "embedding_text": "오더: 게임 내에서 팀원의 행동을 지시하는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0100"
+  },
+  {
+    "primary_keyword": "스노우볼",
+    "related_keywords": [
+      "연승",
+      "압도"
+    ],
+    "definition": "게임 초반 이점을 계속 키워나가며 승리를 확정짓는 전략",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "스노우볼 잘 굴렸다"
+    ],
+    "embedding_text": "스노우볼: 게임 초반 이점을 계속 키워나가며 승리를 확정짓는 전략",
+    "source": "gpt4o_generated",
+    "id": "meme_0101"
+  },
+  {
+    "primary_keyword": "탱커",
+    "related_keywords": [
+      "방어",
+      "견제"
+    ],
+    "definition": "적의 공격을 대신 맞아주는 역할을 하는 캐릭터",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "탱커가 잘 버텼다"
+    ],
+    "embedding_text": "탱커: 적의 공격을 대신 맞아주는 역할을 하는 캐릭터",
+    "source": "gpt4o_generated",
+    "id": "meme_0102"
+  },
+  {
+    "primary_keyword": "킬각",
+    "related_keywords": [
+      "기회",
+      "잡았다"
+    ],
+    "definition": "적을 확실하게 잡을 수 있는 상황",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "킬각 제대로 봤다"
+    ],
+    "embedding_text": "킬각: 적을 확실하게 잡을 수 있는 상황",
+    "source": "gpt4o_generated",
+    "id": "meme_0103"
+  },
+  {
+    "primary_keyword": "핑",
+    "related_keywords": [
+      "신호",
+      "알림"
+    ],
+    "definition": "게임 내에서 팀원에게 정보를 전달하기 위해 사용하는 신호",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "적 위치에 핑 찍었어"
+    ],
+    "embedding_text": "핑: 게임 내에서 팀원에게 정보를 전달하기 위해 사용하는 신호",
+    "source": "gpt4o_generated",
+    "id": "meme_0104"
+  },
+  {
+    "primary_keyword": "치킨",
+    "related_keywords": [
+      "승리",
+      "1등"
+    ],
+    "definition": "배틀로얄 게임에서 마지막까지 살아남아 승리하는 것",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "드디어 치킨 먹었다"
+    ],
+    "embedding_text": "치킨: 배틀로얄 게임에서 마지막까지 살아남아 승리하는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0105"
+  },
+  {
+    "primary_keyword": "하드캐리",
+    "related_keywords": [
+      "영웅",
+      "에이스"
+    ],
+    "definition": "한 명의 플레이어가 팀의 승리를 이끌어내는 상황",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "오늘 하드캐리 했네"
+    ],
+    "embedding_text": "하드캐리: 한 명의 플레이어가 팀의 승리를 이끌어내는 상황",
+    "source": "gpt4o_generated",
+    "id": "meme_0106"
+  },
+  {
+    "primary_keyword": "피딩",
+    "related_keywords": [
+      "헛발질",
+      "실수"
+    ],
+    "definition": "무리한 플레이로 적에게 쉽게 킬을 주는 것",
+    "tags": [
+      "NEGATIVE"
+    ],
+    "examples": [
+      "피딩 좀 하지 마라"
+    ],
+    "embedding_text": "피딩: 무리한 플레이로 적에게 쉽게 킬을 주는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0107"
+  },
+  {
+    "primary_keyword": "열등감",
+    "related_keywords": [
+      "자격지심",
+      "비교"
+    ],
+    "definition": "팀 내에서 다른 사람보다 잘 못한다고 느껴서 생기는 부정적인 감정",
+    "tags": [
+      "NEGATIVE"
+    ],
+    "examples": [
+      "열등감에 빠지면 안 돼"
+    ],
+    "embedding_text": "열등감: 팀 내에서 다른 사람보다 잘 못한다고 느껴서 생기는 부정적인 감정",
+    "source": "gpt4o_generated",
+    "id": "meme_0108"
+  },
+  {
+    "primary_keyword": "트롤",
+    "related_keywords": [
+      "방해꾼",
+      "장난"
+    ],
+    "definition": "게임을 의도적으로 망치기 위해 이상한 행동을 하는 사람",
+    "tags": [
+      "NEGATIVE"
+    ],
+    "examples": [
+      "트롤 때문에 졌다"
+    ],
+    "embedding_text": "트롤: 게임을 의도적으로 망치기 위해 이상한 행동을 하는 사람",
+    "source": "gpt4o_generated",
+    "id": "meme_0109"
+  },
+  {
+    "primary_keyword": "강화폭망",
+    "related_keywords": [
+      "망했다",
+      "터졌다"
+    ],
+    "definition": "강화에 실패하여 아이템이 파괴되거나 가치가 크게 떨어진 상황.",
+    "tags": [
+      "NEGATIVE"
+    ],
+    "examples": [
+      "이번에 또 강화폭망했어."
+    ],
+    "embedding_text": "강화폭망: 강화에 실패하여 아이템이 파괴되거나 가치가 크게 떨어진 상황.",
+    "source": "gpt4o_generated",
+    "id": "meme_0110"
+  },
+  {
+    "primary_keyword": "득템",
+    "related_keywords": [
+      "아이템 획득",
+      "운빨"
+    ],
+    "definition": "게임 내에서 좋은 아이템을 얻었을 때 사용하는 표현.",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "어제 득템해서 너무 기뻤어!"
+    ],
+    "embedding_text": "득템: 게임 내에서 좋은 아이템을 얻었을 때 사용하는 표현.",
+    "source": "gpt4o_generated",
+    "id": "meme_0111"
+  },
+  {
+    "primary_keyword": "똥망",
+    "related_keywords": [
+      "망했다",
+      "실패"
+    ],
+    "definition": "아이템 강화나 제작에 실패하여 큰 손해를 본 상황.",
+    "tags": [
+      "NEGATIVE"
+    ],
+    "examples": [
+      "이번 강화도 똥망이야."
+    ],
+    "embedding_text": "똥망: 아이템 강화나 제작에 실패하여 큰 손해를 본 상황.",
+    "source": "gpt4o_generated",
+    "id": "meme_0112"
+  },
+  {
+    "primary_keyword": "강화운",
+    "related_keywords": [
+      "운빨"
+    ],
+    "definition": "아이템 강화의 성공 여부를 결정짓는 운.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번에는 강화운이 좋았어."
+    ],
+    "embedding_text": "강화운: 아이템 강화의 성공 여부를 결정짓는 운.",
+    "source": "gpt4o_generated",
+    "id": "meme_0113"
+  },
+  {
+    "primary_keyword": "강화실패",
+    "related_keywords": [
+      "실패",
+      "터졌다"
+    ],
+    "definition": "아이템 강화를 시도했으나 성공하지 못한 상태.",
+    "tags": [
+      "NEGATIVE"
+    ],
+    "examples": [
+      "연속으로 강화실패라니..."
+    ],
+    "embedding_text": "강화실패: 아이템 강화를 시도했으나 성공하지 못한 상태.",
+    "source": "gpt4o_generated",
+    "id": "meme_0114"
+  },
+  {
+    "primary_keyword": "강화성공",
+    "related_keywords": [
+      "성공",
+      "대박"
+    ],
+    "definition": "아이템 강화를 시도하여 성공한 상태.",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "드디어 강화성공했다!"
+    ],
+    "embedding_text": "강화성공: 아이템 강화를 시도하여 성공한 상태.",
+    "source": "gpt4o_generated",
+    "id": "meme_0115"
+  },
+  {
+    "primary_keyword": "근성작",
+    "related_keywords": [
+      "인내",
+      "노가다"
+    ],
+    "definition": "꾸준한 노력과 시간을 투자하여 아이템을 강화하거나 완성하는 행위.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 장비는 근성작으로 만들었어."
+    ],
+    "embedding_text": "근성작: 꾸준한 노력과 시간을 투자하여 아이템을 강화하거나 완성하는 행위.",
+    "source": "gpt4o_generated",
+    "id": "meme_0116"
+  },
+  {
+    "primary_keyword": "엔드템",
+    "related_keywords": [
+      "최종 아이템",
+      "최고"
+    ],
+    "definition": "게임에서 가장 강력하고 최종적으로 얻을 수 있는 아이템.",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "드디어 엔드템을 얻었다!"
+    ],
+    "embedding_text": "엔드템: 게임에서 가장 강력하고 최종적으로 얻을 수 있는 아이템.",
+    "source": "gpt4o_generated",
+    "id": "meme_0117"
+  },
+  {
+    "primary_keyword": "재미템",
+    "related_keywords": [
+      "유머",
+      "장난"
+    ],
+    "definition": "실용적이지 않지만 재미를 위해 사용되는 아이템.",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "이건 완전 재미템이야!"
+    ],
+    "embedding_text": "재미템: 실용적이지 않지만 재미를 위해 사용되는 아이템.",
+    "source": "gpt4o_generated",
+    "id": "meme_0118"
+  },
+  {
+    "primary_keyword": "운빨",
+    "related_keywords": [
+      "확률",
+      "운"
+    ],
+    "definition": "게임 내에서 어떤 결과가 나올지 운에 의존하는 상황.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 강화는 완전 운빨이었어."
+    ],
+    "embedding_text": "운빨: 게임 내에서 어떤 결과가 나올지 운에 의존하는 상황.",
+    "source": "gpt4o_generated",
+    "id": "meme_0119"
+  },
+  {
+    "primary_keyword": "무과금",
+    "related_keywords": [
+      "과금",
+      "무료"
+    ],
+    "definition": "게임 내에서 돈을 쓰지 않고 플레이하는 방법.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "나는 무과금으로 엔드템을 얻었다."
+    ],
+    "embedding_text": "무과금: 게임 내에서 돈을 쓰지 않고 플레이하는 방법.",
+    "source": "gpt4o_generated",
+    "id": "meme_0120"
+  },
+  {
+    "primary_keyword": "현질",
+    "related_keywords": [
+      "과금",
+      "현금"
+    ],
+    "definition": "실제 돈을 써서 게임 내에서 아이템이나 혜택을 구매하는 행위.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번에 현질로 강화템을 샀어."
+    ],
+    "embedding_text": "현질: 실제 돈을 써서 게임 내에서 아이템이나 혜택을 구매하는 행위.",
+    "source": "gpt4o_generated",
+    "id": "meme_0121"
+  },
+  {
+    "primary_keyword": "막타",
+    "related_keywords": [
+      "마지막 공격",
+      "마무리"
+    ],
+    "definition": "몬스터를 쓰러뜨리는 마지막 공격.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "막타를 내가 가져갔어!"
+    ],
+    "embedding_text": "막타: 몬스터를 쓰러뜨리는 마지막 공격.",
+    "source": "gpt4o_generated",
+    "id": "meme_0122"
+  },
+  {
+    "primary_keyword": "초심작",
+    "related_keywords": [
+      "초보",
+      "시작"
+    ],
+    "definition": "처음부터 시작하여 아이템을 강화하거나 캐릭터를 키우는 것.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이번 캐릭터는 초심작으로 키웠어."
+    ],
+    "embedding_text": "초심작: 처음부터 시작하여 아이템을 강화하거나 캐릭터를 키우는 것.",
+    "source": "gpt4o_generated",
+    "id": "meme_0123"
+  },
+  {
+    "primary_keyword": "만렙",
+    "related_keywords": [
+      "최고 레벨",
+      "최대 레벨"
+    ],
+    "definition": "캐릭터가 도달할 수 있는 최고 레벨.",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "드디어 만렙 찍었다!"
+    ],
+    "embedding_text": "만렙: 캐릭터가 도달할 수 있는 최고 레벨.",
+    "source": "gpt4o_generated",
+    "id": "meme_0124"
+  },
+  {
+    "primary_keyword": "강화재료",
+    "related_keywords": [
+      "재료",
+      "아이템"
+    ],
+    "definition": "아이템 강화를 위해 필요한 재료.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "강화재료가 부족해서 강화 못했어."
+    ],
+    "embedding_text": "강화재료: 아이템 강화를 위해 필요한 재료.",
+    "source": "gpt4o_generated",
+    "id": "meme_0125"
+  },
+  {
+    "primary_keyword": "리셋",
+    "related_keywords": [
+      "초기화",
+      "다시"
+    ],
+    "definition": "기존의 상태를 초기 상태로 돌리는 행위.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "강화 실패해서 리셋했어."
+    ],
+    "embedding_text": "리셋: 기존의 상태를 초기 상태로 돌리는 행위.",
+    "source": "gpt4o_generated",
+    "id": "meme_0126"
+  },
+  {
+    "primary_keyword": "어이가없네",
+    "related_keywords": [
+      "어이없다",
+      "황당하다"
+    ],
+    "definition": "말도 안 되는 상황을 접했을 때 쓰는 표현.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "갑자기 회의가 취소되다니 어이가 없네."
+    ],
+    "embedding_text": "어이가없네: 말도 안 되는 상황을 접했을 때 쓰는 표현.",
+    "source": "gpt4o_generated",
+    "id": "meme_0127"
+  },
+  {
+    "primary_keyword": "답이없다",
+    "related_keywords": [
+      "답답하다",
+      "막막하다"
+    ],
+    "definition": "해결책이 보이지 않는 상황을 나타냄.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이 문제는 정말 답이 없다."
+    ],
+    "embedding_text": "답이없다: 해결책이 보이지 않는 상황을 나타냄.",
+    "source": "gpt4o_generated",
+    "id": "meme_0128"
+  },
+  {
+    "primary_keyword": "어쩔티비",
+    "related_keywords": [
+      "어쩌라고",
+      "티비나봐"
+    ],
+    "definition": "상대방의 말에 대꾸할 가치조차 없다는 뜻.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "네 말이나 들어줄 줄 알았어? 어쩔티비."
+    ],
+    "embedding_text": "어쩔티비: 상대방의 말에 대꾸할 가치조차 없다는 뜻.",
+    "source": "gpt4o_generated",
+    "id": "meme_0129"
+  },
+  {
+    "primary_keyword": "헐",
+    "related_keywords": [
+      "충격",
+      "놀람"
+    ],
+    "definition": "예상치 못한 상황에 대한 놀라움의 표현.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "헐, 그 사람이 그랬다고?"
+    ],
+    "embedding_text": "헐: 예상치 못한 상황에 대한 놀라움의 표현.",
+    "source": "gpt4o_generated",
+    "id": "meme_0130"
+  },
+  {
+    "primary_keyword": "멍미",
+    "related_keywords": [
+      "뭐임",
+      "뭐야"
+    ],
+    "definition": "이해가 안 되는 상황을 물어볼 때 사용.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그게 무슨 말이야? 멍미"
+    ],
+    "embedding_text": "멍미: 이해가 안 되는 상황을 물어볼 때 사용.",
+    "source": "gpt4o_generated",
+    "id": "meme_0131"
+  },
+  {
+    "primary_keyword": "와장창",
+    "related_keywords": [
+      "큰일났다",
+      "망했다"
+    ],
+    "definition": "무언가 깨진듯한 큰 충격이나 실패를 의미.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "시험 망쳤어, 와장창."
+    ],
+    "embedding_text": "와장창: 무언가 깨진듯한 큰 충격이나 실패를 의미.",
+    "source": "gpt4o_generated",
+    "id": "meme_0132"
+  },
+  {
+    "primary_keyword": "노답",
+    "related_keywords": [
+      "답없음",
+      "방법없음"
+    ],
+    "definition": "어떤 상황에 대해 전혀 방법이 없다는 뜻.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 사람은 진짜 노답이야."
+    ],
+    "embedding_text": "노답: 어떤 상황에 대해 전혀 방법이 없다는 뜻.",
+    "source": "gpt4o_generated",
+    "id": "meme_0133"
+  },
+  {
+    "primary_keyword": "킹받네",
+    "related_keywords": [
+      "열받다",
+      "짜증나다"
+    ],
+    "definition": "상황이 매우 화가 나고 짜증 날 때 쓰는 표현.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "진짜 킹받네, 말도 안 돼!"
+    ],
+    "embedding_text": "킹받네: 상황이 매우 화가 나고 짜증 날 때 쓰는 표현.",
+    "source": "gpt4o_generated",
+    "id": "meme_0134"
+  },
+  {
+    "primary_keyword": "팔짝뛰다",
+    "related_keywords": [
+      "화나다",
+      "부글부글"
+    ],
+    "definition": "마음이 매우 동요되거나 놀랐을 때 사용.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이게 대체 뭐야? 팔짝뛸 노릇이네."
+    ],
+    "embedding_text": "팔짝뛰다: 마음이 매우 동요되거나 놀랐을 때 사용.",
+    "source": "gpt4o_generated",
+    "id": "meme_0135"
+  },
+  {
+    "primary_keyword": "빡치다",
+    "related_keywords": [
+      "화나다",
+      "열받다"
+    ],
+    "definition": "매우 화가 나서 참기 어려운 상태.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 말 듣고 완전 빡쳤잖아."
+    ],
+    "embedding_text": "빡치다: 매우 화가 나서 참기 어려운 상태.",
+    "source": "gpt4o_generated",
+    "id": "meme_0136"
+  },
+  {
+    "primary_keyword": "멘탈붕괴",
+    "related_keywords": [
+      "멘붕",
+      "충격"
+    ],
+    "definition": "심리적으로 큰 충격을 받아 혼란스러운 상태.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "시험 성적 보고 멘탈붕괴 왔어."
+    ],
+    "embedding_text": "멘탈붕괴: 심리적으로 큰 충격을 받아 혼란스러운 상태.",
+    "source": "gpt4o_generated",
+    "id": "meme_0137"
+  },
+  {
+    "primary_keyword": "말잇못",
+    "related_keywords": [
+      "할말없다",
+      "할말을잃다"
+    ],
+    "definition": "너무 어이없어서 말이 안 나오는 상황.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 소식 듣고 말잇못했어."
+    ],
+    "embedding_text": "말잇못: 너무 어이없어서 말이 안 나오는 상황.",
+    "source": "gpt4o_generated",
+    "id": "meme_0138"
+  },
+  {
+    "primary_keyword": "쌉소리",
+    "related_keywords": [
+      "헛소리",
+      "헛된말"
+    ],
+    "definition": "말도 안 되는 이야기나 주장.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그건 그냥 쌉소리야."
+    ],
+    "embedding_text": "쌉소리: 말도 안 되는 이야기나 주장.",
+    "source": "gpt4o_generated",
+    "id": "meme_0139"
+  },
+  {
+    "primary_keyword": "심멎",
+    "related_keywords": [
+      "심장멈춤",
+      "충격받다"
+    ],
+    "definition": "너무 놀라서 심장이 멈출 것 같은 상황.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 소식 듣고 심멎할 뻔했어."
+    ],
+    "embedding_text": "심멎: 너무 놀라서 심장이 멈출 것 같은 상황.",
+    "source": "gpt4o_generated",
+    "id": "meme_0140"
+  },
+  {
+    "primary_keyword": "환장하다",
+    "related_keywords": [
+      "미치다",
+      "열받다"
+    ],
+    "definition": "매우 짜증나거나 황당할 때 쓰는 표현.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 사람 때문에 정말 환장하겠어."
+    ],
+    "embedding_text": "환장하다: 매우 짜증나거나 황당할 때 쓰는 표현.",
+    "source": "gpt4o_generated",
+    "id": "meme_0141"
+  },
+  {
+    "primary_keyword": "정신줄놓다",
+    "related_keywords": [
+      "혼란",
+      "멘붕"
+    ],
+    "definition": "정신이 아주 혼란스러운 상태.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "너무 바빠서 정신줄 놓았어."
+    ],
+    "embedding_text": "정신줄놓다: 정신이 아주 혼란스러운 상태.",
+    "source": "gpt4o_generated",
+    "id": "meme_0142"
+  },
+  {
+    "primary_keyword": "화딱지나다",
+    "related_keywords": [
+      "화나다",
+      "짜증나다"
+    ],
+    "definition": "매우 짜증나고 화가 나는 상태.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 사람 때문에 화딱지 나."
+    ],
+    "embedding_text": "화딱지나다: 매우 짜증나고 화가 나는 상태.",
+    "source": "gpt4o_generated",
+    "id": "meme_0143"
+  },
+  {
+    "primary_keyword": "지리다",
+    "related_keywords": [
+      "놀라다",
+      "경악"
+    ],
+    "definition": "너무 놀라서 기절할 것 같은 상황.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "그 장면 진짜 지렸어."
+    ],
+    "embedding_text": "지리다: 너무 놀라서 기절할 것 같은 상황.",
+    "source": "gpt4o_generated",
+    "id": "meme_0144"
+  },
+  {
+    "primary_keyword": "팝콘각",
+    "related_keywords": [
+      "재미",
+      "흥미진진"
+    ],
+    "definition": "앞으로 벌어질 일이 매우 기대되는 상황.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이제 싸울 것 같다, 팝콘각이네."
+    ],
+    "embedding_text": "팝콘각: 앞으로 벌어질 일이 매우 기대되는 상황.",
+    "source": "gpt4o_generated",
+    "id": "meme_0145"
+  },
+  {
+    "primary_keyword": "중꺾마",
+    "related_keywords": [
+      "중요한 건 꺾이지 않는 마음",
+      "꺾이지 않는 마음"
+    ],
+    "definition": "어떤 상황에서도 포기하지 않고 긍정적인 태도를 유지하는 것",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "이번 시험에서 떨어졌지만, 중꺾마로 다시 도전할 거야!"
+    ],
+    "embedding_text": "중꺾마: 어떤 상황에서도 포기하지 않고 긍정적인 태도를 유지하는 것",
+    "source": "gpt4o_generated",
+    "id": "meme_0146"
+  },
+  {
+    "primary_keyword": "멘탈 갑",
+    "related_keywords": [
+      "멘탈 강철",
+      "정신력 대마왕"
+    ],
+    "definition": "어려운 상황에서도 흔들리지 않는 강한 정신력을 가진 사람",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "그 친구는 정말 멘탈 갑이야. 항상 침착하고 긍정적이야."
+    ],
+    "embedding_text": "멘탈 갑: 어려운 상황에서도 흔들리지 않는 강한 정신력을 가진 사람",
+    "source": "gpt4o_generated",
+    "id": "meme_0147"
+  },
+  {
+    "primary_keyword": "꺾이지 않는 꽃",
+    "related_keywords": [
+      "꺾이지 않는 나무",
+      "꺾이지 않는 가지"
+    ],
+    "definition": "어려움을 이겨내고 계속 피어나는 사람이나 상황",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "그녀는 정말 꺾이지 않는 꽃이야. 모든 어려움을 이겨냈어."
+    ],
+    "embedding_text": "꺾이지 않는 꽃: 어려움을 이겨내고 계속 피어나는 사람이나 상황",
+    "source": "gpt4o_generated",
+    "id": "meme_0148"
+  },
+  {
+    "primary_keyword": "긍정의 아이콘",
+    "related_keywords": [
+      "희망의 아이콘",
+      "마음의 태양"
+    ],
+    "definition": "항상 긍정적이고 희망적인 모습을 보여주는 사람",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "그 친구는 진짜 긍정의 아이콘이야. 주위 사람들까지 밝게 만들어."
+    ],
+    "embedding_text": "긍정의 아이콘: 항상 긍정적이고 희망적인 모습을 보여주는 사람",
+    "source": "gpt4o_generated",
+    "id": "meme_0149"
+  },
+  {
+    "primary_keyword": "회복탄력성",
+    "related_keywords": [
+      "정신적 회복력",
+      "탄력 있는 마음"
+    ],
+    "definition": "어려움에서 빠르게 회복할 수 있는 능력",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "그녀의 회복탄력성 덕분에 쉽게 다시 일어설 수 있었다."
+    ],
+    "embedding_text": "회복탄력성: 어려움에서 빠르게 회복할 수 있는 능력",
+    "source": "gpt4o_generated",
+    "id": "meme_0150"
+  },
+  {
+    "primary_keyword": "긍정적 사고",
+    "related_keywords": [
+      "낙관적 태도",
+      "발전적 사고"
+    ],
+    "definition": "상황의 긍정적인 면을 보려는 사고 방식",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "긍정적 사고가 힘들 때 힘이 되어줄 거야."
+    ],
+    "embedding_text": "긍정적 사고: 상황의 긍정적인 면을 보려는 사고 방식",
+    "source": "gpt4o_generated",
+    "id": "meme_0151"
+  },
+  {
+    "primary_keyword": "빡침도 잠시",
+    "related_keywords": [
+      "화도 잠깐",
+      "분노도 찰나"
+    ],
+    "definition": "화나거나 실망해도 금방 회복하는 태도",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "빡침도 잠시, 다시 시작하면 돼."
+    ],
+    "embedding_text": "빡침도 잠시: 화나거나 실망해도 금방 회복하는 태도",
+    "source": "gpt4o_generated",
+    "id": "meme_0152"
+  },
+  {
+    "primary_keyword": "다시 일어서는 힘",
+    "related_keywords": [
+      "회복의 힘",
+      "재기의 힘"
+    ],
+    "definition": "실패 후에 다시 일어설 수 있는 능력",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "다시 일어서는 힘이 중요해. 실패는 끝이 아니야."
+    ],
+    "embedding_text": "다시 일어서는 힘: 실패 후에 다시 일어설 수 있는 능력",
+    "source": "gpt4o_generated",
+    "id": "meme_0153"
+  },
+  {
+    "primary_keyword": "포기란 없다",
+    "related_keywords": [
+      "포기 금지",
+      "끝까지 간다"
+    ],
+    "definition": "어떤 어려움에도 포기하지 않겠다는 의지",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "포기란 없다. 끝까지 해보자."
+    ],
+    "embedding_text": "포기란 없다: 어떤 어려움에도 포기하지 않겠다는 의지",
+    "source": "gpt4o_generated",
+    "id": "meme_0154"
+  },
+  {
+    "primary_keyword": "희망의 끈",
+    "related_keywords": [
+      "희망의 불씨",
+      "믿음의 줄"
+    ],
+    "definition": "어려운 상황에서도 희망을 잃지 않는 마음",
+    "tags": [
+      "POSITIVE"
+    ],
+    "examples": [
+      "그는 희망의 끈을 놓지 않고 계속 도전했다."
+    ],
+    "embedding_text": "희망의 끈: 어려운 상황에서도 희망을 잃지 않는 마음",
+    "source": "gpt4o_generated",
+    "id": "meme_0155"
+  },
+  {
+    "primary_keyword": "월요병",
+    "related_keywords": [
+      "월요일",
+      "출근"
+    ],
+    "definition": "주말을 보내고 월요일에 직장에 나가는 것을 힘들어하는 현상.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "월요병 때문에 출근하기 싫다."
+    ],
+    "embedding_text": "월요병: 주말을 보내고 월요일에 직장에 나가는 것을 힘들어하는 현상.",
+    "source": "gpt4o_generated",
+    "id": "meme_0156"
+  },
+  {
+    "primary_keyword": "야근",
+    "related_keywords": [
+      "밤샘",
+      "추가근무"
+    ],
+    "definition": "정상 근무 시간 외에 추가로 일을 하는 것.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "야근이 일상이라 집에 언제 가는지 모르겠다."
+    ],
+    "embedding_text": "야근: 정상 근무 시간 외에 추가로 일을 하는 것.",
+    "source": "gpt4o_generated",
+    "id": "meme_0157"
+  },
+  {
+    "primary_keyword": "퇴사",
+    "related_keywords": [
+      "사직",
+      "이직"
+    ],
+    "definition": "직장을 그만두는 행위.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "드디어 퇴사하고 자유를 찾았다."
+    ],
+    "embedding_text": "퇴사: 직장을 그만두는 행위.",
+    "source": "gpt4o_generated",
+    "id": "meme_0158"
+  },
+  {
+    "primary_keyword": "칼퇴",
+    "related_keywords": [
+      "정시 퇴근",
+      "시간 엄수"
+    ],
+    "definition": "정시 퇴근을 하는 것.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "오늘은 꼭 칼퇴를 할 거야."
+    ],
+    "embedding_text": "칼퇴: 정시 퇴근을 하는 것.",
+    "source": "gpt4o_generated",
+    "id": "meme_0159"
+  },
+  {
+    "primary_keyword": "주말",
+    "related_keywords": [
+      "휴식",
+      "리프레시"
+    ],
+    "definition": "주중의 일을 쉬고 휴식을 취하는 날.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "주말만 해도 행복하다."
+    ],
+    "embedding_text": "주말: 주중의 일을 쉬고 휴식을 취하는 날.",
+    "source": "gpt4o_generated",
+    "id": "meme_0160"
+  },
+  {
+    "primary_keyword": "연차",
+    "related_keywords": [
+      "유급휴가",
+      "휴가"
+    ],
+    "definition": "직장에서 개별적으로 부여하는 유급 휴가.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "연차를 써서 여행을 다녀왔다."
+    ],
+    "embedding_text": "연차: 직장에서 개별적으로 부여하는 유급 휴가.",
+    "source": "gpt4o_generated",
+    "id": "meme_0161"
+  },
+  {
+    "primary_keyword": "회식",
+    "related_keywords": [
+      "회식자리",
+      "술자리"
+    ],
+    "definition": "회사 직원들이 함께 모여 식사나 술을 마시는 모임.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "회식 때문에 집에 늦게 들어간다."
+    ],
+    "embedding_text": "회식: 회사 직원들이 함께 모여 식사나 술을 마시는 모임.",
+    "source": "gpt4o_generated",
+    "id": "meme_0162"
+  },
+  {
+    "primary_keyword": "프로불편러",
+    "related_keywords": [
+      "꼰대",
+      "불평"
+    ],
+    "definition": "항상 불편함을 느끼고 불평하는 사람.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "프로불편러 때문에 회사 생활이 힘들다."
+    ],
+    "embedding_text": "프로불편러: 항상 불편함을 느끼고 불평하는 사람.",
+    "source": "gpt4o_generated",
+    "id": "meme_0163"
+  },
+  {
+    "primary_keyword": "사수",
+    "related_keywords": [
+      "멘토",
+      "지도자"
+    ],
+    "definition": "직장에서 일을 지도하고 가르쳐주는 선배.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "사수 덕분에 일을 빨리 배웠다."
+    ],
+    "embedding_text": "사수: 직장에서 일을 지도하고 가르쳐주는 선배.",
+    "source": "gpt4o_generated",
+    "id": "meme_0164"
+  },
+  {
+    "primary_keyword": "번아웃",
+    "related_keywords": [
+      "탈진",
+      "과로"
+    ],
+    "definition": "지나친 업무로 인해 정신적, 육체적으로 소진된 상태.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "번아웃이 와서 휴가를 내야겠다."
+    ],
+    "embedding_text": "번아웃: 지나친 업무로 인해 정신적, 육체적으로 소진된 상태.",
+    "source": "gpt4o_generated",
+    "id": "meme_0165"
+  },
+  {
+    "primary_keyword": "사회생활",
+    "related_keywords": [
+      "인간관계",
+      "직장생활"
+    ],
+    "definition": "직장 등에서 사람들과 어울리며 관계를 맺는 것.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "사회생활이 참 어렵다."
+    ],
+    "embedding_text": "사회생활: 직장 등에서 사람들과 어울리며 관계를 맺는 것.",
+    "source": "gpt4o_generated",
+    "id": "meme_0166"
+  },
+  {
+    "primary_keyword": "회사업무",
+    "related_keywords": [
+      "업무",
+      "일"
+    ],
+    "definition": "회사에서 맡은 일을 수행하는 것.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "회사업무가 너무 많아서 야근 중."
+    ],
+    "embedding_text": "회사업무: 회사에서 맡은 일을 수행하는 것.",
+    "source": "gpt4o_generated",
+    "id": "meme_0167"
+  },
+  {
+    "primary_keyword": "직장상사",
+    "related_keywords": [
+      "보스",
+      "윗사람"
+    ],
+    "definition": "직장에서 자신보다 높은 직급의 사람.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "직장상사 때문에 일이 힘들다."
+    ],
+    "embedding_text": "직장상사: 직장에서 자신보다 높은 직급의 사람.",
+    "source": "gpt4o_generated",
+    "id": "meme_0168"
+  },
+  {
+    "primary_keyword": "팀워크",
+    "related_keywords": [
+      "협력",
+      "협동"
+    ],
+    "definition": "팀이 협력하여 목표를 달성하는 것.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "팀워크가 좋아서 프로젝트가 성공했다."
+    ],
+    "embedding_text": "팀워크: 팀이 협력하여 목표를 달성하는 것.",
+    "source": "gpt4o_generated",
+    "id": "meme_0169"
+  },
+  {
+    "primary_keyword": "커피",
+    "related_keywords": [
+      "카페인",
+      "휴식"
+    ],
+    "definition": "직장인들이 피로를 풀기 위해 마시는 음료.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "커피 한 잔으로 월요병을 이겨낸다."
+    ],
+    "embedding_text": "커피: 직장인들이 피로를 풀기 위해 마시는 음료.",
+    "source": "gpt4o_generated",
+    "id": "meme_0170"
+  },
+  {
+    "primary_keyword": "이직",
+    "related_keywords": [
+      "전직",
+      "커리어"
+    ],
+    "definition": "다른 직장으로 옮기는 것.",
+    "tags": [
+      "NEUTRAL"
+    ],
+    "examples": [
+      "이직 준비 중이다."
+    ],
+    "embedding_text": "이직: 다른 직장으로 옮기는 것.",
+    "source": "gpt4o_generated",
+    "id": "meme_0171"
+  }
+]
