@@ -86,3 +86,6 @@ test_rag.py
 
 # uploaded documents
 data/uploads/docs/
+
+#model and vectorDB
+src/talaria/assets/

@@ -9894,5 +9894,15 @@
     ],
     "embedding_text": "이직: 다른 직장으로 옮기는 것.",
     "source": "gpt4o_generated"
+  },
+  {
+    "id": "meme_521",
+    "primary_keyword": "럭키비키",
+    "related_keywords": ["원영적 사고", "럭키비키잖아", "오히려 좋아"],
+    "definition": "걸그룹 아이브의 장원영이 긍정적인 사고방식을 표현하며 사용한 말로, 부정적인 상황도 행운으로 바꾸어 생각하는 태도를 의미함. (Lucky + Vicky)",
+    "tags": ["ADMIRATION", "NEUTRAL"],
+    "examples": ["빵이 다 팔렸네? 갓 구운 빵을 먹을 수 있으니까 완전 럭키비키잖아!"],
+    "embedding_text": "럭키비키 (원영적 사고): 부정적인 상황도 긍정적인 행운으로 바꾸어 생각하는 태도. 장원영 유행어.",
+    "source": "manual_add"
   }
 ]

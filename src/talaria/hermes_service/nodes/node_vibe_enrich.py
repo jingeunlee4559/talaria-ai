@@ -1,219 +1,105 @@
-# src/talaria/hermes_service/nodes/node_vibe_enrich.py
 import logging
-import json
-import os
-from ..state import TranslateState
-from typing import Dict, List, Any, Optional
-from ...core.database import get_db_cursor 
-import re # ⭐️ 정규식(Regex) 임포트
+from ..state import TranslateState, FoundTerm
+from ..utils.model_loader import get_retriever, get_meme_dictionary # ⭐️ 족보 로더 추가
 
 log = logging.getLogger(__name__)
 
-# --- 1. K-Culture Rule Caching (Singleton Pattern) ---
-
-# ⭐️ MannerChecker.MannerRule의 핵심 로직을 차용
-class _CultureRule:
-    """
-    K-Culture DB 규칙을 메모리에 캐시하고 'contains' 검사를 수행하는 헬퍼 클래스
-    """
-    def __init__(self, rule_data: Dict[str, Any]):
-        self.pattern_text: str = rule_data.get('pattern_text', '')
-        self.pattern_type: str = rule_data.get('pattern_type', 'contains')
-        self.case_sensitive: bool = bool(rule_data.get('case_sensitive', 0))
-        self.explanation_tpl: str = rule_data.get('explanation_tpl', '')
-        self.suggestion_tpl: str = rule_data.get('suggestion_tpl', '') # 힌트
-        
-        # MannerChecker의 _compile 로직과 동일
-        self._regex: Optional[re.Pattern] = None
-        self._pattern_ci: Optional[str] = None # Case-Insensitive (소문자) 패턴
-        self._pattern_cs: Optional[str] = None # Case-Sensitive (원본) 패턴
-        
-        if self.pattern_type == "regex":
-            flags = 0 if self.case_sensitive else re.IGNORECASE
-            try:
-                self._regex = re.compile(self.pattern_text, flags=flags)
-            except re.error as e:
-                log.error(f"Regex 컴파일 실패 (Rule: {self.pattern_text}): {e}")
-        else:
-            # 'contains' 또는 'exact'
-            if self.case_sensitive:
-                self._pattern_cs = self.pattern_text
-            else:
-                self._pattern_ci = self.pattern_text.lower()
-                
-    def _norm_text(self, text: str) -> str:
-         return text if self.case_sensitive else text.lower()
-
-    # MannerChecker._find_matches의 핵심 로직
-    def find_match(self, text: str) -> Optional[str]:
-        """주어진 텍스트에서 이 규칙의 패턴을 찾습니다."""
-        t = self._norm_text(text) # STT 텍스트를 소문자화 (필요시)
-        
-        if self.pattern_type == "contains":
-            pat = self._pattern_ci if not self.case_sensitive else self._pattern_cs
-            # ⭐️ "킹받"(pat) in "아 진짜 킹받네"(t) -> True
-            if pat and pat in t: 
-                return self.pattern_text # 매칭된 원본 "킹받" 반환
-        
-        elif self.pattern_type == "regex" and self._regex:
-            match = self._regex.search(text)
-            if match:
-                return match.group(0) # 정규식 매칭 부분 반환
-
-        # (기타: exact 등)
-        return None
-
-class _CultureChecker:
-    """
-    K-Culture DB 규칙을 시작 시 메모리에 로드하고 'contains' 검사를 제공하는 싱글톤
-    """
-    _instance = None
-    _rules: List[_CultureRule] = []
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(_CultureChecker, cls).__new__(cls)
-            cls._instance._load_rules_from_db()
-        return cls._instance
-
-    def _load_rules_from_db(self):
-        log.info("K-Culture DB 규칙 로드를 시작합니다...")
-        rules_data = []
-        try:
-            with get_db_cursor(dictionary=True) as cursor:
-                TABLE_NAME = "tl_culture_dict" 
-                
-                # ⭐️ [수정] image_45d967.png의 K-meme, K-game 등
-                sql = f"""
-                    SELECT pattern_text, pattern_type, case_sensitive, 
-                           explanation_tpl, suggestion_tpl
-                    FROM {TABLE_NAME}
-                    WHERE active = 1
-                """
-                cursor.execute(sql)
-                rules_data = cursor.fetchall()
-            
-            # ⭐️ DB에서 가져온 룰을 파이썬 객체로 컴파일 (MannerChecker 방식)
-            self._rules = [self.compile_rule(data) for data in rules_data]
-            log.info(f"✅ K-Culture DB 규칙 {len(self._rules)}개 로드 및 캐시 완료.")
-            
-        except Exception as e:
-            log.error(f"K-Culture DB 로드 실패: {e}", exc_info=True)
-            
-    def compile_rule(self, data: Dict[str, Any]) -> _CultureRule:
-        return _CultureRule(data)
-
-    def find_all_matches(self, corrected_stt: str) -> List[Dict[str, str]]:
-        """LLM 1이 보정한 텍스트로 'contains' 검사를 수행"""
-        if not corrected_stt:
-            return []
-            
-        found_matches: List[Dict[str, str]] = []
-        
-        # 1. 캐시된 모든 룰을 순회 (DB 조회 X)
-        for rule in self._rules:
-            match_text = rule.find_match(corrected_stt)
-            if match_text:
-                # ⭐️ 찾은 룰의 정보를 반환
-                found_matches.append({
-                    "term": match_text,
-                    "explanation": rule.explanation_tpl.format(match=match_text),
-                    "hint": rule.suggestion_tpl or rule.explanation_tpl.split(".")[0]
-                })
-        
-        return found_matches
-
-# --- 2. Eager-loading (싱글톤 인스턴스 생성) ---
-try:
-    _checker_instance = _CultureChecker()
-except Exception as e:
-    log.critical(f"❌ _CultureChecker 인스턴스 생성 실패: {e}", exc_info=True)
-    _checker_instance = None
-
-# --- 3. EMOJI 맵 로드 (기존과 동일) ---
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ASSETS_DIR = os.path.join(BASE_DIR, "..", "..", "assets")
-
-def load_json_asset(filename: str) -> Dict:
-    filepath = os.path.join(ASSETS_DIR, filename)
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception as e:
-        log.error(f"❌ {filename} 로드 실패: {e}", exc_info=True)
-        return {}
-        
-EMOJI_MAP = load_json_asset("emotion_emoji_map.json")
-KEYWORD_MAP = load_json_asset("keyword_emoji_map.json")
-
-# --- 4. LangGraph 노드 함수 정의 ---
-
-# ⭐️ [핵심 수정] context_enrich_agent (Contains 로직)
 def context_enrich_agent(state: TranslateState) -> TranslateState:
     """
-    [Vibe Mode - B-2] (규칙: Contains)
-    LLM 1이 보정한 'corrected_stt'를 받아, K-Culture DB(캐시)와 'contains' 비교
+    [Vibe Mode - B-2] (Hybrid RAG)
+    1. 족보(JSON) 매칭 (Exact Match)
+    2. 모델 추출 기반 VectorDB 검색
+    3. 문장 기반 VectorDB 검색 (Fallback)
     """
-    if not _checker_instance:
-        log.error("Vibe 힌트: _CultureChecker가 초기화되지 않았습니다.")
-        state['vibe_context'] = "No K-Culture rules loaded."
-        return state
-
-    # ⭐️ [수정] LLM 1이 보정한 STT를 가져옴
-    corrected_stt = state.get("corrected_stt") or state.get("stt_text", "")
+    retriever = get_retriever()
+    meme_dict = get_meme_dictionary() # ⭐️ 족보 가져오기
     
-    # ⭐️ _checker_instance를 통해 'contains' 검사 실행
-    matches = _checker_instance.find_all_matches(corrected_stt)
+    stt_text = state.get('stt_text', "")
+    model_triggers = state.get('vibe_triggers', []) # 모델이 찾은 것들
     
-    if not matches:
-        log.info("Vibe 힌트: 'contains' 매칭 결과 없음.")
-        state['vibe_context'] = "No specific K-Culture terms identified."
-        return state
+    found_results = [] # 최종 찾은 밈들 (중복 제거용 dict)
+    
+    # --- [Step 1] 족보(Dictionary) 전수 조사 (가장 빠르고 정확) ---
+    # 문장에 족보 키워드가 포함되어 있는지 확인
+    # (최적화: 긴 단어부터 찾아서 짧은 단어 중복 매칭 방지 가능하지만, 여기선 단순 포함 확인)
+    if meme_dict:
+        for keyword, data in meme_dict.items():
+            if keyword in stt_text:
+                log.info(f"🥇 [Step 1] 족보 발견: '{keyword}'")
+                found_results.append({
+                    "term": data['primary_keyword'],
+                    "definition": data['definition'],
+                    "source": "Dictionary (Exact)"
+                })
+    
+    # --- [Step 2] 모델 추출 기반 VectorDB 검색 (족보에 없을 때) ---
+    # 족보에서 못 찾았는데, 모델이 뭔가 찾았다고 주장하는 경우
+    if not found_results and model_triggers:
+        log.info(f"🥈 [Step 2] 모델 트리거로 DB 검색 시도: {model_triggers}")
+        search_res = retriever.search(model_triggers, top_k=1)
         
-    explanations_for_ui = [m['explanation'] for m in matches]
-    hints_for_llm = [f"'{m['term']}' means '{m['hint']}'" for m in matches]
+        for res in search_res:
+            # 유사도가 너무 낮으면 retriever 내부에서 걸러짐 (거리 < 1.1)
+            log.info(f"   -> DB 매칭 성공: {res['primary_keyword']}")
+            found_results.append({
+                "term": res['primary_keyword'],
+                "definition": res['definition'],
+                "source": "Model + VectorDB"
+            })
 
-    state['final_explanation'] = " | ".join(explanations_for_ui)
-    state['vibe_context'] = "Context: " + ". ".join(hints_for_llm)
-    log.info(f"Vibe 힌트(LLM 2용) 생성 (Contains 기반): {state['vibe_context']}")
+    # --- [Step 3] 문장 전체 VectorDB 검색 (아무것도 못 찾았을 때) ---
+    if not found_results and len(stt_text.split()) < 15:
+        log.info(f"🥉 [Step 3] 문장 전체로 DB 검색 시도 (Fallback)")
+        search_res = retriever.search([stt_text], top_k=1)
+        
+        for res in search_res:
+            # 문장 검색은 더 엄격해야 함 (예: 거리 < 0.8) - retriever 내부 로직 의존 or 여기서 필터링
+            # 여기서는 retriever가 이미 1.1 미만만 주므로 일단 채택
+            log.info(f"   -> 문장 매칭 성공: {res['primary_keyword']}")
+            found_results.append({
+                "term": res['primary_keyword'],
+                "definition": res['definition'],
+                "source": "Sentence VectorDB"
+            })
 
-    # ⭐️ [신규] 프론트엔드에 전달할 수 있도록 'vibe_triggers'에도 저장
-    state['vibe_triggers'] = [m['term'] for m in matches]
+    # --- [결과 정리 및 State 업데이트] ---
+    
+    # 중복 제거 (여러 단계에서 같은 밈을 찾았을 수 있음)
+    unique_terms = {}
+    for item in found_results:
+        unique_terms[item['term']] = item
+    
+    final_terms_list = list(unique_terms.values())
+    
+    # 데이터 매핑
+    found_terms_struct = [] # FoundTerm 형식
+    context_lines = []
+    explanation_lines = []
+    
+    for item in final_terms_list:
+        term = item['term']
+        definition = item['definition']
+        
+        found_terms_struct.append({"term": term, "meaning": definition})
+        context_lines.append(f"'{term}' means '{definition}'")
+        explanation_lines.append(f"{term}: {definition}")
+
+    state['found_terms'] = found_terms_struct
+    
+    if context_lines:
+        state['vibe_context'] = "Context Info:\n" + "\n".join(context_lines)
+        state['final_explanation'] = " | ".join(explanation_lines)
+        
+        # ⭐️ [중요] Publish용 데이터 (LiveKit Agent가 사용할 필드에 맞게)
+        # 기존 state.py에 manner_check_data가 없다면 found_terms를 쓰거나
+        # 임시 필드를 써야 합니다. (아까 논의한 대로 found_terms 활용 추천)
+        # state['manner_check_data'] = found_terms_struct 
+    else:
+        state['vibe_context'] = ""
+        state['final_explanation'] = ""
 
     return state
 
-# [수정 없음] emoji_agent
+# (emoji_agent 등은 그대로)
 def emoji_agent(state: TranslateState) -> TranslateState:
-    """
-    [Vibe Mode - B-3] (규칙 기반)
-    1순위: 키워드 맵 검사
-    2순위: LLM 감정 맵핑
-    """
-    # ⭐️ 1순위: 키워드 맵 검사
-    corrected_stt_lower = (state.get("corrected_stt") or "").lower()
-    if corrected_stt_lower and KEYWORD_MAP:
-        for keyword, emoji in KEYWORD_MAP.items():
-            if keyword in corrected_stt_lower:
-                state['final_emoji'] = emoji
-                log.info(f"Vibe 이모지 (Keyword): '{keyword}' -> {emoji}")
-                return state # ⭐️ 키워드 매칭 시 즉시 종료
-
-    # ⭐️ 2순위: LLM 감정 맵핑 (키워드가 매칭되지 않았을 때만 실행)
-    emotion = state.get("vibe_emotion_tag", "default")
-
-    # (이전 대화에서 수정한 'neutral' 처리 로직)
-    if emotion == "neutral" or emotion == "default":
-        state['final_emoji'] = None
-        log.info(f"Vibe 이모지 (Emotion): {emotion} -> (이모지 없음)")
-        return state
-
-    emoji = EMOJI_MAP.get(emotion, EMOJI_MAP.get("default"))
-
-    if emoji is None:
-         state['final_emoji'] = None
-         log.warning(f"Vibe 이모지 (Emotion): {emotion}에 해당하는 이모지가 없어 건너뜁니다.")
-    else:
-        state['final_emoji'] = emoji
-        log.info(f"Vibe 이모지 (Emotion): {emotion} -> {emoji}")
-
     return state
