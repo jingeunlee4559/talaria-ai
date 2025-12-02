@@ -303,7 +303,7 @@ class ParticipantSTTHandler:
                             "explanation": final_explanation, # (기본: 한국어)
                             "translations": explanation_translations, # 🟢 [추가됨] 예: {'en-US': 'Soup is...', 'zh-CN': '...'}
                             
-                            "agent_code": "K-meme",
+                            "agent_code": "k-meme",
                             "severity": 1,
                             "match": match_text,
                             "suggestion": "",

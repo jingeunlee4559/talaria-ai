@@ -158,9 +158,24 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
 
     # --- 5. livekit_agent로 결과 반환 ---
     final_translations = payload.simple_translations.copy()
-    
-    # [수정] LLM이 보정한 'target_lang'의 값만 덮어씁니다.
     final_translations[target_lang] = corrected_answer 
+
+    # ⭐️ [핵심 수정] 클라이언트 반환용 Triggers 교체 로직
+    # 모델이 추출한 불완전한 토큰(final_state['vibe_triggers']) 대신
+    # DB 검증을 통과한 정확한 단어(final_state['found_terms'])를 사용합니다.
+    
+    clean_triggers = []
+    found_terms_list = final_state.get("found_terms", [])
+    
+    if found_terms_list:
+        # DB 매칭된 결과가 있다면, 그 단어들(term)만 깔끔하게 리스트로 추출
+        clean_triggers = [item['term'] for item in found_terms_list]
+        log.info(f"📢 Alert 전송용 Trigger 교체: {final_state.get('vibe_triggers')} -> {clean_triggers}")
+    else:
+        # DB 매칭 결과가 없다면?
+        # 앞선 node_vibe_enrich의 '엄격한 필터링'에 의해 걸러진 것이므로
+        # Alert를 띄우지 않도록 빈 리스트를 반환합니다. (False Positive 방지)
+        clean_triggers = []
 
     return UtteranceProcessOut(
         stt_text=payload.stt_text,
@@ -169,6 +184,6 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
         final_explanation=final_state.get("final_explanation"),
         final_emoji=final_state.get("final_emoji"),
         corrected_stt=final_state.get("corrected_stt"),
-        vibe_triggers=final_state.get("vibe_triggers"),
+        vibe_triggers=clean_triggers, 
         ai_tags=ai_tags
     )

@@ -1,7 +1,7 @@
 # src/talaria/hermes_service/utils/model_loader.py
 
 import os
-import json # json 임포트 추가
+import json 
 import torch
 import chromadb
 from transformers import AutoTokenizer, ElectraModel, AutoConfig, ElectraPreTrainedModel
@@ -12,10 +12,10 @@ import numpy as np
 # ==========================================
 # 1. 설정 (경로)
 # ==========================================
+# (기존과 동일)
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.."))
 MODEL_PATH = os.path.join(BASE_DIR, "src/talaria/assets/model")
 DB_PATH = os.path.join(BASE_DIR, "src/talaria/assets/vectordb")
-# ⭐️ [추가] 족보 데이터 경로
 DATA_FILE = os.path.join(BASE_DIR, "model/data_collecting/meme_dictionary_complete.json")
 
 COLLECTION_NAME = "meme_dictionary"
@@ -24,6 +24,7 @@ EMBEDDING_MODEL = "jhgan/ko-sbert-multitask"
 # ==========================================
 # 2. 모델 클래스 (학습 때와 동일 구조)
 # ==========================================
+# (기존과 동일)
 class MemeMultiTaskModel(ElectraPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
@@ -46,6 +47,7 @@ class MemeMultiTaskModel(ElectraPreTrainedModel):
 # ==========================================
 # 3. 추론기 (Scanner)
 # ==========================================
+# (기존과 동일)
 class MemeScanner:
     def __init__(self):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -53,7 +55,6 @@ class MemeScanner:
         
         if not os.path.exists(MODEL_PATH):
              print(f"❌ [Error] 모델 경로 없음: {MODEL_PATH}")
-             # 에러를 띄우지 않고 넘어가되, 기능이 작동 안 하도록 처리 (선택 사항)
              self.model = None
              return
 
@@ -151,22 +152,39 @@ class MemeRetriever:
             self.collection = None
 
     def search(self, queries, top_k=1):
+        """
+        queries: List[str] 형태의 검색어 리스트
+        반환값: List[dict] (메타데이터 + score 포함)
+        """
         if not self.collection or not queries: return []
         
         try:
+            # ChromaDB 쿼리 실행
             results = self.collection.query(query_texts=queries, n_results=top_k)
             valid_results = []
-            # 거리 기준 (1.0 미만이면 유사)
-            for i, dist in enumerate(results['distances'][0]):
-                if dist < 1.1: # 조금 여유 있게
-                    valid_results.append(results['metadatas'][0][i])
+            
+            # ⭐️ [수정] 여러 개의 쿼리(queries)가 들어왔을 때, 각각의 결과를 모두 순회하도록 변경
+            # results['distances']는 [[dist1_q1, ...], [dist1_q2, ...]] 형태입니다.
+            
+            for q_idx, dists in enumerate(results['distances']):
+                metas = results['metadatas'][q_idx]
+                
+                for i, dist in enumerate(dists):
+                    # 거리 기준 (1.1 미만이면 후보군으로 포함)
+                    if dist < 1.1:
+                        item = metas[i]
+                        item['score'] = dist  # ⭐️ [핵심] 점수(distance) 주입!
+                        valid_results.append(item)
+                        
             return valid_results
-        except:
+        except Exception as e:
+            print(f"❌ [Error] 검색 중 오류: {e}")
             return []
 
 # ==========================================
-# 5. 싱글톤 로더 (수정됨)
+# 5. 싱글톤 로더
 # ==========================================
+# (기존과 동일)
 class GlobalModelLoader:
     _instance = None
     
@@ -175,7 +193,7 @@ class GlobalModelLoader:
             cls._instance = super(GlobalModelLoader, cls).__new__(cls)
             cls._instance.scanner = None
             cls._instance.retriever = None
-            cls._instance.meme_dict = {} # ⭐️ 족보 저장소
+            cls._instance.meme_dict = {} 
             cls._instance.initialized = False
         return cls._instance
     
@@ -186,17 +204,13 @@ class GlobalModelLoader:
         self.scanner = MemeScanner()
         self.retriever = MemeRetriever()
         
-        # ⭐️ [추가] JSON 족보 로딩 (Keyword Matching용)
         try:
             if os.path.exists(DATA_FILE):
                 with open(DATA_FILE, 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                    # 검색 속도를 위해 {키워드: 데이터} 형태로 변환
                     for item in data:
-                        # 메인 키워드
                         if 'primary_keyword' in item:
                             self.meme_dict[item['primary_keyword']] = item
-                        # 연관 키워드 (유사어)도 다 매핑
                         for rel in item.get('related_keywords', []):
                             self.meme_dict[rel] = item
                 print(f">>> [Loader] 밈 족보 로딩 완료 ({len(self.meme_dict)}개 키워드)")
@@ -217,7 +231,6 @@ def get_retriever():
     if not loader.initialized: loader.initialize()
     return loader.retriever
 
-# ⭐️ [추가] 족보 가져오는 함수
 def get_meme_dictionary():
     if not loader.initialized: loader.initialize()
     return loader.meme_dict

@@ -35,6 +35,10 @@ class TranslateState(TypedDict):
     final_explanation: Optional[str]  # B-2. 규칙 DB가 추가한 설명
     final_emoji: Optional[str]        # B-3. 규칙 DB가 매핑한 이모지
 
+    is_safe: bool                 # 안전 여부 (True/False)
+    safety_reason: Optional[str]  # 필터링 사유 (예: HATE_SPEECH, SLANG)
+    original_text_before_guard: Optional[str] # 필터링 전 원본 (로그용)
+
 
 # --- 회의 요약용 State 정의 ---
 class SummaryState(TypedDict):
