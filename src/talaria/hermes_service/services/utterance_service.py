@@ -10,7 +10,7 @@ import time
 
 log = logging.getLogger(__name__)
 
-def _get_chat_history(meeting_id: int, limit: int = 10) -> List[str]:
+def _get_chat_history(meeting_id: int, limit: int = 5) -> List[str]:
     """DB에서 최근 대화 기록을 가져옵니다."""
     history = []
     try:
@@ -78,14 +78,11 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
     """
     log.info(f"발화 처리 시작 (Mode: {payload.translation_mode}, STT: {payload.stt_text})")
 
+    real_user_locale = payload.user_locale 
+    log.info(f"   -> User Locale: {real_user_locale} (Graph Routing 기준)")
+
     # --- 1. DB에서 Chat History 조회 ---
     chat_history = _get_chat_history(payload.meeting_id)
-
-    # --- 2. Graph State 준비 ---
-    
-    # ⭐️ [핵심 수정] 
-    # 1차 번역본과 대상 언어를 Agent가 보낸 payload에서 직접 가져옵니다.
-    # 더 이상 "en-US"를 하드코딩하거나 추측하지 않습니다.
     
     target_lang = payload.target_lang
     simple_translation = payload.simple_translations.get(target_lang, "") # Vibe 모드이거나 B-모드 FastPath가 아니면 비어있음
@@ -99,7 +96,7 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
         stt_text=payload.stt_text,
         translated_text=simple_translation, 
         
-        stt_lang=payload.lang,
+        stt_lang=real_user_locale,
         target_lang=target_lang,
 
         context=[], 
@@ -141,6 +138,7 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
     ai_tags = {
         "mode": payload.translation_mode,
         "target_lang": target_lang, 
+        "user_locale": real_user_locale,
         "simple_translations": payload.simple_translations,
         "final_answer": corrected_answer, # 번역 결과는 태그에 저장
         "original_stt": payload.stt_text, # 🟢 [추가] 원본 STT는 ai_tags에 백업해둠 (디버깅용)
@@ -160,22 +158,22 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
     final_translations = payload.simple_translations.copy()
     final_translations[target_lang] = corrected_answer 
 
-    # ⭐️ [핵심 수정] 클라이언트 반환용 Triggers 교체 로직
-    # 모델이 추출한 불완전한 토큰(final_state['vibe_triggers']) 대신
-    # DB 검증을 통과한 정확한 단어(final_state['found_terms'])를 사용합니다.
-    
+   
     clean_triggers = []
+    found_details = []
     found_terms_list = final_state.get("found_terms", [])
     
     if found_terms_list:
-        # DB 매칭된 결과가 있다면, 그 단어들(term)만 깔끔하게 리스트로 추출
         clean_triggers = [item['term'] for item in found_terms_list]
-        log.info(f"📢 Alert 전송용 Trigger 교체: {final_state.get('vibe_triggers')} -> {clean_triggers}")
-    else:
-        # DB 매칭 결과가 없다면?
-        # 앞선 node_vibe_enrich의 '엄격한 필터링'에 의해 걸러진 것이므로
-        # Alert를 띄우지 않도록 빈 리스트를 반환합니다. (False Positive 방지)
-        clean_triggers = []
+        # State의 FoundTerm(TypedDict)을 Dict로 변환하여 리스트에 담음
+        found_details = [
+            {
+                "term": item['term'],
+                "meaning": item['meaning'],
+                "category": item.get('category', 'k-meme') # 안전하게 가져오기
+            }
+            for item in found_terms_list
+        ]
 
     return UtteranceProcessOut(
         stt_text=payload.stt_text,
@@ -185,5 +183,6 @@ def process_and_save_utterance(payload: UtteranceProcessIn) -> UtteranceProcessO
         final_emoji=final_state.get("final_emoji"),
         corrected_stt=final_state.get("corrected_stt"),
         vibe_triggers=clean_triggers, 
+        found_terms_details=found_details,
         ai_tags=ai_tags
     )

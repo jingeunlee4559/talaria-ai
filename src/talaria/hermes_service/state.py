@@ -8,6 +8,7 @@ from .schemas.summary import ActionItem
 class FoundTerm(TypedDict):
     term: str       # 찾은 단어 (예: "CR")
     meaning: str    # DB에서 조회한 의미 (예: "변경 요청서")
+    category: str
 
 class TranslateState(TypedDict):
     stt_text : str # 사용자 발화 STT 내용
@@ -24,6 +25,7 @@ class TranslateState(TypedDict):
 
     translation_mode: Literal["business", "vibe"] # 비지니스 / 컬쳐 라우터 제어용
     vibe_emotion_tag: Optional[str]     # B-1. LLM이 분석한 감정
+    vibe_emotion_score: Optional[float]
     vibe_triggers: Optional[List[str]]  # B-1. LLM이 인식한 밈/용어
 
     # 2-LLM Call을 위한 Vibe 모드 전용 필드

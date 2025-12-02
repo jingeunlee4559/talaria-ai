@@ -1,54 +1,101 @@
+# src/talaria/hermes_service/nodes/node_vibe_extract.py
 import logging
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import JsonOutputParser # JSON 파서 사용
+from pydantic import BaseModel, Field
 from ..state import TranslateState
 from ..utils.model_loader import get_scanner
 
 log = logging.getLogger(__name__)
 
-def vibe_extract_agent(state: TranslateState) -> TranslateState:
-    """
-    [Vibe Mode - B-1] (자체 모델: MemeScanner)
-    기존 LLM 기반 추출을 대체하여, 자체 학습 모델(KcELECTRA)로 밈과 뉘앙스를 추출합니다.
-    결과는 기존 State 필드인 'vibe_triggers'와 'vibe_emotion_tag'에 매핑됩니다.
-    """
+# --- Foreign용 LLM 설정 ---
+try:
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
+except:
+    llm = None
+
+# ⭐️ [수정] 외국어 감정 분석 스키마 (점수 포함)
+class EmotionResult(BaseModel):
+    emotion: str = Field(description="One of: ADMIRATION, SHOCK, SARCASM, NEUTRAL")
+    score: int = Field(description="Intensity score (0-100). 0 for Neutral, 100 for Extreme.")
+
+foreign_parser = JsonOutputParser(pydantic_object=EmotionResult)
+
+EMOTION_PROMPT = """Analyze the emotion and intensity.
+Return JSON:
+{{
+    "emotion": "ADMIRATION" | "SHOCK" | "SARCASM" | "NEUTRAL",
+    "score": 0~100 (Integer)
+}}
+
+Text: "{text}"
+"""
+foreign_chain = ChatPromptTemplate.from_template(EMOTION_PROMPT) | llm | foreign_parser
+
+
+# [Node 1] 한국어 전용 (Scanner)
+def vibe_extract_kor_agent(state: TranslateState) -> TranslateState:
+    stt_text = state['stt_text']
     scanner = get_scanner()
     
-    # 모델 로드 실패 시 안전 장치 (기본값 반환)
     if not scanner:
-        log.error("❌ MemeScanner 로드 실패. Vibe 추출 건너뜁니다.")
         state['vibe_triggers'] = []
         state['vibe_emotion_tag'] = "NEUTRAL"
-        # 모델은 STT 보정 기능이 없으므로 원본 유지
-        state['corrected_stt'] = state['stt_text']
+        state['vibe_emotion_score'] = 0.0 # 기본값
+        state['corrected_stt'] = stt_text
         return state
 
-    stt_text = state['stt_text']
-    
-    # 이전 대화 맥락 활용 (chat_history의 마지막 발화)
-    chat_history = state.get("chat_history", [])
-    prev_text = chat_history[-1] if chat_history else ""
-
-    log.info(f"🤖 Vibe 모델 분석 시작: Input='{stt_text}' (Context='{prev_text}')")
-
     try:
-        # 1. 모델 추론 실행 (0.05초 내외 소요)
-        result = scanner.predict(current_text=stt_text, prev_text=prev_text)
+        # Scanner가 score(0.0~1.0)를 반환한다고 가정 (model_loader 확인됨)
+        result = scanner.predict(current_text=stt_text, prev_text=state.get("chat_history", [])[-1] if state.get("chat_history") else "")
         
-        # 2. 결과 파싱
-        meme_words = result.get("meme_words", [])
-        nuance = result.get("nuance", "NEUTRAL")
-        score = result.get("score", 0.0)
-
-        # 3. 기존 State 필드에 매핑 (스키마 변경 없음)
-        state['vibe_triggers'] = meme_words      # List[str] -> 밈 단어 리스트
-        state['vibe_emotion_tag'] = nuance       # str -> 감정 태그
-        state['corrected_stt'] = stt_text        # 원본 유지
-
-        log.info(f"✅ 모델 분석 완료: Triggers={meme_words}, Emotion={nuance} (Conf: {score:.1f}%)")
+        state['vibe_triggers'] = result.get("meme_words", [])
+        state['vibe_emotion_tag'] = result.get("nuance", "NEUTRAL")
+        
+        # ⭐️ [추가] 점수 저장 (이미 0.0~1.0 범위)
+        state['vibe_emotion_score'] = result.get("score", 0.0) 
+        
+        state['corrected_stt'] = stt_text
+        log.info(f"🇰🇷 [Scanner] 감정: {state['vibe_emotion_tag']} (Score: {state['vibe_emotion_score']:.2f})")
         
     except Exception as e:
-        log.error(f"❌ 모델 추론 중 오류: {e}", exc_info=True)
-        state['vibe_triggers'] = []
-        state['vibe_emotion_tag'] = "NEUTRAL"
-        state['corrected_stt'] = stt_text
+        log.error(f"Scanner Error: {e}")
+        state['vibe_emotion_score'] = 0.0
         
+    return state
+
+
+# [Node 2] 외국어 전용 (LLM)
+def vibe_extract_foreign_agent(state: TranslateState) -> TranslateState:
+    stt_text = state['stt_text']
+    
+    try:
+        if llm:
+            res = foreign_chain.invoke({"text": stt_text})
+            emotion = res.get("emotion", "NEUTRAL").upper()
+            score_val = res.get("score", 0)
+            
+            # 유효성 검사
+            if emotion not in ["ADMIRATION", "SHOCK", "SARCASM", "NEUTRAL"]:
+                emotion = "NEUTRAL"
+                
+            state['vibe_emotion_tag'] = emotion
+            # ⭐️ [추가] 0~100 점수를 0.0~1.0으로 정규화
+            state['vibe_emotion_score'] = float(score_val) / 100.0
+            
+        else:
+            state['vibe_emotion_tag'] = "NEUTRAL"
+            state['vibe_emotion_score'] = 0.0
+        
+        state['vibe_triggers'] = []
+        state['corrected_stt'] = stt_text
+        log.info(f"🌍 [Foreign] 감정: {state['vibe_emotion_tag']} (Score: {state['vibe_emotion_score']:.2f})")
+
+    except Exception as e:
+        log.error(f"Foreign Extract Error: {e}")
+        state['vibe_emotion_tag'] = "NEUTRAL"
+        state['vibe_emotion_score'] = 0.0
+        state['corrected_stt'] = stt_text
+
     return state

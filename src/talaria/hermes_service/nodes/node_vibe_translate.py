@@ -1,6 +1,7 @@
 # src/talaria/hermes_service/nodes/node_vibe_translate.py
 import logging
-import random
+import os
+import re
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -8,118 +9,148 @@ from ..state import TranslateState
 
 log = logging.getLogger(__name__)
 
-# (LLM 초기화 - 기존 동일)
 try:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3, max_retries=2) 
-    log.info("✅ Vibe용 LLM(Translate) (gpt-4o-mini) 로드 완료.")
-except Exception as e:
+    llm = ChatOpenAI(
+        model="gpt-4o-mini",
+        temperature=0.3,
+        api_key=os.environ["OPENAI_API_KEY"],  # 권장: 환경변수 명시
+    )
+except:
     llm = None
-    log.critical(f"❌ Vibe용 LLM(Translate) 로드 실패: {e}", exc_info=True)
 
-# (프롬프트 - 기존 동일)
-VIBE_TRANSLATE_PROMPT = """You are a witty, trendy Gen-Z translator.
-Your goal is to translate Korean text into **authentic, vibe-heavy {target_lang} slang**.
-Do NOT sound like a textbook or a robot. Sound like a cool friend texting in a group chat.
-
-### 1. Cultural Context (Meme Hints)
-Use the following meanings to capture the *intent* of the slang:
-{vibe_context}
-
-### 2. Emotional Tone (Match this Vibe)
-The detected vibe is: **{vibe_emotion}**
-Apply the specific style rules below:
-- **SARCASM:** Dry humor, lowercase, '...' pauses. (e.g., "wow. just wow.")
-- **ADMIRATION:** Hype it up! Caps, "GOAT", "Slay". (e.g., "BRO THIS IS IT")
-- **SHOCK:** Disbelief. "?!", "No way". (e.g., "Wait what??")
-- **NEUTRAL:** Chill, casual. (e.g., "just vibing")
-
-### 3. Constraints
-- **Preserve Proper Nouns:** Do NOT translate names.
-- **No Explanations:** Just give the translated text.
-- **Slang Usage:** Use internet abbreviations (idk, rn, tbh) where appropriate.
-
----
-**Input Text:**
-"{corrected_stt}"
-
-**Translation ({target_lang}):**
-"""
-
-prompt = ChatPromptTemplate.from_template(VIBE_TRANSLATE_PROMPT)
-chain = prompt | llm | StrOutputParser()
-
-# (이모지 맵 - 기존 동일)
-EMOJI_EFFECT_MAP = {
-    "ADMIRATION": ["🔥", "✨", "💖", "🎉", "👑", "💎"],
-    "SHOCK": ["💥", "⚡", "💫"],
-    "SARCASM": ["❄️", "🌀", "🌙"],
-    "NEUTRAL": [] 
+EFFECT_TAG_MAP = {
+    "PARTY": "🎉", "FIRE": "🔥", "HEART": "💖", "BOOM": "💥", 
+    "COLD": "❄️", "MOON": "🌙", "MAGIC": "✨"
 }
 
-# ⭐️ [수정] 텍스트를 반환하는 게 아니라, '선정된 이모지 문자열'만 반환하도록 변경
-def select_emoji_suffix(emotion: str) -> str:
-    """
-    감정에 맞는 이모지를 확률적으로 선택하여 반환합니다. (없으면 빈 문자열)
-    """
-    candidates = EMOJI_EFFECT_MAP.get(emotion, [])
-    if not candidates:
-        return ""
+# [Prompt 1] 한국어용 (Context 사용)
+KOR_PROMPT = """You are a Gen-Z translator. 
+Translate **Korean** text into **authentic, vibe-heavy {target_lang} slang**.
 
-    # 빈도 조절 (30% 확률)
-    if random.random() > 0.3: 
-        return ""
+### Critical Rules:
+1. **Localize Metaphors:** DO NOT translate Korean idioms literally (e.g., 'Goguma', 'Cider'). Instead, find the **perfect slang equivalent** in {target_lang}.
+   - (Bad): "I ate sweet potatoes."
+   - (Good): "It was so suffocating / frustrating."
+2. **Vibe First:** Focus on the emotion and impact, not the exact words.
 
-    # 이모지 하나 선택
-    return f" {random.choice(candidates)}"  # 앞에 공백 포함해서 리턴
+### Context (Meme Meanings)
+{vibe_context}
 
+### Tone
+{vibe_emotion}
 
-def vibe_translate_agent(state: TranslateState) -> TranslateState:
+### Effect Tags (Append ONE if fits):
+<EFFECT:PARTY>, <EFFECT:FIRE>, <EFFECT:HEART>, <EFFECT:BOOM>, <EFFECT:COLD>, <EFFECT:MOON>, <EFFECT:MAGIC>
+
+Input: "{corrected_stt}"
+Translation:"""
+
+# [Prompt 2] 외국어용 (Context 없음)
+FOREIGN_PROMPT = """You are a Gen-Z translator. 
+Translate **{source_lang}** text into **authentic, vibe-heavy {target_lang} slang**.
+
+### Critical Rules:
+1. **Localize Metaphors:** Use {target_lang} slang that carries the *same feeling*, not the literal meaning.
+2. **Vibe First:** Make it sound like a native speaker of {target_lang}.
+
+### Tone
+{vibe_emotion}
+
+### Effect Tags (Append ONE if fits):
+<EFFECT:PARTY>, <EFFECT:FIRE>, <EFFECT:HEART>, <EFFECT:BOOM>, <EFFECT:COLD>, <EFFECT:MOON>, <EFFECT:MAGIC>
+
+Input: "{corrected_stt}"
+Translation:"""
+
+chain_kor = ChatPromptTemplate.from_template(KOR_PROMPT) | llm | StrOutputParser()
+chain_foreign = ChatPromptTemplate.from_template(FOREIGN_PROMPT) | llm | StrOutputParser()
+
+EMOJI_THRESHOLD = 0.8
+
+def _parse_effect(text: str, emotion: str, score: float):
     """
-    [Vibe Mode - B-4] (LLM 2: 번역 + Python 후처리)
+    텍스트 끝의 <EFFECT:XXX> 태그를 파싱하되,
+    점수가 낮거나 감정이 NEUTRAL이면 태그를 제거하고 이모지를 붙이지 않습니다.
     """
-    if not llm:
-        log.error("Vibe LLM 로드 실패")
-        state['final_answer'] = state['stt_text']
-        return state
+    # 1. 태그 추출
+    match = re.search(r"<EFFECT:([A-Z]+)>", text)
+    clean_text = re.sub(r"\s*<EFFECT:[A-Z]+>", "", text).strip() # 일단 태그는 본문에서 지움
     
-    corrected_stt = state.get("corrected_stt") or state.get("stt_text", "")
-    vibe_context = state.get("vibe_context") or "No specific meme definitions found."
-    target_lang = state.get("target_lang") or "English"
-    vibe_emotion = state.get("vibe_emotion_tag") or "NEUTRAL"
+    # 2. ⭐️ [핵심] 필터링 로직
+    # 감정이 NEUTRAL이거나, 점수가 기준치 미만이면 이모지 생성 안 함
+    if emotion == "NEUTRAL" or score < EMOJI_THRESHOLD:
+        if match:
+            log.info(f"🔇 이펙트 무시됨 (Score {score:.2f} < {EMOJI_THRESHOLD} or Neutral)")
+        return clean_text, ""
 
-    if not corrected_stt.strip():
-        state['final_answer'] = ""
-        return state
+    # 3. 기준 통과 시 이모지 변환
+    if match:
+        tag_key = match.group(1)
+        emoji = EFFECT_TAG_MAP.get(tag_key, "")
+        if emoji:
+            log.info(f"✨ 이펙트 적용! ({tag_key} -> {emoji}, Score: {score:.2f})")
+            return clean_text, f" {emoji}"
+            
+    return clean_text, ""
 
+
+# [Node 1] 한국어 번역
+def vibe_translate_kor_agent(state: TranslateState) -> TranslateState:
+    if not llm: return state
+    
+    # State에서 점수 가져오기
+    emotion = state.get("vibe_emotion_tag", "NEUTRAL")
+    score = state.get("vibe_emotion_score", 0.0) 
+    
     try:
-        # 1. LLM 번역
-        response = chain.invoke({
-            "corrected_stt": corrected_stt,
-            "vibe_context": vibe_context,
-            "vibe_emotion": vibe_emotion,
-            "target_lang": target_lang
+        res = chain_kor.invoke({
+            # ... (기존 인자) ...
+            "target_lang": state.get("target_lang", "English"),
+            "vibe_context": state.get("vibe_context", ""),
+            "vibe_emotion": emotion,
+            "corrected_stt": state.get("corrected_stt", "")
         })
         
-        translated_text = response.strip().strip('"')
+        raw_res = res.strip().strip('"')
         
-        # 2. ⭐️ [수정] 이모지 선정 (한 번만 수행하여 싱크 맞춤)
-        emoji_suffix = select_emoji_suffix(vibe_emotion)
+        # ⭐️ 파싱 함수에 점수 전달
+        clean, emoji = _parse_effect(raw_res, emotion, score)
         
-        # 3. ⭐️ [수정] 번역문과 원문 양쪽에 적용
-        # (원문에 적용할 때는 state['corrected_stt']를 업데이트)
+        state['final_answer'] = f"{clean}{emoji}"
+        if emoji: state['corrected_stt'] += emoji # 원문에도 이모지 부착
         
-        state['final_answer'] = f"{translated_text}{emoji_suffix}"
-        
-        if emoji_suffix:
-            # 원문에도 이모지가 붙도록 업데이트
-            new_source_text = f"{corrected_stt}{emoji_suffix}"
-            state['corrected_stt'] = new_source_text
-            log.info(f"✨ 이모지 적용(Source & Target): {emoji_suffix.strip()}")
-        else:
-            log.info(f"Vibe 번역 완료 (No Emoji): '{translated_text}'")
-
     except Exception as e:
-        log.error(f"Vibe LLM 수행 중 오류: {e}", exc_info=True)
-        state['final_answer'] = corrected_stt
+        log.error(f"Trans-KO Error: {e}")
+        state['final_answer'] = state.get("corrected_stt", "")
+        
+    return state
+
+# [Node 2] 외국어 번역
+def vibe_translate_foreign_agent(state: TranslateState) -> TranslateState:
+    if not llm: return state
+    
+    emotion = state.get("vibe_emotion_tag", "NEUTRAL")
+    score = state.get("vibe_emotion_score", 0.0)
+
+    try:
+        res = chain_foreign.invoke({
+            # ... (기존 인자) ...
+            "source_lang": state.get("stt_lang", "Foreign"),
+            "target_lang": state.get("target_lang", "English"),
+            "vibe_emotion": emotion,
+            "corrected_stt": state.get("corrected_stt", "")
+        })
+        
+        raw_res = res.strip().strip('"')
+        
+        # ⭐️ 파싱 함수에 점수 전달
+        clean, emoji = _parse_effect(raw_res, emotion, score)
+        
+        state['final_answer'] = f"{clean}{emoji}"
+        if emoji: state['corrected_stt'] += emoji
+        
+    except Exception as e:
+        log.error(f"Trans-Foreign Error: {e}")
+        state['final_answer'] = state.get("corrected_stt", "")
         
     return state

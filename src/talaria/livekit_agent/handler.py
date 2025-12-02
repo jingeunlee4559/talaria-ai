@@ -254,6 +254,7 @@ class ParticipantSTTHandler:
                         "track_sid": self.track.sid,
                         "stt_text": text,
                         "lang": real_source_lang_code,
+                        "user_locale": self.participant_locale,
                         "confidence": confidence,
                         "started_ms": start_time_ms,
                         "ended_ms": end_time_ms,
@@ -275,20 +276,27 @@ class ParticipantSTTHandler:
                     corrected_stt_from_hermes = result_data.get("corrected_stt")
                     vibe_triggers = result_data.get("vibe_triggers")
                     final_explanation = result_data.get("final_explanation")
+                    found_terms_details = result_data.get("found_terms_details", [])
                     
-                    # [Vibe 모드] 문화 설명 발행 로직
+                    # [Vibe 모드] 문화 설명(Alert) 발행 로직
                     if translation_mode == "vibe" and final_explanation and self.publish_manner_callback:
-                        log.info(f"[{pid}] ⭐️ Vibe '문화 설명' 발견! 번역 데이터를 포함하여 발행합니다.")
+                        log.info(f"[{pid}] ⭐️ Vibe Alert 준비 중... (Category 확인)")
                         
-                        # 1. 설명 번역 (한국어 DB -> 현재 방에 있는 모든 언어)
+                        # 1. 카테고리 결정 로직
+                        # 발견된 밈 중 첫 번째 것의 카테고리를 사용 (없으면 기본값 'k-meme')
+                        target_category = "k-meme"
+                        if found_terms_details and len(found_terms_details) > 0:
+                            # 백엔드가 준 category 사용 (예: 'game', 'mukbang')
+                            target_category = found_terms_details[0].get("category", "k-meme")
+                        
+                        # 2. 설명 번역 (기존 로직 유지)
                         explanation_translations = {}
                         if self.translation_enabled:
-                            # 현재 방에 있는 모든 참가자의 언어를 타겟으로 설정
                             all_locales = list(self._get_current_locales())
                             try:
                                 explanation_translations = await translate_to_multiple_languages(
                                     final_explanation, 
-                                    "ko-KR",  # DB 원본은 항상 한국어
+                                    "ko-KR",
                                     all_locales
                                 )
                             except Exception as e:
@@ -296,14 +304,16 @@ class ParticipantSTTHandler:
 
                         match_text = vibe_triggers[0] if vibe_triggers else ""
                         
-                        # 2. 모든 번역을 포함한 Payload 생성
+                        # 3. Payload 생성 (agent_code에 카테고리 적용!)
                         fake_payload = {
                             "type": "manner_alert",
                             "label": "K-Culture Tip", 
-                            "explanation": final_explanation, # (기본: 한국어)
-                            "translations": explanation_translations, # 🟢 [추가됨] 예: {'en-US': 'Soup is...', 'zh-CN': '...'}
+                            "explanation": final_explanation,
+                            "translations": explanation_translations,
                             
-                            "agent_code": "k-meme",
+                            # ⭐️ [핵심 수정] 하드코딩 대신 동적 카테고리 할당
+                            "agent_code": target_category, 
+                            
                             "severity": 1,
                             "match": match_text,
                             "suggestion": "",
@@ -315,14 +325,11 @@ class ParticipantSTTHandler:
                             "version": "v1-culture",
                         }
                         
-                        # 3. 브로드캐스트 (모두에게 전송)
+                        log.info(f"[{pid}] 🚀 Manner Alert 발행 (Cat: {target_category}, Match: {match_text})")
                         await self.publish_manner_callback(fake_payload)
 
-                except httpx.HTTPStatusError as e:
-                    log.error(f"❌ hermes_service API 오류: {e.response.status_code} - {e.response.text}")
-                    final_translations = simple_translations
                 except Exception as e:
-                    log.error(f"❌ hermes_service 호출 실패: {e}")
+                    log.error(f"❌ hermes_service 호출/처리 실패: {e}", exc_info=True)
                     final_translations = simple_translations
 
             # --- 5.  2차 게시 (보정본 업데이트) ---

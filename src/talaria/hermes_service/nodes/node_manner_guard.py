@@ -8,81 +8,113 @@ from ..state import TranslateState
 
 log = logging.getLogger(__name__)
 
-# 1. LLM 설정 (빠른 속도를 위해 gpt-4o-mini 사용)
 try:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0) # 온도를 0으로 하여 일관성 유지
-    log.info("✅ Manner Guard LLM 로드 완료.")
-except Exception as e:
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
+except:
     llm = None
-    log.critical(f"❌ Manner Guard LLM 로드 실패: {e}")
 
-# 2. 출력 스키마 정의 (JSON으로 확실하게 받기 위함)
 class SafetyCheckResult(BaseModel):
-    is_safe: bool = Field(description="True if the text is safe, False otherwise.")
-    filtered_text: str = Field(description="The sanitized text. Use '***' for hate speech, and rewording for mild slang.")
-    reason: str = Field(description="Reason for filtering (e.g., PROFANITY, HATE_SPEECH, NONE).")
+    severity: str = Field(description="One of: SAFE, WORD_MASK, BLOCK")
+    filtered_source_text: str
+    filtered_target_text: str
+    blocking_message_source: str
+    blocking_message_target: str
+    reason: str
 
 parser = JsonOutputParser(pydantic_object=SafetyCheckResult)
 
-# 3. 프롬프트 정의 (하이브리드 전략 적용)
-GUARD_PROMPT = """You are the 'Manner Guard' AI of a real-time translation service.
-Your job is to screen the translated text for **unethical content**.
+# ⭐️ [핵심 수정] 혐오와 비판을 명확히 구분하는 프롬프트
+GUARD_PROMPT = """You are a rational Content Moderator.
+Your goal is to block Hate Speech while protecting Free Speech (Criticism, Anger, Satire).
 
-### Rules for Filtering:
-1. **SAFE Content:** If the text is clean or just has harmless jokes, keep `is_safe` = true and `filtered_text` as is.
-2. **MILD Slang (Vibe):** If it contains mild slang (e.g., 'damn', 'shit', '존나', '개웃겨'), **REWRITE** it wititly to maintain the fun vibe but make it less offensive. (e.g., 'Freaking funny', '겁나 웃겨').
-3. **EXTREME Hate/Profanity:** If it contains hate speech, sexual harassment, or severe curses (e.g., 'Fuck you', 'Cunt', '개새끼', 패드립), **MASK** the specific word with `***`. (e.g., 'You ***').
+### 🛡️ WHITELIST (Authorized Memes):
+Words in [{whitelist}] are ALWAYS SAFE.
 
-### Input Text:
-"{input_text}"
+### 🚨 DECISION GUIDELINES (Read Carefully):
 
-### Output Format (JSON):
-{format_instructions}
-"""
+**1. WHAT IS "SAFE"? (Do NOT Block)**
+- **Criticism/Boycott:** "I will boycott Clova", "This service sucks", "Worst movie ever". -> **SAFE**
+- **Personal Anger:** "I'm so pissed off", "How annoying". -> **SAFE**
+- **Metaphors:** "You are a potato", "He is a snake". -> **SAFE**
+- **Simple Insults:** "Idiot", "Stupid", "Fool". -> **SAFE** (Do not block, at most mask if vulgar)
+
+**2. WHAT IS "WORD_MASK"? (Partial Censorship)**
+- Only specific vulgar slurs (e.g., F*ck, Sh*t, 씨발, 개새끼).
+- Action: Replace ONLY the swear word with `***`. The sentence remains visible.
+
+**3. WHAT IS "BLOCK"? (Total Ban)**
+- **Hate Speech:** Attacks based on **Race, Gender, Religion, Disability, Sexual Orientation**. (e.g., "Kill all [Group]", "Dirty [Race]").
+- **Sexual Violence/Harassment:** Explicit sexual descriptions or threats.
+- **Realistic Threats:** "I will kill you and your family".
+
+---
+**Input Source:** "{source_text}" (Lang: {source_lang})
+**Input Target:** "{target_text}" (Lang: {target_lang})
+
+Output JSON: {format_instructions}"""
 
 prompt = ChatPromptTemplate.from_template(GUARD_PROMPT, partial_variables={"format_instructions": parser.get_format_instructions()})
 chain = prompt | llm | parser
 
 def manner_guard_agent(state: TranslateState) -> TranslateState:
-    """
-    [Vibe Mode - Post-Processing]
-    최종 번역문에 대해 윤리적 가드레일을 적용합니다.
-    """
-    if not llm:
-        return state
-
-    current_text = state.get("final_answer", "")
-    
-    # 입력이 비어있으면 패스
-    if not current_text.strip():
+    if not llm: 
         state['is_safe'] = True
         return state
 
-    log.info(f"🛡️ Manner Guard 검사 시작: '{current_text}'")
+    src = state.get("corrected_stt") or state.get("stt_text", "")
+    tgt = state.get("final_answer", "")
+    src_lang = state.get("stt_lang", "Korean")
+    tgt_lang = state.get("target_lang", "English")
+    
+    # 밈 화이트리스트 주입
+    found_memes = state.get("found_terms", [])
+    whitelist_str = ", ".join([f"'{item['term']}'" for item in found_memes])
+    
+    if not src.strip() or not tgt.strip(): 
+        state['is_safe'] = True
+        return state
+
+    log.info(f"🛡️ Guard Check: '{src}' <-> '{tgt}'")
 
     try:
-        # LLM 호출
-        result = chain.invoke({"input_text": current_text})
+        res = chain.invoke({
+            "source_text": src, 
+            "target_text": tgt,
+            "source_lang": src_lang,
+            "target_lang": tgt_lang,
+            "whitelist": whitelist_str
+        })
         
-        # 결과 파싱
-        is_safe = result.get("is_safe", True)
-        filtered_text = result.get("filtered_text", current_text)
-        reason = result.get("reason", "NONE")
-
-        # State 업데이트
-        state['is_safe'] = is_safe
-        state['safety_reason'] = reason
-        state['original_text_before_guard'] = current_text # 원본 백업
+        severity = res.get("severity", "SAFE")
+        reason = res.get("reason", "NONE")
         
-        if not is_safe:
-            state['final_answer'] = filtered_text # 필터링된 텍스트로 교체
-            log.warning(f"🚨 유해 콘텐츠 감지 ({reason})! 필터링 적용: '{current_text}' -> '{filtered_text}'")
+        final_src = res.get("filtered_source_text", src)
+        final_tgt = res.get("filtered_target_text", tgt)
+        
+        if severity == "BLOCK":
+            state['is_safe'] = False
+            # 차단 메시지 생성
+            state['corrected_stt'] = res.get("blocking_message_source", "🚫 부적절한 메시지입니다.")
+            state['final_answer'] = res.get("blocking_message_target", "🚫 Message hidden.")
+            log.warning(f"🚨 [BLOCK] {reason} (Src: {src})")
+            
+        elif severity == "WORD_MASK":
+            state['is_safe'] = False
+            state['corrected_stt'] = final_src
+            state['final_answer'] = final_tgt
+            log.warning(f"⚠️ [MASK] {reason}")
+            
         else:
-            log.info("✅ 안전한 텍스트입니다.")
+            state['is_safe'] = True
+            # SAFE라도 필터링 텍스트가 있으면 반영 (마스킹 없는 수정 등)
+            state['corrected_stt'] = final_src
+            state['final_answer'] = final_tgt
+            log.info(f"✅ [SAFE] {reason}")
+
+        state['safety_reason'] = f"{severity}:{reason}"
 
     except Exception as e:
-        log.error(f"❌ Manner Guard 실행 중 오류: {e}")
-        # 오류 시 원본 그대로 내보냄 (Fail-Open 정책)
-        state['is_safe'] = True 
+        log.error(f"Guard Error: {e}")
+        state['is_safe'] = True
         
     return state

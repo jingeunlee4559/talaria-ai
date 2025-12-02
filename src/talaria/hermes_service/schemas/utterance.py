@@ -10,6 +10,7 @@ class UtteranceProcessIn(BaseModel):
     
     stt_text: str = Field(..., description="STT 원본 텍스트")
     lang: str = Field(..., description="STT 원본 언어 코드 (예: ko-KR)")
+    user_locale: str = Field(..., description="User's locale setting (e.g., 'ko-KR', 'en-US')")
     confidence: Optional[float] = Field(None, description="STT 신뢰도 (0.0 ~ 1.0)")
     started_ms: Optional[int] = Field(None, description="발화 시작 시간 (ms)")
     ended_ms: Optional[int] = Field(None, description="발화 종료 시간 (ms)")
@@ -19,7 +20,6 @@ class UtteranceProcessIn(BaseModel):
 
     target_lang: str = Field("en-US", description="LLM 보정/번역을 수행할 대상 언어 (e.g., en-US)")
 
-    # ⭐️ [신규] 모드 플래그
     translation_mode: str = Field("business", description="번역 모드 ('business' or 'vibe')")
 
 class UtteranceProcessOut(BaseModel):
@@ -33,4 +33,5 @@ class UtteranceProcessOut(BaseModel):
     final_explanation: Optional[str] = Field(None, description="Vibe 모드 문화/밈 설명 (DB 저장용)")
     final_emoji: Optional[str] = Field(None, description="Vibe 모드 감정 이모지 (Agent가 사용)")
     corrected_stt: Optional[str] = Field(None, description="[신규] Vibe 모드에서 보정된 STT")
+    found_terms_details: Optional[List[Dict[str, str]]] = Field(None, description="Detailed meme info with category")
     ai_tags: Dict = Field(..., description="DB에 저장될 모든 AI 분석 데이터")

@@ -12,19 +12,17 @@ import numpy as np
 # ==========================================
 # 1. 설정 (경로)
 # ==========================================
-# (기존과 동일)
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../.."))
 MODEL_PATH = os.path.join(BASE_DIR, "src/talaria/assets/model")
 DB_PATH = os.path.join(BASE_DIR, "src/talaria/assets/vectordb")
-DATA_FILE = os.path.join(BASE_DIR, "model/data_collecting/meme_dictionary_complete.json")
+
+# ⭐️ [수정] 데이터 파일 경로 변경 (카테고리 정보가 포함된 파일 사용)
+DATA_FILE = os.path.join(BASE_DIR, "model/data_collecting/meme_dictionary_labeled.json")
 
 COLLECTION_NAME = "meme_dictionary"
 EMBEDDING_MODEL = "jhgan/ko-sbert-multitask"
 
-# ==========================================
-# 2. 모델 클래스 (학습 때와 동일 구조)
-# ==========================================
-# (기존과 동일)
+# ... (이하 모델 클래스 및 Scanner 클래스는 기존과 동일) ...
 class MemeMultiTaskModel(ElectraPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
@@ -44,10 +42,6 @@ class MemeMultiTaskModel(ElectraPreTrainedModel):
         logits_ner = self.ner_classifier(sequence_output)
         return logits_cls, logits_ner
 
-# ==========================================
-# 3. 추론기 (Scanner)
-# ==========================================
-# (기존과 동일)
 class MemeScanner:
     def __init__(self):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -163,9 +157,6 @@ class MemeRetriever:
             results = self.collection.query(query_texts=queries, n_results=top_k)
             valid_results = []
             
-            # ⭐️ [수정] 여러 개의 쿼리(queries)가 들어왔을 때, 각각의 결과를 모두 순회하도록 변경
-            # results['distances']는 [[dist1_q1, ...], [dist1_q2, ...]] 형태입니다.
-            
             for q_idx, dists in enumerate(results['distances']):
                 metas = results['metadatas'][q_idx]
                 
@@ -173,7 +164,7 @@ class MemeRetriever:
                     # 거리 기준 (1.1 미만이면 후보군으로 포함)
                     if dist < 1.1:
                         item = metas[i]
-                        item['score'] = dist  # ⭐️ [핵심] 점수(distance) 주입!
+                        item['score'] = dist
                         valid_results.append(item)
                         
             return valid_results
@@ -184,7 +175,6 @@ class MemeRetriever:
 # ==========================================
 # 5. 싱글톤 로더
 # ==========================================
-# (기존과 동일)
 class GlobalModelLoader:
     _instance = None
     
@@ -209,6 +199,7 @@ class GlobalModelLoader:
                 with open(DATA_FILE, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     for item in data:
+                        # ⭐️ [확인] category 필드는 이미 item 안에 포함되어 있음
                         if 'primary_keyword' in item:
                             self.meme_dict[item['primary_keyword']] = item
                         for rel in item.get('related_keywords', []):
