@@ -17,7 +17,7 @@ from ...core.database import get_db_cursor
 log = logging.getLogger(__name__)
 
 # --- 조건부 번역을 위한 상수 정의 ---
-RAG_SIMILARITY_THRESHOLD = 0.7  # L2 거리 기준 (0.7 미만일 때 관련성 높다고 판단)
+RAG_SIMILARITY_THRESHOLD = 11.0  # L2 거리 기준 (0.7 미만일 때 관련성 높다고 판단)
 SHORT_SENTENCE_WORD_COUNT = 7   # 이 단어 개수 이하일 때 "짧은 문장"으로 간주
 RAG_RESULT_COUNT = 3            # RAG 검색 시 가져올 청크 개수
 

@@ -18,7 +18,7 @@ from ..state import TranslateState, FoundTerm
 log = logging.getLogger(__name__)
 
 try:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.1, max_retries=2)
+    llm = ChatOpenAI(model="gpt-5.1", temperature=0.1, max_retries=2)
     log.info("✅ OpenAI LLM(gpt-4o-mini) 모델이 성공적으로 로드되었습니다.")
 except Exception as e:
     log.critical(f"❌ OpenAI LLM 로드 실패: {e}", exc_info=True)

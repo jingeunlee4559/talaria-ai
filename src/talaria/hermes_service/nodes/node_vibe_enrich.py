@@ -1,6 +1,6 @@
 # src/talaria/hermes_service/nodes/node_vibe_enrich.py
 import logging
-import re  # ⭐️ 정규표현식 모듈 추가
+import re
 from ..state import TranslateState, FoundTerm
 from ..utils.model_loader import get_retriever, get_meme_dictionary
 
@@ -27,9 +27,13 @@ def context_enrich_agent(state: TranslateState) -> TranslateState:
     # [Step 1] 족보 검색 (Exact Match with Boundary Check)
     if meme_dict:
         for keyword, data in meme_dict.items():
+            # ⭐️ [수정] 검색 키워드(keyword)가 대표어(primary_keyword)와 다르면 건너뜀
+            # 즉, related_keywords(동의어)는 검색 대상에서 제외됨
+            if keyword != data.get('primary_keyword'):
+                continue
+
             if len(keyword) >= 2: 
-                # ⭐️ [핵심 수정] 단순 포함(in) 대신 정규식으로 '독립된 단어'인지 검사
-                # (?<![가-힣]): 키워드 바로 앞에 '한글'이 오면 매칭 안 함 (나'오더'라, 먹으'러' 방지)
+                # 정규식: 키워드 바로 앞에 '한글'이 오면 매칭 안 함 (Boundary Check)
                 pattern = rf"(?<![가-힣]){re.escape(keyword)}"
                 
                 if re.search(pattern, stt_text) and keyword not in matched_keys:
@@ -47,11 +51,9 @@ def context_enrich_agent(state: TranslateState) -> TranslateState:
         search_res = retriever.search(model_triggers, top_k=1)
         for res in search_res:
             score = res.get('score', 10.0)
-            keyword = res['primary_keyword']
+            keyword = res['primary_keyword'] # 모델 검색은 이미 primary_keyword 기준
             
             if score <= THRESHOLD_WORD_SEARCH and keyword not in matched_keys:
-                # ⭐️ [핵심 수정] 여기도 동일한 정규식 검증 적용 (교차 검증 강화)
-                # 모델이 찾았더라도, 실제 문장 속에서 어미의 일부라면 거름
                 pattern = rf"(?<![가-힣]){re.escape(keyword)}"
                 
                 if re.search(pattern, stt_text):

@@ -24,14 +24,37 @@ EFFECT_TAG_MAP = {
 }
 
 # [Prompt 1] 한국어용 (Context 사용)
+# KOR_PROMPT = """You are a Gen-Z translator. 
+# Translate **Korean** text into **authentic, vibe-heavy {target_lang} slang**.
+
+# ### Critical Rules:
+# 1. **Localize Metaphors:** DO NOT translate Korean idioms literally (e.g., 'Goguma', 'Cider'). Instead, find the **perfect slang equivalent** in {target_lang}.
+#    - (Bad): "I ate sweet potatoes."
+#    - (Good): "It was so suffocating / frustrating."
+# 2. **Vibe First:** Focus on the emotion and impact, not the exact words.
+
+# ### Context (Meme Meanings)
+# {vibe_context}
+
+# ### Tone
+# {vibe_emotion}
+
+# ### Effect Tags (Append ONE if fits):
+# <EFFECT:PARTY>, <EFFECT:FIRE>, <EFFECT:HEART>, <EFFECT:BOOM>, <EFFECT:COLD>, <EFFECT:MOON>, <EFFECT:MAGIC>
+
+# Input: "{corrected_stt}"
+# Translation:"""
+
 KOR_PROMPT = """You are a Gen-Z translator. 
 Translate **Korean** text into **authentic, vibe-heavy {target_lang} slang**.
 
 ### Critical Rules:
-1. **Localize Metaphors:** DO NOT translate Korean idioms literally (e.g., 'Goguma', 'Cider'). Instead, find the **perfect slang equivalent** in {target_lang}.
-   - (Bad): "I ate sweet potatoes."
-   - (Good): "It was so suffocating / frustrating."
-2. **Vibe First:** Focus on the emotion and impact, not the exact words.
+1. **Context is King:** You MUST use the definitions provided in [Context] above all else. 
+   - If '사이다' is defined as 'refreshing/satisfying', DO NOT translate it as 'vibe check' (which means assessing atmosphere).
+   - Find a slang that matches the **exact definition** provided.
+   - Example for 'Cider': "That ending was so satisfying / hits the spot / total W."
+2. **Localize Metaphors:** Find the perfect slang equivalent, BUT it must keep the original meaning.
+3. **Vibe Second:** Apply the Gen-Z tone ONLY AFTER ensuring the meaning is correct.
 
 ### Context (Meme Meanings)
 {vibe_context}
@@ -45,7 +68,7 @@ Translate **Korean** text into **authentic, vibe-heavy {target_lang} slang**.
 Input: "{corrected_stt}"
 Translation:"""
 
-# [Prompt 2] 외국어용 (Context 없음)
+# # [Prompt 2] 외국어용 (Context 없음)
 FOREIGN_PROMPT = """You are a Gen-Z translator. 
 Translate **{source_lang}** text into **authentic, vibe-heavy {target_lang} slang**.
 
@@ -65,7 +88,7 @@ Translation:"""
 chain_kor = ChatPromptTemplate.from_template(KOR_PROMPT) | llm | StrOutputParser()
 chain_foreign = ChatPromptTemplate.from_template(FOREIGN_PROMPT) | llm | StrOutputParser()
 
-EMOJI_THRESHOLD = 0.8
+EMOJI_THRESHOLD = 0.9
 
 def _parse_effect(text: str, emotion: str, score: float):
     """

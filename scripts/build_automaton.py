@@ -47,7 +47,7 @@ try:
     print("✅ 오토마톤 빌드 완료.")
 
     # 6. 완성된 오토마톤을 파일로 저장 (직렬화)
-    with open('./output/expert_dict.pkl', 'wb') as f:
+    with open('expert_dict.pkl', 'wb') as f:
         pickle.dump(automaton, f)
 
     print("✅ 'expert_dict.pkl' 파일 저장 완료!")
